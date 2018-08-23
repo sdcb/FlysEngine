@@ -66,9 +66,9 @@ namespace FlysTest
                 DrawTextOptions.EnableColorFont);
 
             renderTarget.DrawText($"FPS: {fpsManager.Fps}\r\nFT: {fpsManager.FrameTimeMs}",
-                xResource.TextFormats[22.0f],
+                xResource.TextFormats[15.0f],
                 new RectangleF(0, 0, float.MaxValue, float.MaxValue),
-                xResource.GetColor(Color.Purple));
+                xResource.GetColor(Color.Red));
         }
     }
 }
