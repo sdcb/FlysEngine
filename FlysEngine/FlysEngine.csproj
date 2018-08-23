@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net45;net40;netstandard1.1</TargetFrameworks>
+    <Authors>sdcb</Authors>
+    <Company />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.1.2.0</Version>
+    <Description>Real-time 2D rendering utilities based on SharpDX/Direct2D.</Description>
+    <PackageReleaseNotes>0.1.2: 
+add support for uwp.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpDX" Version="4.1.0" />
+    <PackageReference Include="SharpDX.Animation" Version="4.1.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.1.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.1.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.1.0" />
+    <PackageReference Include="SharpDX.Mathematics" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>
