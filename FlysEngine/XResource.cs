@@ -21,7 +21,7 @@ namespace FlysEngine
         public readonly WIC.ImagingFactory2 WICFactory = new WIC.ImagingFactory2();
         public readonly BitmapManager Bitmaps;
         public readonly TextLayoutManager TextLayouts;
-        private readonly Direct2D1.SolidColorBrush _solidBrush;
+        private Direct2D1.SolidColorBrush _solidBrush;
 
         public readonly Animation.Manager AnimationManager = new Animation.Manager();
         public readonly Animation.TransitionLibrary TransitionLibrary = new Animation.TransitionLibrary();
@@ -40,8 +40,9 @@ namespace FlysEngine
         {
             if (_solidBrush == null)
                 throw new InvalidOperationException("Need to call Initialize before call this function.");
-
+            
             _solidBrush.Color = color;
+
             return _solidBrush;
         }
 
@@ -88,6 +89,7 @@ namespace FlysEngine
             using (var d3device = DirectXTools.CreateD3Device())
             {
                 RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, d3device);
+                _solidBrush = new Direct2D1.SolidColorBrush(RenderTarget, Color.Black);
                 SwapChain = DirectXTools.CreateSwapChainForHwnd(d3device, windowHandle);
                 DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
                 Bitmaps.SetRenderTarget(RenderTarget);
@@ -103,6 +105,7 @@ namespace FlysEngine
             using (var d3device = DirectXTools.CreateD3Device())
             {
                 RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, d3device);
+                _solidBrush = new Direct2D1.SolidColorBrush(RenderTarget, Color.Black);
                 SwapChain = DirectXTools.CreateSwapChain(width, height, d3device);
                 nativePanel.SetSwapChain(SwapChain);
                 DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
@@ -116,6 +119,7 @@ namespace FlysEngine
             using (var d3device = DirectXTools.CreateD3Device())
             {
                 RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, d3device);
+                _solidBrush = new Direct2D1.SolidColorBrush(RenderTarget, Color.Black);
                 SwapChain = DirectXTools.CreateSwapChainForCoreWindow(d3device, coreWindow);
                 DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
                 Bitmaps.SetRenderTarget(RenderTarget);
@@ -127,6 +131,7 @@ namespace FlysEngine
         {
             Bitmaps.Dispose();
             SwapChain.Dispose();
+            _solidBrush.Dispose();
             RenderTarget.Dispose();
         }
 
