@@ -5,10 +5,14 @@
     <Authors>sdcb</Authors>
     <Company />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.1.2.0</Version>
+    <Version>0.1.3.0</Version>
     <Description>Real-time 2D rendering utilities based on SharpDX/Direct2D.</Description>
-    <PackageReleaseNotes>0.1.2: 
-add support for uwp.</PackageReleaseNotes>
+    <PackageReleaseNotes>0.1.3:
+Upgrade to SharpDX 4.1.0
+Remove SolidColorBrushManager.</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/sdcb/FlysEngine</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sdcb/FlysEngine</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

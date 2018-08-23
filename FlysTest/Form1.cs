@@ -57,18 +57,18 @@ namespace FlysTest
         {
             renderTarget.Clear(Color.CornflowerBlue.ToColor4());
             renderTarget.DrawRectangle(new RectangleF(5, 5, ClientSize.Width - 10, ClientSize.Height - 10),
-                xResource.Brushes[Color.Blue]);
+                xResource.GetColor(Color.Blue));
 
             renderTarget.DrawText($"😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎",
                 xResource.TextFormats[24.0f],
                 new RectangleF(0, 22, renderTarget.Size.Width, float.MaxValue),
-                xResource.Brushes[Color.White], 
+                xResource.GetColor(Color.White), 
                 DrawTextOptions.EnableColorFont);
 
             renderTarget.DrawText($"FPS: {fpsManager.Fps}\r\nFT: {fpsManager.FrameTimeMs}",
                 xResource.TextFormats[22.0f],
                 new RectangleF(0, 0, float.MaxValue, float.MaxValue),
-                xResource.Brushes[Color.Purple]);
+                xResource.GetColor(Color.Purple));
         }
     }
 }
