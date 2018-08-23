@@ -4,7 +4,7 @@ Real-time 2D rendering utilities based on SharpDX/Direct2D.
 # Simple example
 (Refer to https://github.com/sdcb/FlysEngine/tree/master/FlysTest)
 * Final result:
-
+  ![Final Result](FlysTest/FlysTest.png)
 * Create a Windows-form application
 * Install the `FlysEngine` nuget package
 * Install the `SharpDX.Desktop` nuget package for convenient
@@ -70,9 +70,9 @@ public partial class Form1 : Form
             DrawTextOptions.EnableColorFont);
 
         renderTarget.DrawText($"FPS: {fpsManager.Fps}\r\nFT: {fpsManager.FrameTimeMs}",
-            xResource.TextFormats[22.0f],
+            xResource.TextFormats[15.0f],
             new RectangleF(0, 0, float.MaxValue, float.MaxValue),
-            xResource.GetColor(Color.Purple));
+            xResource.GetColor(Color.Red));
     }
 }
 ```
