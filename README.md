@@ -1,8 +1,8 @@
-# FlysEngine
+# FlysEngine [![NuGet](https://img.shields.io/badge/nuget-0.1.3-blue.svg)]
 Real-time 2D rendering utilities based on SharpDX/Direct2D.
 
 # Simple example
-(Refer to https://github.com/sdcb/FlysEngine/tree/master/FlysTest)
+(Refer to /tree/master/FlysTest)
 * Final result:
   ![Final Result](FlysTest/FlysTest.png)
 * Create a Windows-form application
