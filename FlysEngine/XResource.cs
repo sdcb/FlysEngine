@@ -97,6 +97,20 @@ namespace FlysEngine
             }
         }
 
+        public void InitializeDeviceGdiCompatible(IntPtr windowHandle, int width, int height)
+        {
+            using (var d3device = DirectXTools.CreateD3Device())
+            {
+                RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, d3device);
+                _solidBrush = new Direct2D1.SolidColorBrush(RenderTarget, Color.Black);
+                SwapChain = DirectXTools.CreateSwapChainForHwnd(d3device, windowHandle);
+                //DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
+                DirectXTools.CreateDeviceContextCPUBitmap(RenderTarget, width, height);
+                Bitmaps.SetRenderTarget(RenderTarget);
+                TextLayouts.SetRenderTarget(RenderTarget);
+            }
+        }
+
         public void InitializeDevice(int width, int height, object swapChainPanel)
         {
             var nativePanel = ComObject.As<DXGI.ISwapChainPanelNative>(swapChainPanel);
@@ -107,7 +121,7 @@ namespace FlysEngine
                 RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, d3device);
                 _solidBrush = new Direct2D1.SolidColorBrush(RenderTarget, Color.Black);
                 SwapChain = DirectXTools.CreateSwapChain(width, height, d3device);
-                nativePanel.SetSwapChain(SwapChain);
+                nativePanel.SwapChain = SwapChain;
                 DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
                 Bitmaps.SetRenderTarget(RenderTarget);
                 TextLayouts.SetRenderTarget(RenderTarget);

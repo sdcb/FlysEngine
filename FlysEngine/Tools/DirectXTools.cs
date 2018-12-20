@@ -144,5 +144,19 @@ namespace FlysEngine.Tools
                 }
             }
         }
+
+        public static void CreateDeviceContextCPUBitmap(
+            Direct2D1.DeviceContext target, int width, int height)
+        {
+            var props = new Direct2D1.BitmapProperties1
+            {
+                BitmapOptions = Direct2D1.BitmapOptions.Target | Direct2D1.BitmapOptions.GdiCompatible,
+                PixelFormat = new Direct2D1.PixelFormat(DXGI.Format.B8G8R8A8_UNorm, Direct2D1.AlphaMode.Premultiplied)
+            };
+            using (var bitmap = new Direct2D1.Bitmap1(target, new Size2(width, height), props))
+            {
+                target.Target = bitmap;
+            }
+        }
     }
 }
