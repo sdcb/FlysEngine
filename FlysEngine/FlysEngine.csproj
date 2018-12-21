@@ -41,4 +41,8 @@ Remove SolidColorBrushManager.</PackageReleaseNotes>
     <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="linqpad-samples\**" Pack="True" PackagePath="linqpad-samples" />
+  </ItemGroup>
+
 </Project>
