@@ -15,7 +15,7 @@ namespace FlysTest.Desktop
         [STAThread]
         static void Main()
         {
-            using (var window = new RenderWindow() { Text = "Hello World" })
+            using (var window = new LayeredRenderWindow() { Text = "Hello World", DragMoveEnabled = true })
             {
                 var bottomRightFont = new DWrite.TextFormat(window.XResource.DWriteFactory, "Consolas", 16.0f)
                 {
@@ -35,18 +35,18 @@ namespace FlysTest.Desktop
                 void Draw(RenderWindow _, Direct2D.DeviceContext target)
                 {
                     XResource res = window.XResource;
-                    target.Clear(Color.CornflowerBlue);
+                    target.Clear(Color.Transparent);
                     RectangleF rectangle = new RectangleF(0, 0, target.Size.Width, target.Size.Height);
 
                     target.DrawRectangle(
-                        new RectangleF(10, 10, target.Size.Width - 20, target.Size.Height - 20),
+                        rectangle,
                         res.GetColor(Color.Blue));
 
                     target.DrawText("😀😁😂🤣😃😄😅😆😉😊😋😎",
                         res.TextFormats[36], rectangle, res.GetColor(Color.Blue),
                         Direct2D.DrawTextOptions.EnableColorFont);
 
-                    target.DrawText("FPS: " + window.RenderTimer.FramesPerSecond.ToString("F1"),
+                    target.DrawText($"{window.RenderTimer.DurationSinceStart:mm':'ss'.'ff}\nFPS: {window.RenderTimer.FramesPerSecond:F1}",
                         bottomRightFont, rectangle, res.GetColor(Color.Red));
 
                     target.DrawText("Hello World",

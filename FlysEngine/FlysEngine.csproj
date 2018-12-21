@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net45;net40;netstandard1.1</TargetFrameworks>
@@ -22,9 +22,9 @@ Remove SolidColorBrushManager.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
-    <PackageLicenseUrl>https://github.com/sdcb/FlysEngine/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageTags>linqpad-samples</PackageTags>
-    <Copyright></Copyright>
+    <Copyright><license type="file">LICENSE</license></Copyright>
   </PropertyGroup>
 
   <ItemGroup>

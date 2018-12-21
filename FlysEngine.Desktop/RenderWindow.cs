@@ -34,15 +34,20 @@ namespace FlysEngine.Desktop
 
             if (!XResource.DeviceAvailable)
             {
-                XResource.InitializeDevice(Handle);
-
-                OnCreateDeviceResources();
-                OnCreateDeviceSizeResources();
+                InitializeResources();
             }
 
             float lastFrameTimeInSecond = RenderTimer.BeginFrame();
             RenderCore(syncInterval, presentFlags, lastFrameTimeInSecond);
             RenderTimer.EndFrame();
+        }
+
+        protected virtual void InitializeResources()
+        {
+            XResource.InitializeDevice(Handle);
+
+            OnCreateDeviceResources();
+            OnCreateDeviceSizeResources();
         }
 
         private void RenderCore(int syncInterval, PresentFlags presentFlags, float lastFrameTimeInSecond)
@@ -59,6 +64,7 @@ namespace FlysEngine.Desktop
                 XResource.RenderTarget.BeginDraw();
                 {
                     OnDraw(XResource.RenderTarget);
+                    OnPostDraw();
                 }
                 XResource.RenderTarget.EndDraw();
 
@@ -82,6 +88,10 @@ namespace FlysEngine.Desktop
                     }
                 }
             }
+        }
+
+        protected virtual void OnPostDraw()
+        {
         }
 
         protected override void OnResize(EventArgs e)
