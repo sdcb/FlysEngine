@@ -6,76 +6,84 @@ Real-time 2D rendering utilities based on SharpDX/Direct2D.
 * Final result:
   ![Final Result](FlysTest/FlysTest.png)
 * Create a Windows-form application
+* Delete the entire Form1 class
 * Install the `FlysEngine` nuget package
 * Install the `SharpDX.Desktop` nuget package for convenient
-* In `Program.cs` file, change the `Application.Run` with: 
+* In `Program.cs` file, using following namespaces:
   ```
-  using (var form = new Form1())
+  using FlysEngine;
+  using FlysEngine.Managers;
+  using SharpDX;
+  using SharpDX.Direct2D1;
+  using SharpDX.Windows;
+  using System;
+  using System.Windows.Forms;
+  
+  using DWrite = SharpDX.DirectWrite;
+  ```
+* Replace Main method's content to following code:
+  ```
+  using (var res = new XResource())
+  using (var form = new Form() { Text = "Hello World" })
   {
-      RenderLoop.Run(form, () => form.Render());
+      var timer = new RenderTimer();
+      var bottomRightFont = new DWrite.TextFormat(res.DWriteFactory, "Consolas", 16.0f)
+      {
+          FlowDirection = DWrite.FlowDirection.BottomToTop, 
+          TextAlignment = DWrite.TextAlignment.Trailing, 
+      };
+      var bottomLeftFont = new DWrite.TextFormat(res.DWriteFactory, "Consolas", 
+          DWrite.FontWeight.Normal, DWrite.FontStyle.Italic, 24.0f)
+      {
+          FlowDirection = DWrite.FlowDirection.BottomToTop, 
+          TextAlignment = DWrite.TextAlignment.Leading, 
+      };
+  
+      form.Resize += (o, e) =>
+      {
+          if (form.WindowState != FormWindowState.Minimized && res.DeviceAvailable)
+          {
+              res.Resize();
+          }
+      };
+  
+      RenderLoop.Run(form, () => Render());
+  
+      void Render()
+      {
+          if (!res.DeviceAvailable) res.InitializeDevice(form.Handle);
+  
+          var target = res.RenderTarget;
+  
+          timer.BeginFrame();
+          target.BeginDraw();
+          Draw(target);
+          target.EndDraw();
+          res.SwapChain.Present(1, 0);
+          timer.EndFrame();
+      }
+  
+      void Draw(DeviceContext target)
+      {
+          target.Clear(Color.CornflowerBlue.ToColor4());
+          RectangleF rectangle = new RectangleF(0, 0, target.Size.Width, target.Size.Height);
+
+		  target.DrawRectangle(
+              new RectangleF(10, 10, target.Size.Width - 20, target.Size.Height - 20), 
+              res.GetColor(Color.Blue));
+  
+          target.DrawText("😀😁😂🤣😃😄😅😆😉😊😋😎", 
+              res.TextFormats[36],  rectangle, res.GetColor(Color.Blue), 
+              DrawTextOptions.EnableColorFont);
+  
+          target.DrawText("FPS: " + timer.FramesPerSecond.ToString("F1"), 
+              bottomRightFont, rectangle, res.GetColor(Color.Red));
+  
+          target.DrawText("Hello World",
+              bottomLeftFont, rectangle, res.GetColor(Color.Purple));
+      }
   }
   ```
-* In Form1.cs, paste the following code:
-```
-public partial class Form1 : Form
-{
-    private readonly XResource xResource = new XResource();
-    private readonly FpsManager fpsManager = new FpsManager();
-
-    public Form1()
-    {
-        InitializeComponent();
-    }
-
-    protected override void OnResize(EventArgs e)
-    {
-        base.OnResize(e);
-
-        if (WindowState != FormWindowState.Minimized && xResource.DeviceAvailable)
-        {
-            xResource.Resize();
-        }
-    }
-
-    public void Render()
-    {
-        if (!xResource.DeviceAvailable)
-        {
-            xResource.InitializeDevice(Handle);
-        }
-
-        var dt = fpsManager.BeginFrame();
-        {
-            xResource.UpdateLogic(dt);
-            xResource.RenderTarget.BeginDraw();
-            {
-                Draw(xResource.RenderTarget);
-            }
-            xResource.RenderTarget.EndDraw();
-            fpsManager.EndFrame();
-            xResource.SwapChain.Present(1, 0);
-        }
-    }
-
-    private void Draw(DeviceContext renderTarget)
-    {
-        renderTarget.Clear(Color.CornflowerBlue.ToColor4());
-        renderTarget.DrawRectangle(new RectangleF(5, 5, ClientSize.Width - 10, ClientSize.Height - 10),
-            xResource.GetColor(Color.Blue));
-
-        renderTarget.DrawText($"😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎",
-            xResource.TextFormats[24.0f],
-            new RectangleF(0, 22, renderTarget.Size.Width, float.MaxValue),
-            xResource.GetColor(Color.White), 
-            DrawTextOptions.EnableColorFont);
-
-        renderTarget.DrawText($"FPS: {fpsManager.Fps}\r\nFT: {fpsManager.FrameTimeMs}",
-            xResource.TextFormats[15.0f],
-            new RectangleF(0, 0, float.MaxValue, float.MaxValue),
-            xResource.GetColor(Color.Red));
-    }
-}
-```
 * And you're done.
 
 # License

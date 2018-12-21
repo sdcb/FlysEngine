@@ -78,9 +78,15 @@ namespace FlysEngine
         }
 
         double _timeNow = 0.0;
-        public void UpdateLogic(float dt)
+        public void UpdateLogicByTimeNow(TimeSpan timeNow)
         {
-            _timeNow += dt;
+            _timeNow = timeNow.TotalSeconds;
+            AnimationManager.Update(_timeNow);
+        }
+        
+        public void UpdateLogic(float timeSinceLastUpdateInSecond)
+        {
+            _timeNow += timeSinceLastUpdateInSecond;
             AnimationManager.Update(_timeNow);
         }
 
