@@ -1,24 +1,21 @@
 <Query Kind="Program">
   <Reference>&lt;RuntimeDirectory&gt;\Accessibility.dll</Reference>
-  <Reference Relative="..\..\..\source\repos\FlysEngine\FlysEngine\bin\Debug\net40\FlysEngine.dll">C:\Users\flysha.zhou\source\repos\FlysEngine\FlysEngine\bin\Debug\net40\FlysEngine.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Configuration.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Deployment.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Runtime.Serialization.Formatters.Soap.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Security.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Windows.Forms.dll</Reference>
-  <Reference Relative="..\..\..\source\repos\FlysEngine\FlysEngine\bin\Debug\net40\SharpDX.Direct2D1.dll">C:\Users\flysha.zhou\source\repos\FlysEngine\FlysEngine\bin\Debug\net40\SharpDX.Direct2D1.dll</Reference>
-  <Reference Relative="..\..\..\source\repos\FlysEngine\FlysEngine\bin\Debug\net40\SharpDX.DXGI.dll">C:\Users\flysha.zhou\source\repos\FlysEngine\FlysEngine\bin\Debug\net40\SharpDX.DXGI.dll</Reference>
-  <Reference Relative="..\..\..\source\repos\FlysEngine\FlysEngine\bin\Debug\net40\SharpDX.Mathematics.dll">C:\Users\flysha.zhou\source\repos\FlysEngine\FlysEngine\bin\Debug\net40\SharpDX.Mathematics.dll</Reference>
+  <NuGetReference>FlysEngine</NuGetReference>
   <NuGetReference>SharpDX.Desktop</NuGetReference>
   <Namespace>FlysEngine</Namespace>
   <Namespace>FlysEngine.Managers</Namespace>
+  <Namespace>FlysEngine.Tools</Namespace>
   <Namespace>SharpDX</Namespace>
   <Namespace>SharpDX.Direct2D1</Namespace>
   <Namespace>SharpDX.DXGI</Namespace>
   <Namespace>SharpDX.Windows</Namespace>
   <Namespace>System.Runtime.InteropServices</Namespace>
   <Namespace>System.Windows.Forms</Namespace>
-  <Namespace>FlysEngine.Tools</Namespace>
 </Query>
 
 void Main()
