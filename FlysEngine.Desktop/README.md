@@ -2,7 +2,7 @@
 For easier use for `FlysEngine` in desktop application.
 
 # Simple example
-* Create a Windows-form application
+* Create a Windows-form application(.NET Framework or .NET Core 3.0)
 * Delete the entire initial Form1 class
 * Install the `FlysEngine`, `FlysEngine.Desktop` nuget package
 * Add following usings: 
