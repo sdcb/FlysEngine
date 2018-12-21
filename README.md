@@ -1,4 +1,4 @@
-# FlysEngine [![NuGet](https://img.shields.io/badge/nuget-0.1.4-blue.svg)](https://www.nuget.org/packages/FlysEngine/)
+# FlysEngine [![NuGet](https://img.shields.io/badge/nuget-1.0.0-blue.svg)](https://www.nuget.org/packages/FlysEngine/)
 Real-time 2D rendering utilities based on SharpDX/Direct2D.
 
 # Simple example
@@ -77,3 +77,6 @@ public partial class Form1 : Form
 }
 ```
 * And you're done.
+
+# License
+Apache License 2.0
