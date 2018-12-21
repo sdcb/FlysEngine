@@ -58,4 +58,4 @@ For easier use for FlysEngine in desktop application.
 * And it's done :)
 
 # Final result(same as FlysEngine, simple code): 
-![Final Result](FlysTest/FlysTest.png)
+![Final Result](../FlysTest/FlysTest.png)
