@@ -22,9 +22,10 @@ Remove SolidColorBrushManager.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
-    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageLicense>
+      <license type="file">LICENSE</license>
+    </PackageLicense>
     <PackageTags>linqpad-samples</PackageTags>
-    <Copyright><license type="file">LICENSE</license></Copyright>
   </PropertyGroup>
 
   <ItemGroup>

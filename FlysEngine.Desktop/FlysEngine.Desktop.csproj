@@ -4,14 +4,13 @@
     <OutputType>Library</OutputType>
     <TargetFrameworks>net45;net40;netcoreapp3.0</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationIcon />
-    <StartupObject />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/sdcb/FlysEngine</RepositoryUrl>
     <PackageProjectUrl>https://github.com/sdcb/FlysEngine</PackageProjectUrl>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <Copyright><license type="file">LICENSE</license></Copyright>
+    <PackageLicense>
+      <license type="file">LICENSE</license>
+    </PackageLicense>
     <Description>For easier use for FlysEngine in desktop application.</Description>
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
