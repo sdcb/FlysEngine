@@ -1,5 +1,5 @@
 # FlysEngine.Desktop
-For easier use for FlysEngine in desktop application.
+For easier use for `FlysEngine` in desktop application.
 
 # Simple example
 * Create a Windows-form application
