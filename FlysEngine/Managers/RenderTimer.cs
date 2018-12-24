@@ -10,13 +10,10 @@ namespace FlysEngine.Managers
         private long _lastFpsTick = Stopwatch.GetTimestamp();
         private long _lastTick = Stopwatch.GetTimestamp();
         private Stopwatch _frameStopwatch = new Stopwatch();
-        private Stopwatch _totalStopwatch = Stopwatch.StartNew();
 
         private long _frames;
 
         public TimeSpan DurationSinceLastFrame { get; private set; }
-
-        public TimeSpan DurationSinceStart => _totalStopwatch.Elapsed;
 
         public long TotalFrames { get; private set; } = 0;
 

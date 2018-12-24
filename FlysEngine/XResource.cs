@@ -73,21 +73,16 @@ namespace FlysEngine
         {
             var var = new Animation.Variable(AnimationManager, initialValue);
             AnimationManager.ScheduleTransition(var,
-                TransitionLibrary.AccelerateDecelerate(duration, finalValue, 0.2, 0.8), _timeNow);
+                TransitionLibrary.AccelerateDecelerate(duration, finalValue, 0.2, 0.8), DurationSinceStart.TotalSeconds);
             return var;
         }
 
-        double _timeNow = 0.0;
-        public void UpdateLogicByTimeNow(TimeSpan timeNow)
-        {
-            _timeNow = timeNow.TotalSeconds;
-            AnimationManager.Update(_timeNow);
-        }
+        public TimeSpan DurationSinceStart { get; private set; }
         
-        public void UpdateLogic(float timeSinceLastUpdateInSecond)
+        public void UpdateLogic(TimeSpan durationSinceLastUpdate)
         {
-            _timeNow += timeSinceLastUpdateInSecond;
-            AnimationManager.Update(_timeNow);
+            DurationSinceStart += durationSinceLastUpdate;
+            AnimationManager.Update(DurationSinceStart.TotalSeconds);
         }
 
         public void InitializeDevice(IntPtr windowHandle)

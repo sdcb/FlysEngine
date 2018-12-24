@@ -46,7 +46,7 @@ namespace FlysTest.Desktop
                         res.TextFormats[36], rectangle, res.GetColor(Color.Blue),
                         Direct2D.DrawTextOptions.EnableColorFont);
 
-                    target.DrawText($"{window.RenderTimer.DurationSinceStart:mm':'ss'.'ff}\nFPS: {window.RenderTimer.FramesPerSecond:F1}",
+                    target.DrawText($"{window.XResource.DurationSinceStart:mm':'ss'.'ff}\nFPS: {window.RenderTimer.FramesPerSecond:F1}",
                         bottomRightFont, rectangle, res.GetColor(Color.Red));
 
                     target.DrawText("Hello World",

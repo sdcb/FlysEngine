@@ -57,7 +57,7 @@ namespace FlysEngine.Desktop
                 // Freeze logic when render time is slow
                 if (lastFrameTimeInSecond < 0.2f)
                 {
-                    XResource.UpdateLogicByTimeNow(RenderTimer.DurationSinceStart);
+                    XResource.UpdateLogic(RenderTimer.DurationSinceLastFrame);
                     OnUpdateLogic(lastFrameTimeInSecond);
                 }
 
