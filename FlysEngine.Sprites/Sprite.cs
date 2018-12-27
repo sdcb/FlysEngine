@@ -1,6 +1,7 @@
 ﻿using FarseerPhysics.Dynamics;
 using FlysEngine.Desktop;
 using FlysEngine.Managers;
+using FlysEngine.Sprites.Shapes;
 using SharpDX;
 using System;
 using System.Collections.Generic;
