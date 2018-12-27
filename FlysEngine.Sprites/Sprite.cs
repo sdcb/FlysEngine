@@ -6,17 +6,17 @@ using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Direct2D = SharpDX.Direct2D1;
 
 namespace FlysEngine.Sprites
 {
-    public class Sprite
+    public class Sprite : IDisposable
     {
         public Guid Id { get; } = Guid.NewGuid();
 
-        public RenderWindow RenderWindow { get; set; }
+        public string Name { get; set; }
+
+        public SpriteWindow SpriteWindow { get; set; }
 
         public XResource XResource { get; }
 
@@ -32,27 +32,17 @@ namespace FlysEngine.Sprites
 
         public float Rotation { get => Body.Rotation; set => Body.Rotation = value; }
 
-        public bool DefaultDrawEnabled { get; set; } = true;
+        public bool DefaultDrawEnabled { get; set; }
 
-        public bool IsDestroying { get; set; }
+        public bool ReadyToRemove { get; set; }
 
-        private List<Shape> _shapes;
-        public List<Shape> Shapes
-        {
-            get => _shapes;
-            set
-            {
-                _shapes = value;
-                foreach (var fixture in Body.FixtureList.ToList())
-                    Body.DestroyFixture(fixture);
+        public Color DefaultDrawColor { get; set; } = Color.Black;
 
-                Shape.CreateFixtures(value, Body);
-            }
-        }
+        public Shape[] Shapes { get; private set; }
 
         public Sprite(SpriteWindow game)
         {
-            RenderWindow = game;
+            SpriteWindow = game;
             XResource = game.XResource;
             Body = new Body(game.World);
             Body.UserData = this;
@@ -66,6 +56,15 @@ namespace FlysEngine.Sprites
         }
 
         public void AddBehavior(Behavior behavior) => Behaviors.Add(behavior.GetType(), behavior);
+
+        public void SetShapes(params Shape[] value)
+        {
+            Shapes = value;
+            foreach (var fixture in Body.FixtureList.ToList())
+                Body.DestroyFixture(fixture);
+
+            Shape.CreateFixtures(value, Body);
+        }
 
         public virtual void OnUpdate(RenderTimer timer)
         {
@@ -99,9 +98,38 @@ namespace FlysEngine.Sprites
             ctx.Transform = Matrix3x2.Rotation(Rotation, Center) * Matrix3x2.Translation(Position) * old;
 
             foreach (var behavior in Behaviors.Values) behavior.Draw(ctx);
-            if (DefaultDrawEnabled) foreach (var shape in Shapes) shape.Draw(ctx, XResource.GetColor(Color.Yellow));
+            if (DefaultDrawEnabled) foreach (var shape in Shapes) shape.Draw(ctx, XResource.GetColor(DefaultDrawColor));
 
             ctx.Transform = old;
         }
+
+        internal protected virtual void OnCreateDeviceSizeResources()
+        {
+            foreach (var behavior in Behaviors.Values) behavior.OnCreateDeviceSizeResources();
+        }
+
+        internal protected virtual void OnReleaseDeviceSizeResources()
+        {
+            foreach (var behavior in Behaviors.Values) behavior.OnReleaseDeviceSizeResources();
+        }
+
+        internal protected virtual void OnReleaseDeviceResources()
+        {
+            foreach (var behavior in Behaviors.Values) behavior.OnReleaseDeviceResources();
+        }
+
+        internal protected virtual void OnCreateDeviceResources()
+        {
+            foreach (var behavior in Behaviors.Values) behavior.OnCreateDeviceResources();
+        }
+
+        public virtual void Dispose()
+        {
+            SpriteWindow.World.RemoveBody(Body);
+            OnReleaseDeviceSizeResources();
+            OnReleaseDeviceResources();
+        }
+
+        public override string ToString() => $"{Name}:{Position}";
     }
 }

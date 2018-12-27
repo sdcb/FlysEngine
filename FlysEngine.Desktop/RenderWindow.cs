@@ -140,11 +140,14 @@ namespace FlysEngine.Desktop
 
         protected override void Dispose(bool disposing)
         {
-            OnReleaseDeviceSizeResources();
+            if (disposing)
+            {
+                OnReleaseDeviceSizeResources();
 
-            OnReleaseDeviceResources();
+                OnReleaseDeviceResources();
 
-            XResource.Dispose();
+                XResource.Dispose();
+            }
 
             base.Dispose(disposing);
         }
