@@ -11,7 +11,7 @@
     <PackageLicense>
       <license type="file">LICENSE</license>
     </PackageLicense>
-    <Description>For easier use for FlysEngine in desktop application.</Description>
+    <Description>Bundled FlysEngine with Sprite functions and physics engine (from FarseerDuality).</Description>
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
@@ -37,6 +37,10 @@
 
   <ItemGroup>
     <None Include="linqpad-samples\**" Pack="True" PackagePath="linqpad-samples" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="linqpad-samples\" />
   </ItemGroup>
 
 </Project>
