@@ -15,9 +15,8 @@
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
-    <Version>0.1.0</Version>
-    <PackageReleaseNotes>
-    </PackageReleaseNotes>
+    <Version>0.1.1</Version>
+    <PackageReleaseNotes>0.1.1: Add linqpad-samples</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -37,10 +36,6 @@
 
   <ItemGroup>
     <None Include="linqpad-samples\**" Pack="True" PackagePath="linqpad-samples" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="linqpad-samples\" />
   </ItemGroup>
 
 </Project>
