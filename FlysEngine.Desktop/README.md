@@ -1,4 +1,4 @@
-# FlysEngine.Desktop
+# FlysEngine.Desktop [![NuGet](https://img.shields.io/badge/nuget-1.0.2-blue.svg)](https://www.nuget.org/packages/FlysEngine.Desktop/)
 For easier use for `FlysEngine` in desktop application.
 
 # Simple example
