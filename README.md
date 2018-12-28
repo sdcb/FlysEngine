@@ -1,6 +1,13 @@
 # FlysEngine [![NuGet](https://img.shields.io/badge/nuget-1.0.2-blue.svg)](https://www.nuget.org/packages/FlysEngine/)
 Real-time 2D rendering utilities based on SharpDX/Direct2D.
 
+# Packages
+| Package            | runtimes              | NuGet Package |
+| ------------------ |:---------------------:|:-------------:| 
+| `FlysEngine`         | `net40`/`net45`/`netcore30` | [![NuGet](https://img.shields.io/badge/nuget-1.0.2-blue.svg)](https://www.nuget.org/packages/FlysEngine/) |
+| `FlysEngine.Desktop` | `net40`/`net45`/`netcore30` | [![NuGet](https://img.shields.io/badge/nuget-1.0.3-blue.svg)](https://www.nuget.org/packages/FlysEngine.Desktop/) |
+| F`lysEngine.Sprites` | `net461`                | [![NuGet](https://img.shields.io/badge/nuget-0.1.1-blue.svg)](https://www.nuget.org/packages/FlysEngine.Sprites/) |
+
 # Simple example
 (Refer to /tree/master/FlysTest)
 * Final result:
@@ -36,7 +43,7 @@ Real-time 2D rendering utilities based on SharpDX/Direct2D.
           DWrite.FontWeight.Normal, DWrite.FontStyle.Italic, 24.0f)
       {
           FlowDirection = DWrite.FlowDirection.BottomToTop, 
-          TextAlignment = DWrite.TextAlignment.Leading, 
+          TextAlignment = DWrite.TextAlignment.Leading, 	
       };
   
       form.Resize += (o, e) =>
