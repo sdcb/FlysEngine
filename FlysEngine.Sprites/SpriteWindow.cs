@@ -5,6 +5,7 @@ using SharpDX.Direct2D1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DirectInput = SharpDX.DirectInput;
 
 namespace FlysEngine.Sprites
 {
@@ -16,9 +17,29 @@ namespace FlysEngine.Sprites
 
         public Color ClearColor { get; set; } = Color.CornflowerBlue;
 
-        public Matrix3x2 GlobalTransform { get; set; } = Matrix3x2.Identity;
+        public Matrix3x2 GlobalTransform { get; protected set; } = Matrix3x2.Identity;
 
         public bool ShowFPS { get; set; }
+
+        private DirectInput.DirectInput DirectInput { get; } = new DirectInput.DirectInput();
+
+        private DirectInput.Keyboard Keyboard { get; }
+
+        public DirectInput.KeyboardState KeyboardState = new DirectInput.KeyboardState();
+
+        private DirectInput.Mouse Mouse { get; }
+
+        public DirectInput.MouseState MouseState = new DirectInput.MouseState();
+
+        public Vector2 MouseClientPosition = new Vector2();
+
+        public SpriteWindow()
+        {
+            Keyboard = new DirectInput.Keyboard(DirectInput);
+            Keyboard.Acquire();
+            Mouse = new DirectInput.Mouse(DirectInput);
+            Mouse.Acquire();
+        }
 
         public void AddSprites(params Sprite[] sprites)
         {
@@ -34,7 +55,25 @@ namespace FlysEngine.Sprites
         {
             base.OnUpdateLogic(lastFrameTimeInSecond);
 
-            foreach (var sprite in Sprites.Values) sprite.OnUpdate(RenderTimer);
+            if (Focused)
+            {
+                Keyboard.GetCurrentState(ref KeyboardState);
+            }
+            else
+            {
+                KeyboardState.PressedKeys.Clear();
+            }
+
+            Mouse.GetCurrentState(ref MouseState);
+            MouseClientPosition = PointToClient(System.Windows.Forms.Cursor.Position).ToVector2();
+
+            if (!new Rectangle(0, 0, ClientSize.Width, ClientSize.Height).Contains(
+                MouseClientPosition.X, MouseClientPosition.Y))
+            {
+                MouseState.Z = 0;
+            }
+
+            foreach (var sprite in Sprites.Values) sprite.OnUpdate(lastFrameTimeInSecond);
             World.Step(lastFrameTimeInSecond);
 
             var toDestroyIds = Sprites.Values.Where(x => x.ReadyToRemove).Select(x => x.Id).ToList();
@@ -86,6 +125,18 @@ namespace FlysEngine.Sprites
         {
             base.OnReleaseDeviceSizeResources();
             foreach (var sprite in Sprites.Values) sprite.OnReleaseDeviceSizeResources();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Keyboard.Dispose();
+                Mouse.Dispose();
+                DirectInput.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

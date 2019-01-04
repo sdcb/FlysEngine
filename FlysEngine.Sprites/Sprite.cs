@@ -1,5 +1,4 @@
 ﻿using FarseerPhysics.Dynamics;
-using FlysEngine.Desktop;
 using FlysEngine.Managers;
 using FlysEngine.Sprites.Shapes;
 using SharpDX;
@@ -16,7 +15,7 @@ namespace FlysEngine.Sprites
 
         public string Name { get; set; }
 
-        public SpriteWindow SpriteWindow { get; set; }
+        public SpriteWindow Window { get; set; }
 
         public XResource XResource { get; }
 
@@ -40,9 +39,21 @@ namespace FlysEngine.Sprites
 
         public Shape[] Shapes { get; private set; }
 
+        public Matrix3x2 Transform => Matrix3x2.Rotation(Rotation, Center) * Matrix3x2.Translation(Position - Center);
+
+        public string[] Frames { get; set; }
+
+        public int FrameId { get; set; }
+
+        public float Alpha { get; set; } = 1.0f;
+
+        public object UserData { get; set; }
+
+        public List<Sprite> Children = new List<Sprite>();
+
         public Sprite(SpriteWindow game)
         {
-            SpriteWindow = game;
+            Window = game;
             XResource = game.XResource;
             Body = new Body(game.World);
             Body.UserData = this;
@@ -55,7 +66,12 @@ namespace FlysEngine.Sprites
             return null;
         }
 
-        public void AddBehavior(Behavior behavior) => Behaviors.Add(behavior.GetType(), behavior);
+        public void AddBehavior(Behavior behavior)
+        {
+            Behaviors.Add(behavior.GetType(), behavior);
+            behavior.Sprite = this;
+            behavior.OnSpriteSet(this);
+        }
 
         public void SetShapes(params Shape[] value)
         {
@@ -66,9 +82,16 @@ namespace FlysEngine.Sprites
             Shape.CreateFixtures(value, Body);
         }
 
-        public virtual void OnUpdate(RenderTimer timer)
+        public bool IsMouseOver()
         {
-            foreach (var behavior in Behaviors.Values) behavior.Update(timer);
+            return Shape.TestPoint(Shapes, XResource.InvertTransformPoint(
+                Transform * XResource.RenderTarget.Transform,
+                Window.MouseClientPosition));
+        }
+
+        public virtual void OnUpdate(float dt)
+        {
+            foreach (var behavior in Behaviors.Values) behavior.Update(dt);
 
             if (Hit != null && Body.Enabled)
             {
@@ -97,6 +120,13 @@ namespace FlysEngine.Sprites
             var old = ctx.Transform;
             ctx.Transform = Matrix3x2.Rotation(Rotation, Center) * Matrix3x2.Translation(Position) * old;
 
+            if (Frames != null && Frames.Length >= FrameId)
+            {
+                ctx.DrawBitmap(
+                    XResource.Bitmaps[Frames[FrameId]],
+                    Alpha,
+                    Direct2D.InterpolationMode.Linear);
+            }
             foreach (var behavior in Behaviors.Values) behavior.Draw(ctx);
             if (DefaultDrawEnabled) foreach (var shape in Shapes) shape.Draw(ctx, XResource.GetColor(DefaultDrawColor));
 
@@ -125,7 +155,7 @@ namespace FlysEngine.Sprites
 
         public virtual void Dispose()
         {
-            SpriteWindow.World.RemoveBody(Body);
+            Window.World.RemoveBody(Body);
             OnReleaseDeviceSizeResources();
             OnReleaseDeviceResources();
         }

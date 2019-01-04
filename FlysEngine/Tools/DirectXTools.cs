@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Direct3D = SharpDX.Direct3D;
 using Direct3D11 = SharpDX.Direct3D11;
 using Direct2D1 = SharpDX.Direct2D1;

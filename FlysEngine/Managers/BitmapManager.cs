@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WIC = SharpDX.WIC;
 using Direct2D1 = SharpDX.Direct2D1;
 

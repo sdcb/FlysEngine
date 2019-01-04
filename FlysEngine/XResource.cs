@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Direct2D1 = SharpDX.Direct2D1;
 using DXGI = SharpDX.DXGI;
 using DWrite = SharpDX.DirectWrite;
