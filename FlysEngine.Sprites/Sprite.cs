@@ -91,7 +91,15 @@ namespace FlysEngine.Sprites
 
         public virtual void OnUpdate(float dt)
         {
-            foreach (var behavior in Behaviors.Values) behavior.Update(dt);
+            foreach (var behavior in Behaviors.Values)
+            {
+                behavior.Update(dt);
+            }
+
+            foreach (var child in Children)
+            {
+                child.OnUpdate(dt);
+            }
 
             if (Hit != null && Body.Enabled)
             {
@@ -118,7 +126,7 @@ namespace FlysEngine.Sprites
         public void Draw(Direct2D.DeviceContext ctx)
         {
             var old = ctx.Transform;
-            ctx.Transform = Matrix3x2.Rotation(Rotation, Center) * Matrix3x2.Translation(Position) * old;
+            ctx.Transform = Transform * old;
 
             if (Frames != null && Frames.Length >= FrameId)
             {
@@ -128,9 +136,15 @@ namespace FlysEngine.Sprites
                     Direct2D.InterpolationMode.Linear);
             }
             foreach (var behavior in Behaviors.Values) behavior.Draw(ctx);
-            if (DefaultDrawEnabled) foreach (var shape in Shapes) shape.Draw(ctx, XResource.GetColor(DefaultDrawColor));
-
+            if (DefaultDrawEnabled)
+            {
+                foreach (var shape in Shapes) shape.Draw(ctx, XResource.GetColor(DefaultDrawColor));
+            }
             ctx.Transform = old;
+            foreach (var child in Children)
+            {
+                child.Draw(ctx);
+            }
         }
 
         internal protected virtual void OnCreateDeviceSizeResources()
@@ -155,9 +169,18 @@ namespace FlysEngine.Sprites
 
         public virtual void Dispose()
         {
-            Window.World.RemoveBody(Body);
             OnReleaseDeviceSizeResources();
             OnReleaseDeviceResources();
+
+            foreach (var child in Children)
+                child.Dispose();
+            Children.Clear();
+
+            foreach (Behavior behavior in Behaviors.Values)
+                behavior.Dispose();
+            Behaviors.Clear();
+
+            Window.World.RemoveBody(Body);
         }
 
         public override string ToString() => $"{Name}:{Position}";

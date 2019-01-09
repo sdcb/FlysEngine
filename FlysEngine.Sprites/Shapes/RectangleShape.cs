@@ -19,7 +19,7 @@ namespace FlysEngine.Sprites.Shapes
             Size = new Vector2(jsonShape.Size[0], jsonShape.Size[1]);
         }
 
-        public override void Draw(Direct2D.DeviceContext renderTarget, Direct2D.Brush brush) => renderTarget.FillRectangle(Rect, brush);
+        public override void Draw(Direct2D.DeviceContext renderTarget, Direct2D.Brush brush) => renderTarget.DrawRectangle(Rect, brush);
 
         public override bool TestPoint(Vector2 point) => Rect.Contains(point);
 
