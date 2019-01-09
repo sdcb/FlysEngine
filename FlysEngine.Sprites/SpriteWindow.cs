@@ -74,15 +74,17 @@ namespace FlysEngine.Sprites
             }
 
             foreach (var sprite in Sprites.Values) sprite.OnUpdate(lastFrameTimeInSecond);
-            World.Step(lastFrameTimeInSecond);
 
             var toDestroyIds = Sprites.Values.Where(x => x.ReadyToRemove).Select(x => x.Id).ToList();
-            foreach (var id in toDestroyIds)
+            if (toDestroyIds.Count > 0)
             {
-                Sprites[id].Dispose();
-                Sprites.Remove(id);
+                foreach (var id in toDestroyIds)
+                {
+                    Sprites[id].Dispose();
+                    Sprites.Remove(id);
+                }
+                World.ProcessChanges();
             }
-            World.ProcessChanges();
         }
 
         protected override void OnDraw(DeviceContext renderTarget)
