@@ -1,4 +1,4 @@
-# FlysEngine [![NuGet](https://img.shields.io/badge/nuget-1.0.2-blue.svg)](https://www.nuget.org/packages/FlysEngine/)
+# FlysEngine [![NuGet](https://img.shields.io/badge/nuget-1.0.4-blue.svg)](https://www.nuget.org/packages/FlysEngine/)
 Real-time 2D rendering utilities based on SharpDX/Direct2D.
 
 # Packages
