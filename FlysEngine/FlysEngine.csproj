@@ -5,29 +5,23 @@
     <Authors>sdcb</Authors>
     <Company />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.2</Version>
+    <Version>1.0.4</Version>
     <Description>Real-time 2D rendering utilities based on SharpDX/Direct2D.</Description>
-    <PackageReleaseNotes>1.0.2: 
-Move DurationSinceStart from RenderTimer into XResource
-
-1.0.1: 
-Add LINQPad Samples
-
-1.0.0: 
-Add source code link for github.
+    <PackageReleaseNotes>0.1.3:
+Upgrade to SharpDX 4.1.0
+Remove SolidColorBrushManager.
 
 0.1.4:
 Upgrade to SharpDX 4.2.0
 Add CreateDeviceContextCPUBitmap
 
-0.1.3:
-Upgrade to SharpDX 4.1.0
-Remove SolidColorBrushManager.</PackageReleaseNotes>
+1.0.0: Add source code link for github.
+1.0.1: Add LINQPad Samples
+1.0.2: Move DurationSinceStart from RenderTimer into XResource
+1.0.4: Clean code, bump version.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/sdcb/FlysEngine</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sdcb/FlysEngine</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>1.0.2</AssemblyVersion>
-    <FileVersion>1.0.2</FileVersion>
     <PackageLicense>
       <license type="file">LICENSE</license>
     </PackageLicense>
