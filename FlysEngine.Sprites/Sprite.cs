@@ -85,7 +85,7 @@ namespace FlysEngine.Sprites
         public bool IsMouseOver()
         {
             return Shape.TestPoint(Shapes, XResource.InvertTransformPoint(
-                Transform * XResource.RenderTarget.Transform,
+                Transform * Window.GlobalTransform,
                 Window.MouseClientPosition));
         }
 
