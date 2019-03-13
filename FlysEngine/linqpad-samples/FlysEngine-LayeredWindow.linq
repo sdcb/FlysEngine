@@ -5,8 +5,8 @@
   <Reference>&lt;RuntimeDirectory&gt;\System.Runtime.Serialization.Formatters.Soap.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Security.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Windows.Forms.dll</Reference>
-  <NuGetReference>FlysEngine</NuGetReference>
   <NuGetReference>SharpDX.Desktop</NuGetReference>
+  <NuGetReference>FlysEngine.Sprites</NuGetReference>
   <Namespace>FlysEngine</Namespace>
   <Namespace>FlysEngine.Managers</Namespace>
   <Namespace>FlysEngine.Tools</Namespace>
@@ -58,7 +58,7 @@ void Main()
 	
 			var dt = fpsManager.BeginFrame();
 			{
-				res.UpdateLogic(dt);
+				res.UpdateLogic(TimeSpan.FromSeconds(dt));
 				res.RenderTarget.BeginDraw();
 				Draw(res.RenderTarget);
 

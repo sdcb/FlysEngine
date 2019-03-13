@@ -51,7 +51,7 @@ class Game : SpriteWindow
 				};
 				block.SetShapes(new RectangleShape { Size = new Vector2(C.BlockWidth, C.BlockHeight) });
 				block.Body.BodyType = BodyType.Static;
-				block.AddBehavior(new BlockBehavior(GetRectBrushByHitPoint, 4 - id.Row, block));
+				block.AddBehavior(new BlockBehavior(GetRectBrushByHitPoint, 4 - id.Row));
 				Blocks.Add(block.Id, block);
 				return block;
 			}).ToArray());
@@ -61,6 +61,12 @@ class Game : SpriteWindow
 		AddSprites(Walls = CreateBorder());
 		AddSprites(FailureArea = CreateBottom());
 		World.ProcessChanges();
+	}
+
+	protected override void OnUpdateLogic(float lastFrameTimeInSecond)
+	{
+		World.Step(lastFrameTimeInSecond);
+		base.OnUpdateLogic(lastFrameTimeInSecond);
 	}
 
 	protected override void OnCreateDeviceResources()
@@ -140,7 +146,7 @@ class Game : SpriteWindow
 		var ball = new Sprite(this){ Name = $"Ball", };
 		ball.SetShapes(new CircleShape(C.BallR));
 		ball.Body.BodyType = BodyType.Dynamic;
-		ball.AddBehavior(new BallBehavior(() => BallBrush, ball));
+		ball.AddBehavior(new BallBehavior(() => BallBrush));
 		SetBallOnBreaker(ball, breaker);
 
 		return ball;
@@ -152,14 +158,13 @@ class Game : SpriteWindow
 		{
 			Name = $"Breaker",
 			Position = new Vector2(C.Width / 2 - C.BlockWidth * 1.5f / 2, C.Height - C.BallR * 3), // Center
-			Center = new Vector2(C.BlockWidth * 1.5f / 2, 0),
 		};
 		sprite.SetShapes(new RectangleShape
 		{
 			Size = new Vector2(C.BlockWidth * 1.5f, C.BlockHeight),
 		});
 		sprite.Body.BodyType = BodyType.Kinematic;
-		sprite.AddBehavior(new BreakerBehavior(GetRectBrushByHitPoint, 5, sprite));
+		sprite.AddBehavior(new BreakerBehavior(GetRectBrushByHitPoint, 5));
 
 		return sprite;
 	}
@@ -219,7 +224,7 @@ class RectColorBehavior : Behavior
 
 	public Func<int, Direct2D.Brush> BrushGetter;
 
-	public RectColorBehavior(Func<int, Direct2D.Brush> brushGetter, int hitPoint, Sprite sprite) : base(sprite)
+	public RectColorBehavior(Func<int, Direct2D.Brush> brushGetter, int hitPoint)
 	{
 		HitPoint = hitPoint;
 		BrushGetter = brushGetter;
@@ -235,8 +240,12 @@ class RectColorBehavior : Behavior
 
 class BlockBehavior : RectColorBehavior
 {
-	public BlockBehavior(Func<int, Direct2D.Brush> brushGetter, int hitPoint, Sprite sprite)
-		: base(brushGetter, hitPoint, sprite)
+	public BlockBehavior(Func<int, Direct2D.Brush> brushGetter, int hitPoint)
+		: base(brushGetter, hitPoint)
+	{
+	}
+
+	protected override void OnSpriteSet(Sprite sprite)
 	{
 		sprite.Hit += OnHit;
 	}
@@ -253,14 +262,14 @@ class BreakerBehavior : RectColorBehavior
 	float _dx = 0;
 	SharpDX.Animation.Variable _a;
 
-	public BreakerBehavior(Func<int, Direct2D.Brush> brushGetter, int hitPoint, Sprite sprite)
-		: base(brushGetter, hitPoint, sprite)
+	public BreakerBehavior(Func<int, Direct2D.Brush> brushGetter, int hitPoint)
+		: base(brushGetter, hitPoint)
 	{
 	}
 
-	public override void Update(RenderTimer timer)
+	public override void Update(float dt)
 	{
-		base.Update(timer);
+		base.Update(dt);
 		Sprite.Rotation = GetCurrentRotation();
 
 		float calcRotation = -_dx / C.Width * 3 * (float)Math.PI;
@@ -285,7 +294,7 @@ class BallBehavior : Behavior
 {
 	Func<Direct2D.Brush> BallBrushGetter;
 
-	public BallBehavior(Func<Direct2D.Brush> ballBrushGetter, Sprite sprite) : base(sprite)
+	public BallBehavior(Func<Direct2D.Brush> ballBrushGetter)
 	{
 		BallBrushGetter = ballBrushGetter;
 	}
