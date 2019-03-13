@@ -5,7 +5,7 @@
     <Authors>sdcb</Authors>
     <Company />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <Description>Real-time 2D rendering utilities based on SharpDX/Direct2D.</Description>
     <PackageReleaseNotes>0.1.3:
 Upgrade to SharpDX 4.1.0
@@ -18,7 +18,8 @@ Add CreateDeviceContextCPUBitmap
 1.0.0: Add source code link for github.
 1.0.1: Add LINQPad Samples
 1.0.2: Move DurationSinceStart from RenderTimer into XResource
-1.0.4: Clean code, bump version.</PackageReleaseNotes>
+1.0.4: Clean code, bump version.
+1.0.5: Fix linqpad-samples.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/sdcb/FlysEngine</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sdcb/FlysEngine</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -26,6 +27,8 @@ Add CreateDeviceContextCPUBitmap
       <license type="file">LICENSE</license>
     </PackageLicense>
     <PackageTags>linqpad-samples</PackageTags>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +45,10 @@ Add CreateDeviceContextCPUBitmap
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="linqpad-samples\**" Pack="True" PackagePath="linqpad-samples" />
   </ItemGroup>
 

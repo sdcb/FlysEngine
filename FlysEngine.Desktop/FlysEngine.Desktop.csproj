@@ -15,12 +15,15 @@
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <PackageReleaseNotes>1.0.1: Add LINQPad samples.
 1.0.2: Move DurationSinceStart from RenderTimer into XResource in linqpad-samples.
 1.0.3: Fix multiple dispose issue.
-1.0.4: Add desktop convertion utility.</PackageReleaseNotes>
+1.0.4: Add desktop convertion utility.
+1.0.5: Update license notice.</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +38,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="linqpad-samples\**" Pack="True" PackagePath="linqpad-samples" />
   </ItemGroup>
 

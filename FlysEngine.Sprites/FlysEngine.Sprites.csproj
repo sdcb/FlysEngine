@@ -19,7 +19,8 @@
     <PackageReleaseNotes>0.1.1: Add linqpad-samples
 0.2.0: Add behavior/more details
 0.2.1: World not update by default.
-0.2.2: Fix the IsMouseOver not correct issue.</PackageReleaseNotes>
+0.2.2: Fix the IsMouseOver not correct issue.
+0.2.3: Fix linqpad-samples, update license notice.</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
