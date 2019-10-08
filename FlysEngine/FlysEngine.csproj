@@ -5,7 +5,7 @@
     <Authors>sdcb</Authors>
     <Company />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <Description>Real-time 2D rendering utilities based on SharpDX/Direct2D.</Description>
     <PackageReleaseNotes>0.1.3:
 Upgrade to SharpDX 4.1.0
@@ -19,7 +19,8 @@ Add CreateDeviceContextCPUBitmap
 1.0.1: Add LINQPad Samples
 1.0.2: Move DurationSinceStart from RenderTimer into XResource
 1.0.4: Clean code, bump version.
-1.0.5: Fix linqpad-samples.</PackageReleaseNotes>
+1.0.5: Fix linqpad-samples.
+1.0.6: Add D3Device in XResource.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/sdcb/FlysEngine</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sdcb/FlysEngine</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

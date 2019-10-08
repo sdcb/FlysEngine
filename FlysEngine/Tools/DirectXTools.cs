@@ -34,7 +34,7 @@ namespace FlysEngine.Tools
                         Direct3D11.DeviceCreationFlags.BgraSupport,
                         supportedFeatureLevels);
                 }
-                catch (SharpDX.SharpDXException)
+                catch (SharpDXException)
                 {
                     if (driver == supportedDrivers[supportedDrivers.Length - 1])
                         throw;

@@ -1,5 +1,6 @@
 ﻿using System;
 using Direct2D1 = SharpDX.Direct2D1;
+using Direct3D11 = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using DWrite = SharpDX.DirectWrite;
 using WIC = SharpDX.WIC;
@@ -26,6 +27,7 @@ namespace FlysEngine
 
         public DXGI.SwapChain1 SwapChain;
         public Direct2D1.DeviceContext RenderTarget;
+        public Direct3D11.Device D3Device;
 
         public XResource()
         {
@@ -85,11 +87,11 @@ namespace FlysEngine
 
         public void InitializeDevice(IntPtr windowHandle)
         {
-            using (var d3device = DirectXTools.CreateD3Device())
+            D3Device = DirectXTools.CreateD3Device();
             {
-                RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, d3device);
+                RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, D3Device);
                 _solidBrush = new Direct2D1.SolidColorBrush(RenderTarget, Color.Black);
-                SwapChain = DirectXTools.CreateSwapChainForHwnd(d3device, windowHandle);
+                SwapChain = DirectXTools.CreateSwapChainForHwnd(D3Device, windowHandle);
                 DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
                 Bitmaps.SetRenderTarget(RenderTarget);
                 TextLayouts.SetRenderTarget(RenderTarget);
@@ -98,11 +100,11 @@ namespace FlysEngine
 
         public void InitializeDeviceGdiCompatible(IntPtr windowHandle, int width, int height)
         {
-            using (var d3device = DirectXTools.CreateD3Device())
+            D3Device = DirectXTools.CreateD3Device();
             {
-                RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, d3device);
+                RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, D3Device);
                 _solidBrush = new Direct2D1.SolidColorBrush(RenderTarget, Color.Black);
-                SwapChain = DirectXTools.CreateSwapChainForHwnd(d3device, windowHandle);
+                SwapChain = DirectXTools.CreateSwapChainForHwnd(D3Device, windowHandle);
                 //DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
                 DirectXTools.CreateDeviceContextCPUBitmap(RenderTarget, width, height);
                 Bitmaps.SetRenderTarget(RenderTarget);
@@ -115,11 +117,11 @@ namespace FlysEngine
             var nativePanel = ComObject.As<DXGI.ISwapChainPanelNative>(swapChainPanel);
             Debug.Assert(nativePanel != null, $"{nameof(swapChainPanel)} should not be null.");
 
-            using (var d3device = DirectXTools.CreateD3Device())
+            D3Device = DirectXTools.CreateD3Device();
             {
-                RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, d3device);
+                RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, D3Device);
                 _solidBrush = new Direct2D1.SolidColorBrush(RenderTarget, Color.Black);
-                SwapChain = DirectXTools.CreateSwapChain(width, height, d3device);
+                SwapChain = DirectXTools.CreateSwapChain(width, height, D3Device);
                 nativePanel.SwapChain = SwapChain;
                 DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
                 Bitmaps.SetRenderTarget(RenderTarget);
@@ -129,11 +131,11 @@ namespace FlysEngine
 
         public void InitializeDevice(ComObject coreWindow)
         {
-            using (var d3device = DirectXTools.CreateD3Device())
+            D3Device = DirectXTools.CreateD3Device();
             {
-                RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, d3device);
+                RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, D3Device);
                 _solidBrush = new Direct2D1.SolidColorBrush(RenderTarget, Color.Black);
-                SwapChain = DirectXTools.CreateSwapChainForCoreWindow(d3device, coreWindow);
+                SwapChain = DirectXTools.CreateSwapChainForCoreWindow(D3Device, coreWindow);
                 DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
                 Bitmaps.SetRenderTarget(RenderTarget);
                 TextLayouts.SetRenderTarget(RenderTarget);
@@ -146,6 +148,7 @@ namespace FlysEngine
             SwapChain.Dispose();
             _solidBrush.Dispose();
             RenderTarget.Dispose();
+            D3Device.Dispose();
         }
 
         public virtual void Dispose()
