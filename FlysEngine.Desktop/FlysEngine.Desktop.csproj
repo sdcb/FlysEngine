@@ -15,7 +15,7 @@
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <PackageReleaseNotes>1.0.1: Add LINQPad samples.
 1.0.2: Move DurationSinceStart from RenderTimer into XResource in linqpad-samples.
 1.0.3: Fix multiple dispose issue.
