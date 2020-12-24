@@ -31,6 +31,9 @@ namespace FlysEngine.Managers
             }
         }
 
+        public int Count => _formatMap.Count + _sizeDependentFormatMap.Count;
+        public int SizeDependentCount => _sizeDependentFormatMap.Count;
+
         public void ReleaseResources(bool includeSizeDependent = false, bool includeSizeIndependent = false)
         {
             if (includeSizeDependent)
