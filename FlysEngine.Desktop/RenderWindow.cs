@@ -115,6 +115,7 @@ namespace FlysEngine.Desktop
 
         protected virtual void OnReleaseDeviceSizeResources()
         {
+            XResource.TextFormats.ReleaseResources(includeSizeDependent: true);
             ReleaseDeviceSizeResources?.Invoke(this);
         }
 

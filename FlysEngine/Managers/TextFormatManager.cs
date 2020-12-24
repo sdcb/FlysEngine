@@ -6,7 +6,8 @@ namespace FlysEngine.Managers
 {
     public class TextFormatManager : IDisposable
     {
-        private readonly Dictionary<string, DWrite.TextFormat> formatMap = new Dictionary<string, DWrite.TextFormat>();
+        private readonly Dictionary<string, DWrite.TextFormat> _formatMap = new Dictionary<string, DWrite.TextFormat>();
+        private readonly Dictionary<string, DWrite.TextFormat> _sizeDependentFormatMap = new Dictionary<string, DWrite.TextFormat>();
         private readonly DWrite.Factory _factory;
 
         public TextFormatManager(DWrite.Factory factory)
@@ -14,26 +15,46 @@ namespace FlysEngine.Managers
             _factory = factory;
         }
 
-        public DWrite.TextFormat this[float fontSize, string fontFamilyName = "Consolas"]
+        public DWrite.TextFormat this[float fontSize, string fontFamilyName = "Consolas", bool isSizeDependent = false]
         {
             get
             {
                 var key = $"{fontFamilyName}:{fontSize}";
-                if (!formatMap.ContainsKey(key))
+                Dictionary<string, DWrite.TextFormat> map = isSizeDependent ? _sizeDependentFormatMap : _formatMap;
+
+                if (!_formatMap.ContainsKey(key))
                 {
-                    formatMap[key] = new DWrite.TextFormat(_factory, fontFamilyName, fontSize);
+                    map[key] = new DWrite.TextFormat(_factory, fontFamilyName, fontSize);
                 }
 
-                return formatMap[key];
+                return map[key];
+            }
+        }
+
+        public void ReleaseResources(bool includeSizeDependent = false, bool includeSizeIndependent = false)
+        {
+            if (includeSizeDependent)
+            {
+                foreach (var format in _formatMap.Values)
+                {
+                    format.Dispose();
+                }
+                _formatMap.Clear();
+            }
+
+            if (includeSizeIndependent)
+            {
+                foreach (var format in _sizeDependentFormatMap.Values)
+                {
+                    format.Dispose();
+                }
+                _sizeDependentFormatMap.Clear();
             }
         }
 
         public void Dispose()
         {
-            foreach (var format in formatMap.Values)
-            {
-                format.Dispose();
-            }
+            ReleaseResources(includeSizeDependent: true, includeSizeIndependent: true);
         }
     }
 }
