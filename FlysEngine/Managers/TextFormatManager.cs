@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using DWrite = SharpDX.DirectWrite;
+using DWrite = Vortice.DirectWrite;
 
 namespace FlysEngine.Managers
 {
     public class TextFormatManager : IDisposable
     {
-        private readonly Dictionary<string, DWrite.TextFormat> _formatMap = new Dictionary<string, DWrite.TextFormat>();
-        private readonly Dictionary<string, DWrite.TextFormat> _sizeDependentFormatMap = new Dictionary<string, DWrite.TextFormat>();
-        private readonly DWrite.Factory _factory;
+        private readonly Dictionary<string, DWrite.IDWriteTextFormat> _formatMap = new Dictionary<string, DWrite.IDWriteTextFormat>();
+        private readonly Dictionary<string, DWrite.IDWriteTextFormat> _sizeDependentFormatMap = new Dictionary<string, DWrite.IDWriteTextFormat>();
+        private readonly DWrite.IDWriteFactory _factory;
 
-        public TextFormatManager(DWrite.Factory factory)
+        public TextFormatManager(DWrite.IDWriteFactory factory)
         {
             _factory = factory;
         }
 
-        public DWrite.TextFormat this[float fontSize, string fontFamilyName = "Consolas", bool isSizeDependent = false]
+        public DWrite.IDWriteTextFormat this[float fontSize, string fontFamilyName = "Consolas", bool isSizeDependent = false]
         {
             get
             {
                 var key = $"{fontFamilyName}:{fontSize}";
-                Dictionary<string, DWrite.TextFormat> map = isSizeDependent ? _sizeDependentFormatMap : _formatMap;
+                Dictionary<string, DWrite.IDWriteTextFormat> map = isSizeDependent ? _sizeDependentFormatMap : _formatMap;
 
                 if (!_formatMap.ContainsKey(key))
                 {
-                    map[key] = new DWrite.TextFormat(_factory, fontFamilyName, fontSize);
+                    map[key] = _factory.CreateTextFormat(fontFamilyName, fontSize);
                 }
 
                 return map[key];

@@ -1,36 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using Direct2D1 = SharpDX.Direct2D1;
-using DWrite = SharpDX.DirectWrite;
+using Direct2D1 = Vortice.Direct2D1;
+using DWrite = Vortice.DirectWrite;
 
 namespace FlysEngine.Managers
 {
     public class TextLayoutManager : IDisposable
     {
-        private readonly DWrite.Factory _dwriteFactory;
+        private readonly DWrite.IDWriteFactory _dwriteFactory;
         private readonly TextFormatManager _textManager;
-        private readonly Dictionary<string, DWrite.TextLayout> _bmps = new Dictionary<string, DWrite.TextLayout>();
-        private Direct2D1.DeviceContext _renderTarget;
+        private readonly Dictionary<string, DWrite.IDWriteTextLayout> _bmps = new Dictionary<string, DWrite.IDWriteTextLayout>();
+        private Direct2D1.ID2D1DeviceContext _renderTarget;
 
-        public TextLayoutManager(DWrite.Factory dwriteFactory, TextFormatManager textManager)
+        public TextLayoutManager(DWrite.IDWriteFactory dwriteFactory, TextFormatManager textManager)
         {
             _dwriteFactory = dwriteFactory;
             _textManager = textManager;
         }
 
-        public void SetRenderTarget(Direct2D1.DeviceContext renderTarget)
+        public void SetRenderTarget(Direct2D1.ID2D1DeviceContext renderTarget)
         {
             _renderTarget = renderTarget;
         }
 
-        public DWrite.TextLayout this[string text, float fontSize, string fontFamilyName = "Consolas"]
+        public DWrite.IDWriteTextLayout this[string text, float fontSize, string fontFamilyName = "Consolas"]
         {
             get
             {
                 var key = $"{text}:{fontSize}";
                 if (!_bmps.ContainsKey(key))
                 {
-                    _bmps[key] = new DWrite.TextLayout(_dwriteFactory,
+                    _bmps[key] = _dwriteFactory.CreateTextLayout(
                         text,
                         _textManager[fontSize, fontFamilyName],
                         float.MaxValue, fontSize * 2.0f);
