@@ -1,10 +1,9 @@
 ﻿using FarseerPhysics.Common;
 using FlysEngine.Sprites.Shapes.Json;
-using SharpDX;
 using System.Linq;
-using Direct2D = SharpDX.Direct2D1;
+using System.Numerics;
+using Vortice.Direct2D1;
 using EngineShapes = FarseerPhysics.Collision.Shapes;
-using Xna = Duality;
 
 namespace FlysEngine.Sprites.Shapes
 {
@@ -19,7 +18,7 @@ namespace FlysEngine.Sprites.Shapes
             Points = jsonShape.Points.Select(x => new Vector2(x[0], x[1])).ToArray();
         }
 
-        public override void Draw(Direct2D.DeviceContext renderTarget, Direct2D.Brush brush)
+        public override void Draw(ID2D1DeviceContext renderTarget, ID2D1SolidColorBrush brush)
         {
             var lines = new[]
             {
@@ -30,7 +29,7 @@ namespace FlysEngine.Sprites.Shapes
             };
             foreach (var line in lines)
             {
-                renderTarget.DrawLine(line[0], line[1], brush, 2.0f);
+                renderTarget.DrawLine(line[0].ToPoint(), line[1].ToPoint(), brush, 2.0f);
             }
         }
 
@@ -38,11 +37,11 @@ namespace FlysEngine.Sprites.Shapes
         {
             var test = new EngineShapes.PolygonShape(1.0f);
             test.Set(new Vertices(
-                Points.Select(x => new Xna.Vector2(x.X, x.Y)).ToList()));
+                Points.Select(x => new Duality.Vector2(x.X, x.Y)).ToList()));
 
             var transform = new Transform();
             transform.SetIdentity();
-            var mouseXna = new Xna.Vector2(point.X, point.Y);
+            var mouseXna = new Duality.Vector2(point.X, point.Y);
 
             return test.TestPoint(ref transform, ref mouseXna);
         }

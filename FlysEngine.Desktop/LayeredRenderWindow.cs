@@ -1,7 +1,7 @@
 ﻿using FlysEngine.Tools;
-using SharpDX.Direct2D1;
 using System;
 using System.Windows.Forms;
+using Vortice.Direct2D1;
 
 namespace FlysEngine.Desktop
 {
@@ -76,9 +76,9 @@ namespace FlysEngine.Desktop
 
         protected override void OnPostDraw()
         {
-            using (GdiInteropRenderTarget gdi = XResource.RenderTarget.QueryInterface<GdiInteropRenderTarget>())
+            using (ID2D1GdiInteropRenderTarget gdi = XResource.RenderTarget.QueryInterface<ID2D1GdiInteropRenderTarget>())
             {
-                var hdc = gdi.GetDC(DeviceContextInitializeMode.Copy);
+                var hdc = gdi.GetDC(DcInitializeMode.Copy);
                 layeredWindowCtx.Draw(Handle, hdc);
                 gdi.ReleaseDC(null);
             }

@@ -1,10 +1,10 @@
 ﻿using FlysEngine.Managers;
-using SharpDX;
-using SharpDX.Direct2D1;
-using SharpDX.DXGI;
+using SharpGen.Runtime;
 using System;
 using System.Threading;
 using System.Windows.Forms;
+using Vortice.Direct2D1;
+using Vortice.DXGI;
 
 namespace FlysEngine.Desktop
 {
@@ -14,7 +14,7 @@ namespace FlysEngine.Desktop
         public RenderTimer RenderTimer { get; } = new RenderTimer();
 
         public delegate void RenderWindowAction(RenderWindow window);
-        public delegate void DrawAction(RenderWindow window, DeviceContext renderTarget);
+        public delegate void DrawAction(RenderWindow window, ID2D1DeviceContext renderTarget);
         public delegate void UpdateLogicAction(RenderWindow window, float lastFrameTimeInSecond);
 
         public event RenderWindowAction CreateDeviceResources;
@@ -70,7 +70,7 @@ namespace FlysEngine.Desktop
 
                 XResource.SwapChain.Present(syncInterval, presentFlags);
             }
-            catch (SharpDXException e)
+            catch (SharpGenException e)
             {
                 unchecked
                 {
@@ -129,7 +129,7 @@ namespace FlysEngine.Desktop
             UpdateLogic?.Invoke(this, lastFrameTimeInSecond);
         }
 
-        protected virtual void OnDraw(DeviceContext renderTarget)
+        protected virtual void OnDraw(ID2D1DeviceContext renderTarget)
         {
             Draw?.Invoke(this, renderTarget);
         }

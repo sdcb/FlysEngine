@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net40;netstandard1.1</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
     <Authors>sdcb</Authors>
     <Company />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -34,16 +36,12 @@ Add CreateDeviceContextCPUBitmap
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SharpDX" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Animation" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+    <PackageReference Include="Vortice.Direct2D1" Version="2.1.0" />
+    <PackageReference Include="Vortice.Direct3D11" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,8 +1,8 @@
-﻿using SharpDX.Win32;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Vanara.PInvoke;
 
 namespace FlysEngine.Desktop
 {
@@ -117,10 +117,10 @@ namespace FlysEngine.Desktop
                     if (localHandle != IntPtr.Zero)
                     {
                         // Previous code not compatible with Application.AddMessageFilter but faster then DoEvents
-                        NativeMessage msg;
-                        while (Win32Native.PeekMessage(out msg, IntPtr.Zero, 0, 0, 0) != 0)
+                        MSG msg;
+                        while (User32.PeekMessage(out msg, HWND.NULL, 0, 0, 0))
                         {
-                            if (Win32Native.GetMessage(out msg, IntPtr.Zero, 0, 0) == -1)
+                            if (!User32.GetMessage(out msg, IntPtr.Zero, 0, 0))
                             {
                                 throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
                                     "An error happened in rendering loop while processing windows messages. Error: {0}",
@@ -128,16 +128,22 @@ namespace FlysEngine.Desktop
                             }
 
                             // NCDESTROY event?
-                            if (msg.msg == 130)
+                            if (msg.message == 130)
                             {
                                 isControlAlive = false;
                             }
 
-                            var message = new Message() { HWnd = msg.handle, LParam = msg.lParam, Msg = (int)msg.msg, WParam = msg.wParam };
+                            Message message = new () 
+                            { 
+                                HWnd = (IntPtr)msg.hwnd, 
+                                LParam = msg.lParam, 
+                                Msg = (int)msg.message, 
+                                WParam = msg.wParam 
+                            };
                             if (!Application.FilterMessage(ref message))
                             {
-                                Win32Native.TranslateMessage(ref msg);
-                                Win32Native.DispatchMessage(ref msg);
+                                User32.TranslateMessage(in msg);
+                                User32.DispatchMessage(in msg);
                             }
                         }
                     }
@@ -207,8 +213,7 @@ namespace FlysEngine.Desktop
         {
             get
             {
-                NativeMessage msg;
-                return (bool)(Win32Native.PeekMessage(out msg, IntPtr.Zero, 0, 0, 0) == 0);
+                return !User32.PeekMessage(out MSG _);
             }
         }
     }

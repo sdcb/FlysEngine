@@ -1,142 +1,86 @@
 ﻿using System;
-using Direct3D = SharpDX.Direct3D;
-using Direct3D11 = SharpDX.Direct3D11;
-using Direct2D1 = SharpDX.Direct2D1;
-using DXGI = SharpDX.DXGI;
-using SharpDX;
+using SharpGen.Runtime;
+using System.Drawing;
+using Vortice.Direct3D;
+using Vortice.Direct3D11;
+using Vortice.Direct2D1;
+using Vortice.DXGI;
 
 namespace FlysEngine.Tools
 {
     public static class DirectXTools
     {
-        public static Direct3D11.Device CreateD3Device()
+        public static ID3D11Device CreateD3Device()
         {
-            var supportedFeatureLevels = new[]
+            Vortice.Direct3D.FeatureLevel[] supportedFeatureLevels = new[]
             {
-                Direct3D.FeatureLevel.Level_11_1,
-                Direct3D.FeatureLevel.Level_11_0,
-                Direct3D.FeatureLevel.Level_10_1,
-                Direct3D.FeatureLevel.Level_10_0,
+                Vortice.Direct3D.FeatureLevel.Level_11_1,
+                Vortice.Direct3D.FeatureLevel.Level_11_0,
+                Vortice.Direct3D.FeatureLevel.Level_10_1,
+                Vortice.Direct3D.FeatureLevel.Level_10_0,
             };
 
-            var supportedDrivers = new[]
+            DriverType[] supportedDrivers = new[]
             {
-                Direct3D.DriverType.Hardware,
-                Direct3D.DriverType.Warp,
+                DriverType.Hardware,
+                DriverType.Warp,
             };
 
-            foreach (var driver in supportedDrivers)
+            Result result = default;
+            foreach (DriverType driver in supportedDrivers)
             {
-                try
+                result = D3D11.D3D11CreateDevice(null, driver, DeviceCreationFlags.BgraSupport, supportedFeatureLevels, out ID3D11Device device);
+                if (result.Success)
                 {
-                    return new Direct3D11.Device(
-                        driver,
-                        Direct3D11.DeviceCreationFlags.BgraSupport,
-                        supportedFeatureLevels);
-                }
-                catch (SharpDXException)
-                {
-                    if (driver == supportedDrivers[supportedDrivers.Length - 1])
-                        throw;
+                    return device;
                 }
             }
 
-            throw new NotSupportedException();
+            throw new SharpGenException(result);
         }
 
-        public static Direct2D1.DeviceContext CreateRenderTarget(
-            Direct2D1.Factory1 factory2d,
-            Direct3D11.Device device3d)
+        public static ID2D1DeviceContext CreateRenderTarget(
+            ID2D1Factory1 factory2d,
+            ID3D11Device device3d)
         {
-            var dxgiDevice = device3d.QueryInterface<DXGI.Device>();
-            using (var device2d = new Direct2D1.Device(factory2d, dxgiDevice))
+            var dxgiDevice = device3d.QueryInterface<IDXGIDevice>();
+            using (ID2D1Device device2d = factory2d.CreateDevice(dxgiDevice))
             {
-                return new Direct2D1.DeviceContext(
-                    device2d,
-                    Direct2D1.DeviceContextOptions.None);
+                return device2d.CreateDeviceContext(DeviceContextOptions.None);
             }
         }
 
-        public static DXGI.SwapChain1 CreateSwapChainForHwnd(
-            Direct3D11.Device device,
+        public static IDXGISwapChain1 CreateSwapChainForHwnd(
+            ID3D11Device device,
             IntPtr hwnd)
         {
-            var dxgiDevice = device.QueryInterface<DXGI.Device>();
-            var dxgiFactory = dxgiDevice.Adapter.GetParent<DXGI.Factory2>();
-            var dxgiDesc = new DXGI.SwapChainDescription1
+            IDXGIDevice dxgiDevice = device.QueryInterface<IDXGIDevice>();
+            IDXGIFactory2 dxgiFactory = dxgiDevice.GetAdapter().GetParent<IDXGIFactory2>();
+            SwapChainDescription1 dxgiDesc = new()
             {
-                Format = DXGI.Format.B8G8R8A8_UNorm,
-                SampleDescription = new DXGI.SampleDescription(1, 0),
-                Usage = DXGI.Usage.RenderTargetOutput,
+                Format = Format.B8G8R8A8_UNorm,
+                SampleDescription = new SampleDescription(1, 0), 
+                BufferUsage = Usage.RenderTargetOutput,
                 BufferCount = 2,
             };
-            return new DXGI.SwapChain1(
-                dxgiFactory,
+            return dxgiFactory.CreateSwapChainForHwnd(
                 device,
                 hwnd,
-                ref dxgiDesc);
-        }
-
-        public static DXGI.SwapChain1 CreateSwapChain(
-            int width,
-            int height,
-            Direct3D11.Device device)
-        {
-            var dxgiDevice = device.QueryInterface<DXGI.Device>();
-            var dxgiFactory = dxgiDevice.Adapter.GetParent<DXGI.Factory2>();
-            var dxgiDesc = new DXGI.SwapChainDescription1
-            {
-                Width = width,
-                Height = height,
-                Format = DXGI.Format.B8G8R8A8_UNorm,
-                Stereo = false,
-                SampleDescription = new DXGI.SampleDescription(1, 0),
-                Usage = DXGI.Usage.RenderTargetOutput,
-                BufferCount = 2,
-                Scaling = DXGI.Scaling.Stretch,
-                SwapEffect = DXGI.SwapEffect.FlipSequential,
-            };
-            return new DXGI.SwapChain1(
-                dxgiFactory,
-                device,
-                ref dxgiDesc);
-        }
-
-        public static DXGI.SwapChain1 CreateSwapChainForCoreWindow(
-            Direct3D11.Device device, 
-            ComObject coreWindow)
-        {
-            var dxgiDevice = device.QueryInterface<DXGI.Device>();
-            var dxgiFactory = dxgiDevice.Adapter.GetParent<DXGI.Factory2>();
-            var dxgiDesc = new DXGI.SwapChainDescription1
-            {
-                Format = DXGI.Format.B8G8R8A8_UNorm,
-                Stereo = false,
-                SampleDescription = new DXGI.SampleDescription(1, 0),
-                Usage = DXGI.Usage.RenderTargetOutput,
-                BufferCount = 2,
-                Scaling = DXGI.Scaling.Stretch,
-                SwapEffect = DXGI.SwapEffect.FlipSequential,
-            };
-            return new DXGI.SwapChain1(
-                dxgiFactory,
-                device,
-                coreWindow, 
-                ref dxgiDesc);
+                dxgiDesc);
         }
 
         public static void CreateDeviceSwapChainBitmap(
-            DXGI.SwapChain1 swapChain,
-            Direct2D1.DeviceContext target)
+            IDXGISwapChain1 swapChain,
+            ID2D1DeviceContext target)
         {
-            using (var surface = swapChain.GetBackBuffer<DXGI.Surface>(0))
+            using (IDXGISurface surface = swapChain.GetBuffer<IDXGISurface>(0))
             {
-                var props = new Direct2D1.BitmapProperties1
+                var props = new BitmapProperties1
                 {
-                    BitmapOptions = Direct2D1.BitmapOptions.Target | Direct2D1.BitmapOptions.CannotDraw,
-                    PixelFormat = new Direct2D1.PixelFormat(DXGI.Format.B8G8R8A8_UNorm, Direct2D1.AlphaMode.Ignore)
+                    BitmapOptions = BitmapOptions.Target | BitmapOptions.CannotDraw,
+                    PixelFormat = new Vortice.DCommon.PixelFormat(Format.B8G8R8A8_UNorm, Vortice.DCommon.AlphaMode.Ignore)
                 };
-                using (var bitmap = new Direct2D1.Bitmap1(target, surface, props))
+                using (var bitmap = target.CreateBitmapFromDxgiSurface(surface, props))
                 {
                     target.Target = bitmap;
                 }
@@ -144,14 +88,14 @@ namespace FlysEngine.Tools
         }
 
         public static void CreateDeviceContextCPUBitmap(
-            Direct2D1.DeviceContext target, int width, int height)
+            ID2D1DeviceContext target, int width, int height)
         {
-            var props = new Direct2D1.BitmapProperties1
+            BitmapProperties1 props = new()
             {
-                BitmapOptions = Direct2D1.BitmapOptions.Target | Direct2D1.BitmapOptions.GdiCompatible,
-                PixelFormat = new Direct2D1.PixelFormat(DXGI.Format.B8G8R8A8_UNorm, Direct2D1.AlphaMode.Premultiplied)
+                BitmapOptions = BitmapOptions.Target | BitmapOptions.GdiCompatible,
+                PixelFormat = new Vortice.DCommon.PixelFormat(Format.B8G8R8A8_UNorm, Vortice.DCommon.AlphaMode.Premultiplied)
             };
-            using (var bitmap = new Direct2D1.Bitmap1(target, new Size2(width, height), props))
+            using (ID2D1Bitmap1 bitmap = target.CreateBitmap(new Size(width, height), IntPtr.Zero, 0, ref props))
             {
                 target.Target = bitmap;
             }

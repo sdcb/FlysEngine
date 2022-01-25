@@ -1,7 +1,8 @@
 ﻿using FarseerPhysics.Common;
 using FlysEngine.Sprites.Shapes.Json;
-using SharpDX;
-using Direct2D = SharpDX.Direct2D1;
+using System.Drawing;
+using System.Numerics;
+using Vortice.Direct2D1;
 using EngineShapes = FarseerPhysics.Collision.Shapes;
 
 namespace FlysEngine.Sprites.Shapes
@@ -19,9 +20,9 @@ namespace FlysEngine.Sprites.Shapes
             Size = new Vector2(jsonShape.Size[0], jsonShape.Size[1]);
         }
 
-        public override void Draw(Direct2D.DeviceContext renderTarget, Direct2D.Brush brush) => renderTarget.DrawRectangle(Rect, brush);
+        public override void Draw(ID2D1DeviceContext renderTarget, ID2D1SolidColorBrush brush) => renderTarget.DrawRectangle(Rect, brush);
 
-        public override bool TestPoint(Vector2 point) => Rect.Contains(point);
+        public override bool TestPoint(Vector2 point) => Rect.Contains(point.X, point.Y);
 
         public override EngineShapes.Shape ToEngineShape()
         {

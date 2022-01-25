@@ -1,9 +1,11 @@
 ﻿using FlysEngine;
 using FlysEngine.Desktop;
-using SharpDX;
 using System;
-using Direct2D = SharpDX.Direct2D1;
-using DWrite = SharpDX.DirectWrite;
+using System.Drawing;
+using Vortice.Direct2D1;
+using Vortice.DirectWrite;
+using Vortice.Mathematics;
+using FontStyle = Vortice.DirectWrite.FontStyle;
 
 namespace FlysTest.Desktop
 {
@@ -17,40 +19,36 @@ namespace FlysTest.Desktop
         {
             using (var window = new LayeredRenderWindow() { Text = "Hello World", DragMoveEnabled = true })
             {
-                var bottomRightFont = new DWrite.TextFormat(window.XResource.DWriteFactory, "Consolas", 16.0f)
-                {
-                    FlowDirection = DWrite.FlowDirection.BottomToTop,
-                    TextAlignment = DWrite.TextAlignment.Trailing,
-                };
-                var bottomLeftFont = new DWrite.TextFormat(window.XResource.DWriteFactory, "Consolas",
-                    DWrite.FontWeight.Normal, DWrite.FontStyle.Italic, 24.0f)
-                {
-                    FlowDirection = DWrite.FlowDirection.BottomToTop,
-                    TextAlignment = DWrite.TextAlignment.Leading,
-                };
+                IDWriteTextFormat bottomRightFont = window.XResource.DWriteFactory.CreateTextFormat("Consolas", 16.0f);
+                bottomRightFont.FlowDirection = FlowDirection.BottomToTop;
+                bottomRightFont.TextAlignment = TextAlignment.Trailing;
+
+                IDWriteTextFormat bottomLeftFont = window.XResource.DWriteFactory.CreateTextFormat("Consolas", FontWeight.Normal, FontStyle.Italic, FontStretch.Normal, 24.0f);
+                bottomLeftFont.FlowDirection = FlowDirection.BottomToTop;
+                bottomLeftFont.TextAlignment = TextAlignment.Leading;
 
                 window.Draw += Draw;
                 RenderLoop.Run(window, () => window.Render(1, 0));
 
-                void Draw(RenderWindow _, Direct2D.DeviceContext target)
+                void Draw(RenderWindow _, ID2D1DeviceContext target)
                 {
                     XResource res = window.XResource;
-                    target.Clear(Color.Transparent);
+                    target.Clear(Color4.Transparent);
                     RectangleF rectangle = new RectangleF(0, 0, target.Size.Width, target.Size.Height);
 
                     target.DrawRectangle(
                         rectangle,
-                        res.GetColor(Color.Blue));
+                        res.GetColor(Color4.Blue));
 
                     target.DrawText("😀😁😂🤣😃😄😅😆😉😊😋😎",
-                        res.TextFormats[36], rectangle, res.GetColor(Color.Blue),
-                        Direct2D.DrawTextOptions.EnableColorFont);
+                        res.TextFormats[36], rectangle, res.GetColor(Color4.Blue),
+                        DrawTextOptions.EnableColorFont);
 
                     target.DrawText($"{window.XResource.DurationSinceStart:mm':'ss'.'ff}\nFPS: {window.RenderTimer.FramesPerSecond:F1}",
-                        bottomRightFont, rectangle, res.GetColor(Color.Red));
+                        bottomRightFont, rectangle, res.GetColor(Color4.Red));
 
                     target.DrawText("Hello World",
-                        bottomLeftFont, rectangle, res.GetColor(Color.Purple));
+                        bottomLeftFont, rectangle, res.GetColor(Color4.Purple));
                 }
             }
         }

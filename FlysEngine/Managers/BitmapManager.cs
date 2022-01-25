@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using WIC = SharpDX.WIC;
-using Direct2D1 = SharpDX.Direct2D1;
+using Vortice.Direct2D1;
+using Vortice.WIC;
 
 namespace FlysEngine.Managers
 {
     public class BitmapManager : IDisposable
     {
-        private readonly WIC.ImagingFactory _imagingFactory;
-        private readonly Dictionary<string, Direct2D1.Bitmap1> _bmps = new Dictionary<string, Direct2D1.Bitmap1>();
-        private Direct2D1.DeviceContext _renderTarget;
+        private readonly IWICImagingFactory _imagingFactory;
+        private readonly Dictionary<string, ID2D1Bitmap1> _bmps = new Dictionary<string, ID2D1Bitmap1>();
+        private ID2D1DeviceContext _renderTarget;
 
-        public BitmapManager(WIC.ImagingFactory imagingFactory)
+        public BitmapManager(IWICImagingFactory imagingFactory)
         {
             _imagingFactory = imagingFactory;
         }
 
-        public void SetRenderTarget(Direct2D1.DeviceContext renderTarget)
+        public void SetRenderTarget(ID2D1DeviceContext renderTarget)
         {
             _renderTarget = renderTarget;
         }
 
-        public Direct2D1.Bitmap1 this[string filename]
+        public ID2D1Bitmap1 this[string filename]
         {
             get
             {
@@ -53,17 +53,17 @@ namespace FlysEngine.Managers
             return false;
         }
 
-        private static Direct2D1.Bitmap1 CreateD2dBitmap(
-            WIC.ImagingFactory imagingFactory,
+        private static ID2D1Bitmap1 CreateD2dBitmap(
+            IWICImagingFactory imagingFactory,
             string filename,
-            Direct2D1.DeviceContext renderTarget)
+            ID2D1DeviceContext renderTarget)
         {
-            var decoder = new WIC.BitmapDecoder(imagingFactory, filename, WIC.DecodeOptions.CacheOnLoad);
-            WIC.BitmapFrameDecode frame = decoder.GetFrame(0);
+            using IWICBitmapDecoder decoder = imagingFactory.CreateDecoderFromFileName(filename);
+            using IWICBitmapFrameDecode frame = decoder.GetFrame(0);
 
-            var image = new WIC.FormatConverter(imagingFactory);
-            image.Initialize(frame, WIC.PixelFormat.Format32bppPBGRA);
-            return Direct2D1.Bitmap1.FromWicBitmap(renderTarget, image);
+            using IWICFormatConverter converter = imagingFactory.CreateFormatConverter();
+            converter.Initialize(frame, PixelFormat.Format32bppPBGRA, BitmapDitherType.None, null, 0, BitmapPaletteType.Custom);
+            return renderTarget.CreateBitmapFromWicBitmap(converter, null);
         }
 
         public void ReleaseDeviceResources()
