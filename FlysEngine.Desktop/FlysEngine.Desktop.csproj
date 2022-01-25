@@ -15,14 +15,8 @@
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
-    <Version>1.0.6</Version>
-    <PackageReleaseNotes>1.0.1: Add LINQPad samples.
-1.0.2: Move DurationSinceStart from RenderTimer into XResource in linqpad-samples.
-1.0.3: Fix multiple dispose issue.
-1.0.4: Add desktop convertion utility.
-1.0.5: Update license notice.
-1.0.6: Update dependency.
-</PackageReleaseNotes>
+    <Version>2.0</Version>
+    <PackageReleaseNotes>https://github.com/sdcb/FlysEngine/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>

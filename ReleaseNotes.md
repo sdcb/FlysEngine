@@ -30,3 +30,10 @@
 * 1.0.4: Add desktop convertion utility.
 * 1.0.5: Update license notice.
 * 1.0.6: Update dependency.
+
+## FlysEngine.Sprites
+0.1.1: Add linqpad-samples
+0.2.0: Add behavior/more details
+0.2.1: World not update by default.
+0.2.2: Fix the IsMouseOver not correct issue.
+0.2.3: Fix linqpad-samples, update license notice.

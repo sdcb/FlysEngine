@@ -14,11 +14,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
+		ReleaseNotes.md = ReleaseNotes.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlysEngine.Sprites", "FlysEngine.Sprites\FlysEngine.Sprites.csproj", "{0EB22B5B-9C5D-45CD-A669-7E75D760AB2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlysTest", "FlysTest\FlysTest.csproj", "{ABD7E7CB-E92B-4002-8601-D01B4EF18FD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlysTest", "FlysTest\FlysTest.csproj", "{ABD7E7CB-E92B-4002-8601-D01B4EF18FD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
