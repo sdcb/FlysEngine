@@ -1,17 +1,17 @@
-﻿using WIC = SharpDX.WIC;
+﻿using SharpGen.Runtime.Win32;
 using System.IO;
-using SharpDX.IO;
+using Vortice.WIC;
 
 namespace FlysEngine.Tools
 {
     public static class WicTools
     {
-        public static void SaveD2DBitmap(WIC.ImagingFactory wic, WIC.Bitmap wicBitmap, Stream outputStream)
+        public static void SaveD2DBitmap(IWICImagingFactory wic, IWICBitmap wicBitmap, Stream outputStream)
         {
-            using (var encoder = new WIC.BitmapEncoder(wic, WIC.ContainerFormatGuids.Png))
+            using (IWICBitmapEncoder encoder = wic.CreateEncoder(ContainerFormat.Png))
             {
                 encoder.Initialize(outputStream);
-                using (var frame = new WIC.BitmapFrameEncode(encoder))
+                using (IWICBitmapFrameEncode frame = encoder.CreateNewFrame(out IPropertyBag2 props))
                 {
                     frame.Initialize();
                     frame.SetSize(wicBitmap.Size.Width, wicBitmap.Size.Height);
@@ -26,16 +26,16 @@ namespace FlysEngine.Tools
             }
         }
 
-        public static WIC.FormatConverter CreateWicImage(WIC.ImagingFactory wic, string filename)
+        public static IWICFormatConverter CreateWicImage(IWICImagingFactory wic, string fileName)
         {
-            using (var decoder = new WIC.JpegBitmapDecoder(wic))
-            using (var decodeStream = new WIC.WICStream(wic, filename, NativeFileAccess.Read))
+            using (IWICBitmapDecoder decoder = wic.CreateDecoderFromFileName(fileName))
+            using (IWICStream decodeStream = wic.CreateStream(fileName, FileAccess.Read))
             {
-                decoder.Initialize(decodeStream, WIC.DecodeOptions.CacheOnDemand);
-                using (var decodeFrame = decoder.GetFrame(0))
+                decoder.Initialize(decodeStream, DecodeOptions.CacheOnDemand);
+                using (IWICBitmapFrameDecode decodeFrame = decoder.GetFrame(0))
                 {
-                    var converter = new WIC.FormatConverter(wic);
-                    converter.Initialize(decodeFrame, WIC.PixelFormat.Format32bppPBGRA);
+                    var converter = wic.CreateFormatConverter();
+                    converter.Initialize(decodeFrame, PixelFormat.Format32bppPBGRA, BitmapDitherType.None, null, 0, BitmapPaletteType.Custom);
                     return converter;
                 }
             }
