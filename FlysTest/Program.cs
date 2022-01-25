@@ -1,19 +1,18 @@
 ﻿using FlysEngine;
+using FlysEngine.Desktop;
 using FlysEngine.Managers;
-using SharpDX;
-using SharpDX.Direct2D1;
-using SharpDX.Windows;
-using System;
-using System.Windows.Forms;
-
-using DWrite = SharpDX.DirectWrite;
+using Vortice.Direct2D1;
+using Vortice.DirectWrite;
+using Vortice.Mathematics;
+using FlowDirection = Vortice.DirectWrite.FlowDirection;
+using FontStyle = Vortice.DirectWrite.FontStyle;
 
 namespace FlysTest
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
-        /// Entry point.
+        ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
@@ -22,17 +21,13 @@ namespace FlysTest
             using (var form = new Form() { Text = "Hello World" })
             {
                 var timer = new RenderTimer();
-                var bottomRightFont = new DWrite.TextFormat(res.DWriteFactory, "Consolas", 16.0f)
-                {
-                    FlowDirection = DWrite.FlowDirection.BottomToTop, 
-                    TextAlignment = DWrite.TextAlignment.Trailing, 
-                };
-                var bottomLeftFont = new DWrite.TextFormat(res.DWriteFactory, "Consolas", 
-                    DWrite.FontWeight.Normal, DWrite.FontStyle.Italic, 24.0f)
-                {
-                    FlowDirection = DWrite.FlowDirection.BottomToTop, 
-                    TextAlignment = DWrite.TextAlignment.Leading, 
-                };
+                IDWriteTextFormat bottomRightFont = res.DWriteFactory.CreateTextFormat("Consolas", 16.0f);
+                bottomRightFont.FlowDirection = FlowDirection.BottomToTop;
+                bottomRightFont.TextAlignment = TextAlignment.Trailing;
+
+                IDWriteTextFormat bottomLeftFont = res.DWriteFactory.CreateTextFormat("Consolas", FontWeight.Normal, FontStyle.Italic, FontStretch.Normal, 24.0f);
+                bottomLeftFont.FlowDirection = FlowDirection.BottomToTop;
+                bottomLeftFont.TextAlignment = TextAlignment.Leading;
 
                 form.Resize += (o, e) =>
                 {
@@ -58,24 +53,24 @@ namespace FlysTest
                     timer.EndFrame();
                 }
 
-                void Draw(DeviceContext target)
+                void Draw(ID2D1DeviceContext target)
                 {
-                    target.Clear(Color.CornflowerBlue.ToColor4());
+                    target.Clear(Color4.CornflowerBlue);
                     RectangleF rectangle = new RectangleF(0, 0, target.Size.Width, target.Size.Height);
 
                     target.DrawRectangle(
-                        new RectangleF(10, 10, target.Size.Width - 20, target.Size.Height - 20), 
-                        res.GetColor(Color.Blue));
+                        new RectangleF(10, 10, target.Size.Width - 20, target.Size.Height - 20),
+                        res.GetColor(Color4.Blue));
 
-                    target.DrawText("😀😁😂🤣😃😄😅😆😉😊😋😎", 
-                        res.TextFormats[36],  rectangle, res.GetColor(Color.Blue), 
+                    target.DrawText("😀😁😂🤣😃😄😅😆😉😊😋😎",
+                        res.TextFormats[36], rectangle, res.GetColor(Color4.Blue),
                         DrawTextOptions.EnableColorFont);
 
-                    target.DrawText("FPS: " + timer.FramesPerSecond.ToString("F1"), 
-                        bottomRightFont, rectangle, res.GetColor(Color.Red));
+                    target.DrawText("FPS: " + timer.FramesPerSecond.ToString("F1"),
+                        bottomRightFont, rectangle, res.GetColor(Color4.Red));
 
                     target.DrawText("Hello World",
-                        bottomLeftFont, rectangle, res.GetColor(Color.Purple));
+                        bottomLeftFont, rectangle, res.GetColor(Color4.Purple));
                 }
             }
         }
