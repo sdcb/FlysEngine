@@ -1,11 +1,11 @@
 ﻿using FarseerPhysics.Dynamics;
-using FlysEngine.Managers;
 using FlysEngine.Sprites.Shapes;
-using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Direct2D = SharpDX.Direct2D1;
+using System.Numerics;
+using Vortice.Direct2D1;
+using Vortice.Mathematics;
 
 namespace FlysEngine.Sprites
 {
@@ -35,11 +35,11 @@ namespace FlysEngine.Sprites
 
         public bool ReadyToRemove { get; set; }
 
-        public Color DefaultDrawColor { get; set; } = Color.Black;
+        public Color4 DefaultDrawColor { get; set; } = Color4.Black;
 
         public Shape[] Shapes { get; private set; }
 
-        public Matrix3x2 Transform => Matrix3x2.Rotation(Rotation, Center) * Matrix3x2.Translation(Position - Center);
+        public Matrix3x2 Transform => Matrix3x2.CreateRotation(Rotation, Center) * Matrix3x2.CreateTranslation(Position - Center);
 
         public string[] Frames { get; set; }
 
@@ -123,7 +123,7 @@ namespace FlysEngine.Sprites
             }
         }
 
-        public void Draw(Direct2D.DeviceContext ctx)
+        public void Draw(ID2D1DeviceContext ctx)
         {
             var old = ctx.Transform;
             ctx.Transform = Transform * old;
@@ -132,8 +132,8 @@ namespace FlysEngine.Sprites
             {
                 ctx.DrawBitmap(
                     XResource.Bitmaps[Frames[FrameId]],
-                    Alpha,
-                    Direct2D.InterpolationMode.Linear);
+                    Alpha, 
+                    BitmapInterpolationMode.Linear);
             }
             foreach (var behavior in Behaviors.Values) behavior.Draw(ctx);
             if (DefaultDrawEnabled)

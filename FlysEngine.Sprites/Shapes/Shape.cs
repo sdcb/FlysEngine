@@ -1,9 +1,9 @@
 ﻿using FarseerPhysics.Dynamics;
 using FlysEngine.Sprites.Shapes.Json;
-using SharpDX;
 using System.Collections.Generic;
 using System.Linq;
-using Direct2D = SharpDX.Direct2D1;
+using System.Numerics;
+using Vortice.Direct2D1;
 using EngineShapes = FarseerPhysics.Collision.Shapes;
 
 namespace FlysEngine.Sprites.Shapes
@@ -28,9 +28,7 @@ namespace FlysEngine.Sprites.Shapes
             Offset = new Vector2(jsonShape.Offset[0], jsonShape.Offset[1]);
         }
 
-        public abstract void Draw(
-            Direct2D.DeviceContext renderTarget,
-            Direct2D.Brush brush);
+        public abstract void Draw(ID2D1DeviceContext renderTarget, ID2D1SolidColorBrush brush);
 
         public static bool TestPoint(IEnumerable<Shape> shapes, Vector2 point)
         {

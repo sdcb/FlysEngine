@@ -1,6 +1,6 @@
 ﻿using FlysEngine.Sprites.Shapes.Json;
-using SharpDX;
-using Direct2D = SharpDX.Direct2D1;
+using System.Numerics;
+using Vortice.Direct2D1;
 using EngineShapes = FarseerPhysics.Collision.Shapes;
 
 namespace FlysEngine.Sprites.Shapes
@@ -35,9 +35,9 @@ namespace FlysEngine.Sprites.Shapes
             };
         }
 
-        public override void Draw(Direct2D.DeviceContext renderTarget, Direct2D.Brush brush)
+        public override void Draw(ID2D1DeviceContext renderTarget, ID2D1SolidColorBrush brush)
         {
-            renderTarget.DrawLine(P1, P2, brush);
+            renderTarget.DrawLine(P1.ToPoint(), P2.ToPoint(), brush);
         }
 
         public override bool TestPoint(Vector2 point) => false;

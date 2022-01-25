@@ -1,4 +1,5 @@
-﻿using Xna = Duality;
+﻿using System.Numerics;
+using S = Duality;
 
 namespace FlysEngine.Sprites
 {
@@ -6,18 +7,18 @@ namespace FlysEngine.Sprites
     {
         public static float DisplaySimulationScale = 64.0f;
 
-        public static SharpDX.Vector2 ToDisplay(this in Xna.Vector2 xnaVector2) => new SharpDX.Vector2
+        public static Vector2 ToDisplay(this in S.Vector2 sp) => new Vector2
         {
-            X = xnaVector2.X * DisplaySimulationScale,
-            Y = xnaVector2.Y * DisplaySimulationScale,
+            X = sp.X * DisplaySimulationScale,
+            Y = sp.Y * DisplaySimulationScale,
         };
 
         public static float ToDisplay(float value) => value * DisplaySimulationScale;
 
-        public static Xna.Vector2 ToSimulation(this in SharpDX.Vector2 vector2) => new Xna.Vector2
+        public static S.Vector2 ToSimulation(this in Vector2 p) => new S.Vector2
         {
-            X = vector2.X / DisplaySimulationScale,
-            Y = vector2.Y / DisplaySimulationScale,
+            X = p.X / DisplaySimulationScale,
+            Y = p.Y / DisplaySimulationScale,
         };
 
         public static float ToSimulation(float value) => value / DisplaySimulationScale;

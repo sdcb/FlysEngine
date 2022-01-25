@@ -1,6 +1,6 @@
 ﻿using FlysEngine.Sprites.Shapes.Json;
-using SharpDX;
-using Direct2D = SharpDX.Direct2D1;
+using System.Numerics;
+using Vortice.Direct2D1;
 using EngineShapes = FarseerPhysics.Collision.Shapes;
 
 namespace FlysEngine.Sprites.Shapes
@@ -11,7 +11,7 @@ namespace FlysEngine.Sprites.Shapes
 
         public float R { get; private set; }
 
-        public Direct2D.Ellipse Ellipse => new Direct2D.Ellipse(Center + Offset, R, R);
+        public Ellipse Ellipse => new Ellipse((Center + Offset).ToPoint(), R, R);
 
         public CircleShape(JsonShape jsonShape, Vector2 center) : base(jsonShape, center)
         {
@@ -27,7 +27,7 @@ namespace FlysEngine.Sprites.Shapes
             };
         }
 
-        public override void Draw(Direct2D.DeviceContext renderTarget, Direct2D.Brush brush)
+        public override void Draw(ID2D1DeviceContext renderTarget, ID2D1SolidColorBrush brush)
         {
             renderTarget.DrawEllipse(Ellipse, brush, 1.0f);
         }

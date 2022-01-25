@@ -1,10 +1,12 @@
 ﻿using FarseerPhysics.Dynamics;
 using FlysEngine.Desktop;
-using SharpDX;
-using SharpDX.Direct2D1;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Numerics;
+using Vortice.Direct2D1;
+using Vortice.Mathematics;
 using DirectInput = SharpDX.DirectInput;
 
 namespace FlysEngine.Sprites
@@ -15,7 +17,7 @@ namespace FlysEngine.Sprites
 
         public Dictionary<Guid, Sprite> Sprites { get; } = new Dictionary<Guid, Sprite>();
 
-        public Color ClearColor { get; set; } = Color.CornflowerBlue;
+        public Color4 ClearColor { get; set; } = Color4.CornflowerBlue;
 
         public Matrix3x2 GlobalTransform { get; protected set; } = Matrix3x2.Identity;
 
@@ -68,7 +70,7 @@ namespace FlysEngine.Sprites
             MouseClientPosition = PointToClient(System.Windows.Forms.Cursor.Position).ToVector2();
 
             if (!new Rectangle(0, 0, ClientSize.Width, ClientSize.Height).Contains(
-                MouseClientPosition.X, MouseClientPosition.Y))
+                (int)MouseClientPosition.X, (int)MouseClientPosition.Y))
             {
                 MouseState.Z = 0;
             }
@@ -87,7 +89,7 @@ namespace FlysEngine.Sprites
             }
         }
 
-        protected override void OnDraw(DeviceContext renderTarget)
+        protected override void OnDraw(ID2D1DeviceContext renderTarget)
         {
             base.OnDraw(renderTarget);
 
@@ -101,7 +103,7 @@ namespace FlysEngine.Sprites
                 renderTarget.DrawText($"FPS: {RenderTimer.FramesPerSecond:F1}",
                     XResource.TextFormats[12.0f],
                     new RectangleF(0, 0, renderTarget.Size.Width, renderTarget.Size.Height),
-                    XResource.GetColor(Color.DimGray));
+                    XResource.GetColor(Color4.DimGray));
             }
         }
 
