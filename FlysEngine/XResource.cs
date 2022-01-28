@@ -110,22 +110,22 @@ namespace FlysEngine
 
         public void ReleaseDeviceResources()
         {
-            Bitmaps.Dispose();
-            SwapChain.Dispose();
-            _solidBrush.Dispose();
-            RenderTarget.Dispose();
-            D3Device.Dispose();
+            Bitmaps?.Dispose();
+            SwapChain?.Dispose();
+            _solidBrush?.Dispose();
+            RenderTarget?.Dispose();
+            D3Device?.Dispose();
         }
 
         public virtual void Dispose()
         {
             ReleaseDeviceResources();
 
-            TextLayouts.Dispose();
-            TextFormats.Dispose();
-            Direct2DFactory.Dispose();
-            DWriteFactory.Dispose();
-            WICFactory.Dispose();
+            TextLayouts?.Dispose();
+            TextFormats?.Dispose();
+            Direct2DFactory?.Dispose();
+            DWriteFactory?.Dispose();
+            WICFactory?.Dispose();
         }
     }
 }
