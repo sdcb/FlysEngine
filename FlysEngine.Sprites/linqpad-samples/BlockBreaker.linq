@@ -1,8 +1,8 @@
 <Query Kind="Program">
   <Reference>&lt;RuntimeDirectory&gt;\System.Windows.Forms.dll</Reference>
   <NuGetReference>FlysEngine.Sprites</NuGetReference>
-  <Namespace>Direct2D = SharpDX.Direct2D1</Namespace>
-  <Namespace>DWrite = SharpDX.DirectWrite</Namespace>
+  <Namespace>Direct2D = Vortice.Direct2D1</Namespace>
+  <Namespace>DirectWrite = Vortice.DirectWrite</Namespace>
   <Namespace>EngineShapes = FarseerPhysics.Collision.Shapes</Namespace>
   <Namespace>FarseerPhysics.Common</Namespace>
   <Namespace>FarseerPhysics.Dynamics</Namespace>
@@ -11,10 +11,11 @@
   <Namespace>FlysEngine.Managers</Namespace>
   <Namespace>FlysEngine.Sprites</Namespace>
   <Namespace>FlysEngine.Sprites.Shapes</Namespace>
-  <Namespace>SharpDX</Namespace>
-  <Namespace>System</Namespace>
   <Namespace>System.Windows.Forms</Namespace>
   <Namespace>Xna = Duality</Namespace>
+  <Namespace>System.Numerics</Namespace>
+  <Namespace>Vortice.Mathematics</Namespace>
+  <Namespace>System.Drawing</Namespace>
 </Query>
 
 static class C
@@ -30,8 +31,8 @@ class Game : SpriteWindow
 	public Dictionary<Guid, Sprite> Blocks = new Dictionary<Guid, Sprite>();
 	public Sprite Breaker, Ball, Walls, FailureArea;
 	public GameState State { get; set; } = GameState.BallOnBreaker;
-	private Direct2D.Brush BallBrush;
-	private List<Direct2D.Brush> RectBrushes;
+	private Direct2D.ID2D1Brush BallBrush;
+	private List<Direct2D.ID2D1Brush> RectBrushes;
 	
 	public Game()
 	{
@@ -71,20 +72,20 @@ class Game : SpriteWindow
 
 	protected override void OnCreateDeviceResources()
 	{
-		BallBrush = new Direct2D.RadialGradientBrush(XResource.RenderTarget,
+		BallBrush = XResource.RenderTarget.CreateRadialGradientBrush(
 			new Direct2D.RadialGradientBrushProperties { RadiusX = C.BallR, RadiusY = C.BallR, },
-			new Direct2D.GradientStopCollection(XResource.RenderTarget, new[]
+			XResource.RenderTarget.CreateGradientStopCollection(new[]
 			{
-				new Direct2D.GradientStop{ Color = Color.White, Position = 0.0f},
-				new Direct2D.GradientStop{ Color = Color.Black, Position = 1.0f},
+				new Direct2D.GradientStop{ Color = Color4.White, Position = 0.0f},
+				new Direct2D.GradientStop{ Color = Color4.Black, Position = 1.0f},
 			}));
-		RectBrushes = new[] { Color.Yellow, Color.Orange, Color.Green, Color.Blue, Color.Purple }.Select(c => (Direct2D.Brush)
-			new Direct2D.LinearGradientBrush(XResource.RenderTarget,
-					new Direct2D.LinearGradientBrushProperties { StartPoint = Vector2.Zero, EndPoint = new Vector2(C.BlockWidth, C.BlockHeight) },
-					new Direct2D.GradientStopCollection(XResource.RenderTarget, new[]
+		RectBrushes = new[] { Color4.Yellow, Color4.Orange, Color4.Green, Color4.Blue, Color4.Purple }.Select(c => (Direct2D.ID2D1Brush)
+			XResource.RenderTarget.CreateLinearGradientBrush(
+					new Direct2D.LinearGradientBrushProperties { StartPoint = new PointF(), EndPoint = new PointF(C.BlockWidth, C.BlockHeight) },
+					XResource.RenderTarget.CreateGradientStopCollection(new []
 					{
 						new Direct2D.GradientStop{ Color = c, Position = 0.1f},
-						new Direct2D.GradientStop{ Color = Color.White, Position = 0.7f},
+						new Direct2D.GradientStop{ Color = Color4.White, Position = 0.7f},
 						new Direct2D.GradientStop{ Color = c, Position = 1.0f},
 					}))).ToList();
 	}
@@ -96,7 +97,7 @@ class Game : SpriteWindow
 		RectBrushes.Clear();
 	}
 
-	private Direct2D.Brush GetRectBrushByHitPoint(int hitpoint)
+	private Direct2D.ID2D1Brush GetRectBrushByHitPoint(int hitpoint)
 	{
 		if (hitpoint <= 4) return RectBrushes[hitpoint - 1];
 		return RectBrushes[4];
@@ -115,7 +116,7 @@ class Game : SpriteWindow
 		{
 			Name = "Border",
 			DefaultDrawEnabled = true, 
-			DefaultDrawColor = Color.Blue, 
+			DefaultDrawColor = Color4.Blue, 
 		};
 		sprite.SetShapes(lines
 			.Select(x => (Shape)new EdgeShape(new Vector2(x[0], x[1]), new Vector2(x[2], x[3])))
@@ -173,7 +174,7 @@ class Game : SpriteWindow
 	{
 		base.OnCreateDeviceSizeResources();
 		float scale = XResource.RenderTarget.Size.Height / C.Height;
-		GlobalTransform = Matrix3x2.Scaling(scale) * Matrix3x2.Translation((XResource.RenderTarget.Size.Width - C.Width * scale) / 2, 0);
+		GlobalTransform = Matrix3x2.CreateScale(scale) * Matrix3x2.CreateTranslation((XResource.RenderTarget.Size.Width - C.Width * scale) / 2, 0);
 	}
 
 	protected override void OnMouseMove(MouseEventArgs e)
@@ -185,7 +186,8 @@ class Game : SpriteWindow
 			SetBallOnBreaker(Ball, Breaker);
 		}
 
-		var invertPoint = Matrix3x2.TransformPoint(Matrix3x2.Invert(GlobalTransform), new Vector2(e.X, e.Y));
+		Matrix3x2.Invert(GlobalTransform, out Matrix3x2 inverted);
+		Vector2 invertPoint = Vector2.Transform(new Vector2(e.X, e.Y), inverted);
 
 		Breaker.QueryBehavior<BreakerBehavior>().MoveX(invertPoint.X);
 	}
@@ -222,25 +224,25 @@ class RectColorBehavior : Behavior
 {
 	public int HitPoint { get; set; }
 
-	public Func<int, Direct2D.Brush> BrushGetter;
+	public Func<int, Direct2D.ID2D1Brush> BrushGetter;
 
-	public RectColorBehavior(Func<int, Direct2D.Brush> brushGetter, int hitPoint)
+	public RectColorBehavior(Func<int, Direct2D.ID2D1Brush> brushGetter, int hitPoint)
 	{
 		HitPoint = hitPoint;
 		BrushGetter = brushGetter;
 	}
 
-	public override void Draw(Direct2D.DeviceContext ctx)
+	public override void Draw(Direct2D.ID2D1DeviceContext ctx)
 	{
 		var rect = (RectangleShape)Sprite.Shapes[0];
 		ctx.FillRectangle(rect.Rect, BrushGetter(HitPoint));
-		ctx.DrawRectangle(rect.Rect, Sprite.XResource.GetColor(Color.Black), 0.5f);
+		ctx.DrawRectangle(rect.Rect, Sprite.XResource.GetColor(Color4.Black), 0.5f);
 	}
 }
 
 class BlockBehavior : RectColorBehavior
 {
-	public BlockBehavior(Func<int, Direct2D.Brush> brushGetter, int hitPoint)
+	public BlockBehavior(Func<int, Direct2D.ID2D1Brush> brushGetter, int hitPoint)
 		: base(brushGetter, hitPoint)
 	{
 	}
@@ -260,9 +262,8 @@ class BlockBehavior : RectColorBehavior
 class BreakerBehavior : RectColorBehavior
 {
 	float _dx = 0;
-	SharpDX.Animation.Variable _a;
 
-	public BreakerBehavior(Func<int, Direct2D.Brush> brushGetter, int hitPoint)
+	public BreakerBehavior(Func<int, Direct2D.ID2D1Brush> brushGetter, int hitPoint)
 		: base(brushGetter, hitPoint)
 	{
 	}
@@ -273,15 +274,10 @@ class BreakerBehavior : RectColorBehavior
 		Sprite.Rotation = GetCurrentRotation();
 
 		float calcRotation = -_dx / C.Width * 3 * (float)Math.PI;
-		if (Math.Abs(calcRotation) > Math.Abs(Sprite.Rotation))
-		{
-			if (_a != null) _a.Dispose();
-			_a = Sprite.XResource.CreateAnimation(calcRotation, 0, 1.0);
-		}
 		_dx = 0;
 	}
 
-	float GetCurrentRotation() => _a == null ? 0 : (float)_a.Value;
+	float GetCurrentRotation() => 0;
 
 	public void MoveX(float x)
 	{
@@ -292,14 +288,14 @@ class BreakerBehavior : RectColorBehavior
 
 class BallBehavior : Behavior
 {
-	Func<Direct2D.Brush> BallBrushGetter;
+	Func<Direct2D.ID2D1Brush> BallBrushGetter;
 
-	public BallBehavior(Func<Direct2D.Brush> ballBrushGetter)
+	public BallBehavior(Func<Direct2D.ID2D1Brush> ballBrushGetter)
 	{
 		BallBrushGetter = ballBrushGetter;
 	}
 
-	public override void Draw(Direct2D.DeviceContext ctx)
+	public override void Draw(Direct2D.ID2D1DeviceContext ctx)
 	{
 		var shape = (CircleShape)Sprite.Shapes[0];
 		ctx.FillEllipse(shape.Ellipse, BallBrushGetter());

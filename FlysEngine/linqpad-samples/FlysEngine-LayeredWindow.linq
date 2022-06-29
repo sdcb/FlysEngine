@@ -5,17 +5,18 @@
   <Reference>&lt;RuntimeDirectory&gt;\System.Runtime.Serialization.Formatters.Soap.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Security.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Windows.Forms.dll</Reference>
-  <NuGetReference>SharpDX.Desktop</NuGetReference>
+  <NuGetReference>FlysEngine.Desktop</NuGetReference>
   <NuGetReference>FlysEngine.Sprites</NuGetReference>
   <Namespace>FlysEngine</Namespace>
+  <Namespace>FlysEngine.Desktop</Namespace>
   <Namespace>FlysEngine.Managers</Namespace>
   <Namespace>FlysEngine.Tools</Namespace>
-  <Namespace>SharpDX</Namespace>
-  <Namespace>SharpDX.Direct2D1</Namespace>
-  <Namespace>SharpDX.DXGI</Namespace>
-  <Namespace>SharpDX.Windows</Namespace>
   <Namespace>System.Runtime.InteropServices</Namespace>
   <Namespace>System.Windows.Forms</Namespace>
+  <Namespace>Vortice.Direct2D1</Namespace>
+  <Namespace>Vortice.Mathematics</Namespace>
+  <Namespace>System.Drawing</Namespace>
+  <Namespace>Vortice.DXGI</Namespace>
 </Query>
 
 void Main()
@@ -28,7 +29,7 @@ void Main()
 		TopMost = true, 
 	})
 	{
-		var layeredWindowCtx = new LayeredWindowContext(form.Size, form.Location);
+		LayeredWindowContext layeredWindowCtx = new (form.Size, form.Location);
 		
 		form.Resize += (o, e) =>
 		{
@@ -56,17 +57,17 @@ void Main()
 			
 			if (!res.DeviceAvailable) res.InitializeDeviceGdiCompatible(form.Handle, form.Size.Width, form.Size.Height);
 	
-			var dt = fpsManager.BeginFrame();
+			float dt = fpsManager.BeginFrame();
 			{
 				res.UpdateLogic(TimeSpan.FromSeconds(dt));
 				res.RenderTarget.BeginDraw();
 				Draw(res.RenderTarget);
 
-				using (var gdi = res.RenderTarget.QueryInterface<GdiInteropRenderTarget>())
+				using (ID2D1GdiInteropRenderTarget gdi = res.RenderTarget.QueryInterface<ID2D1GdiInteropRenderTarget>())
 				{
-					var hdc = gdi.GetDC(DeviceContextInitializeMode.Copy);
+					IntPtr hdc = gdi.GetDC(DcInitializeMode.Copy);
 					layeredWindowCtx.Draw(form.Handle, hdc);
-					gdi.ReleaseDC();
+					gdi.ReleaseDC(null);
 				}
 
 				res.RenderTarget.EndDraw();
@@ -76,22 +77,22 @@ void Main()
 			res.SwapChain.Present(1, PresentFlags.None);
 		}
 	
-		void Draw(RenderTarget renderTarget)
+		void Draw(ID2D1RenderTarget renderTarget)
 		{
-			renderTarget.Clear(Color.Transparent.ToColor4());
+			renderTarget.Clear(Color4.Transparent);
 			renderTarget.DrawRectangle(new RectangleF(0, 0, renderTarget.Size.Width, renderTarget.Size.Height),
-				res.GetColor(Color.Blue));
+				res.GetColor(Color4.Blue));
 	
 			renderTarget.DrawText($"😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎",
 				res.TextFormats[24.0f],
 				new RectangleF(0, 22, renderTarget.Size.Width, float.MaxValue),
-				res.GetColor(Color.White),
+				res.GetColor(Color4.White),
 				DrawTextOptions.EnableColorFont);
 	
 			renderTarget.DrawText($"FPS: {fpsManager.Fps}\r\nFT: {fpsManager.FrameTimeMs}",
 				res.TextFormats[15.0f],
 				new RectangleF(0, 0, float.MaxValue, float.MaxValue),
-				res.GetColor(Color.Red));
+				res.GetColor(Color4.Red));
 		}
 	}
 }
