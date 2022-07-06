@@ -15,7 +15,7 @@
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
-    <Version>2.0.2</Version>
+    <Version>2.0.3</Version>
     <PackageReleaseNotes>0.1.1: Add linqpad-samples
 0.2.0: Add behavior/more details
 0.2.1: World not update by default.

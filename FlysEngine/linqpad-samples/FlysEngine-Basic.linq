@@ -56,21 +56,21 @@ using (var form = new Form() { Text = "Hello World" })
 
 	void Draw(ID2D1DeviceContext target)
 	{
-		target.Clear(Color4.CornflowerBlue);
-		RectangleF rectangle = new RectangleF(0, 0, target.Size.Width, target.Size.Height);
+		target.Clear(Colors.CornflowerBlue);
+		Rect rectangle = new (0, 0, target.Size.Width, target.Size.Height);
 
 		target.DrawRectangle(
-			new RectangleF(10, 10, target.Size.Width - 20, target.Size.Height - 20),
-			res.GetColor(Color4.Blue));
+			new Rect(10, 10, target.Size.Width - 20, target.Size.Height - 20),
+			res.GetColor(Colors.Blue));
 
 		target.DrawText("😀😁😂🤣😃😄😅😆😉😊😋😎",
-			res.TextFormats[36], rectangle, res.GetColor(Color4.Blue),
+			res.TextFormats[36], rectangle, res.GetColor(Colors.Blue),
 			DrawTextOptions.EnableColorFont);
 
 		target.DrawText("FPS: " + timer.FramesPerSecond.ToString("F1"),
-			bottomRightFont, rectangle, res.GetColor(Color4.Red));
+			bottomRightFont, rectangle, res.GetColor(Colors.Red));
 
 		target.DrawText("Hello World",
-			bottomLeftFont, rectangle, res.GetColor(Color4.Purple));
+			bottomLeftFont, rectangle, res.GetColor(Colors.Purple));
 	}
 }

@@ -15,7 +15,7 @@
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
-    <Version>2.0.2</Version>
+    <Version>2.0.3</Version>
     <PackageReleaseNotes>https://github.com/sdcb/FlysEngine/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

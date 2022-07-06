@@ -38,7 +38,7 @@ namespace FlysEngine
         public IUIAnimationVariable2 CreateAnimation(double initialValue, double finalValue, double durationInSeconds)
         {
             IUIAnimationVariable2 v = Animation.CreateAnimationVariable(initialValue);
-            using IUIAnimationTransition2 transition = TransitionLibrary.CreateAccelerateDecelerateTransition(durationInSeconds, finalValue, 0.3, 0.3);
+            using IUIAnimationTransition2 transition = TransitionLibrary.CreateAccelerateDecelerateTransition(durationInSeconds, finalValue, 0.2, 0.8);
             Animation.ScheduleTransition(v, transition, DurationSinceStart.TotalSeconds);
             return v;
         }

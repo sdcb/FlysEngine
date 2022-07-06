@@ -6,17 +6,16 @@
   <Reference>&lt;RuntimeDirectory&gt;\System.Security.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Windows.Forms.dll</Reference>
   <NuGetReference>FlysEngine.Desktop</NuGetReference>
-  <NuGetReference>FlysEngine.Sprites</NuGetReference>
   <Namespace>FlysEngine</Namespace>
   <Namespace>FlysEngine.Desktop</Namespace>
   <Namespace>FlysEngine.Managers</Namespace>
   <Namespace>FlysEngine.Tools</Namespace>
+  <Namespace>System.Drawing</Namespace>
   <Namespace>System.Runtime.InteropServices</Namespace>
   <Namespace>System.Windows.Forms</Namespace>
   <Namespace>Vortice.Direct2D1</Namespace>
-  <Namespace>Vortice.Mathematics</Namespace>
-  <Namespace>System.Drawing</Namespace>
   <Namespace>Vortice.DXGI</Namespace>
+  <Namespace>Vortice.Mathematics</Namespace>
 </Query>
 
 void Main()
@@ -79,20 +78,20 @@ void Main()
 	
 		void Draw(ID2D1RenderTarget renderTarget)
 		{
-			renderTarget.Clear(Color4.Transparent);
-			renderTarget.DrawRectangle(new RectangleF(0, 0, renderTarget.Size.Width, renderTarget.Size.Height),
-				res.GetColor(Color4.Blue));
+			renderTarget.Clear(Colors.Transparent);
+			renderTarget.DrawRectangle(new Rect(0, 0, renderTarget.Size.Width, renderTarget.Size.Height),
+				res.GetColor(Colors.Blue));
 	
 			renderTarget.DrawText($"😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎",
 				res.TextFormats[24.0f],
-				new RectangleF(0, 22, renderTarget.Size.Width, float.MaxValue),
-				res.GetColor(Color4.White),
+				new Rect(0, 22, renderTarget.Size.Width, float.MaxValue),
+				res.GetColor(Colors.White),
 				DrawTextOptions.EnableColorFont);
 	
 			renderTarget.DrawText($"FPS: {fpsManager.Fps}\r\nFT: {fpsManager.FrameTimeMs}",
 				res.TextFormats[15.0f],
-				new RectangleF(0, 0, float.MaxValue, float.MaxValue),
-				res.GetColor(Color4.Red));
+				new Rect(0, 0, float.MaxValue, float.MaxValue),
+				res.GetColor(Colors.Red));
 		}
 	}
 }

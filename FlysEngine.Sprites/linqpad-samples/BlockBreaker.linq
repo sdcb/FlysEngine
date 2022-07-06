@@ -16,6 +16,7 @@
   <Namespace>System.Numerics</Namespace>
   <Namespace>Vortice.Mathematics</Namespace>
   <Namespace>System.Drawing</Namespace>
+  <Namespace>Vortice.UIAnimation</Namespace>
 </Query>
 
 static class C
@@ -50,7 +51,7 @@ class Game : SpriteWindow
 						C.Offset + id.Col * (C.Offset + C.BlockWidth),
 						C.Offset + id.Row * (C.BlockHeight + C.Offset)),
 				};
-				block.SetShapes(new RectangleShape { Size = new Vector2(C.BlockWidth, C.BlockHeight) });
+				block.SetShapes(new RectangleShape { Size = new Vortice.Mathematics.Size(C.BlockWidth, C.BlockHeight) });
 				block.Body.BodyType = BodyType.Static;
 				block.AddBehavior(new BlockBehavior(GetRectBrushByHitPoint, 4 - id.Row));
 				Blocks.Add(block.Id, block);
@@ -76,16 +77,16 @@ class Game : SpriteWindow
 			new Direct2D.RadialGradientBrushProperties { RadiusX = C.BallR, RadiusY = C.BallR, },
 			XResource.RenderTarget.CreateGradientStopCollection(new[]
 			{
-				new Direct2D.GradientStop{ Color = Color4.White, Position = 0.0f},
-				new Direct2D.GradientStop{ Color = Color4.Black, Position = 1.0f},
+				new Direct2D.GradientStop{ Color = Colors.White, Position = 0.0f},
+				new Direct2D.GradientStop{ Color = Colors.Black, Position = 1.0f},
 			}));
-		RectBrushes = new[] { Color4.Yellow, Color4.Orange, Color4.Green, Color4.Blue, Color4.Purple }.Select(c => (Direct2D.ID2D1Brush)
+		RectBrushes = new[] { Colors.Yellow, Colors.Orange, Colors.Green, Colors.Blue, Colors.Purple }.Select(c => (Direct2D.ID2D1Brush)
 			XResource.RenderTarget.CreateLinearGradientBrush(
-					new Direct2D.LinearGradientBrushProperties { StartPoint = new PointF(), EndPoint = new PointF(C.BlockWidth, C.BlockHeight) },
+					new Direct2D.LinearGradientBrushProperties { StartPoint = new Vector2(), EndPoint = new Vector2(C.BlockWidth, C.BlockHeight) },
 					XResource.RenderTarget.CreateGradientStopCollection(new []
 					{
 						new Direct2D.GradientStop{ Color = c, Position = 0.1f},
-						new Direct2D.GradientStop{ Color = Color4.White, Position = 0.7f},
+						new Direct2D.GradientStop{ Color = Colors.White, Position = 0.7f},
 						new Direct2D.GradientStop{ Color = c, Position = 1.0f},
 					}))).ToList();
 	}
@@ -116,7 +117,7 @@ class Game : SpriteWindow
 		{
 			Name = "Border",
 			DefaultDrawEnabled = true, 
-			DefaultDrawColor = Color4.Blue, 
+			DefaultDrawColor = Colors.Blue, 
 		};
 		sprite.SetShapes(lines
 			.Select(x => (Shape)new EdgeShape(new Vector2(x[0], x[1]), new Vector2(x[2], x[3])))
@@ -158,12 +159,13 @@ class Game : SpriteWindow
 		var sprite = new Sprite(this)
 		{
 			Name = $"Breaker",
-			Position = new Vector2(C.Width / 2 - C.BlockWidth * 1.5f / 2, C.Height - C.BallR * 3), // Center
+			Position = new Vector2(C.Width / 2, C.Height - C.BallR * 3), // Center
 		};
 		sprite.SetShapes(new RectangleShape
 		{
-			Size = new Vector2(C.BlockWidth * 1.5f, C.BlockHeight),
+			Size = new Vortice.Mathematics.Size(C.BlockWidth * 1.5f, C.BlockHeight),
 		});
+		sprite.Center = new Vector2(C.BlockWidth * 1.5f / 2, 0);
 		sprite.Body.BodyType = BodyType.Kinematic;
 		sprite.AddBehavior(new BreakerBehavior(GetRectBrushByHitPoint, 5));
 
@@ -215,7 +217,7 @@ class Game : SpriteWindow
 static void SetBallOnBreaker(Sprite ball, Sprite breaker)
 {
 	ball.Position = new Vector2(
-		breaker.Position.X + (breaker.Shapes[0] as RectangleShape).Size.X / 2,
+		breaker.Position.X,
 		breaker.Position.Y - C.BallR);
 }
 
@@ -236,7 +238,7 @@ class RectColorBehavior : Behavior
 	{
 		var rect = (RectangleShape)Sprite.Shapes[0];
 		ctx.FillRectangle(rect.Rect, BrushGetter(HitPoint));
-		ctx.DrawRectangle(rect.Rect, Sprite.XResource.GetColor(Color4.Black), 0.5f);
+		ctx.DrawRectangle(rect.Rect, Sprite.XResource.GetColor(Colors.Black), 0.5f);
 	}
 }
 
@@ -262,6 +264,7 @@ class BlockBehavior : RectColorBehavior
 class BreakerBehavior : RectColorBehavior
 {
 	float _dx = 0;
+	IUIAnimationVariable2 _a;
 
 	public BreakerBehavior(Func<int, Direct2D.ID2D1Brush> brushGetter, int hitPoint)
 		: base(brushGetter, hitPoint)
@@ -274,10 +277,15 @@ class BreakerBehavior : RectColorBehavior
 		Sprite.Rotation = GetCurrentRotation();
 
 		float calcRotation = -_dx / C.Width * 3 * (float)Math.PI;
+		if (Math.Abs(calcRotation) > Math.Abs(Sprite.Rotation))
+		{
+			if (_a != null) _a.Dispose();
+			_a = Sprite.XResource.CreateAnimation(calcRotation, 0, 1.0);
+		}
 		_dx = 0;
 	}
 
-	float GetCurrentRotation() => 0;
+	float GetCurrentRotation() => _a == null ? 0 : (float)_a.Value;
 
 	public void MoveX(float x)
 	{
