@@ -1,7 +1,6 @@
 ﻿using System;
 using FlysEngine.Managers;
 using FlysEngine.Tools;
-using System.Diagnostics;
 using Vortice.Direct2D1;
 using Vortice.DirectWrite;
 using Vortice.WIC;
@@ -9,6 +8,7 @@ using Vortice.DXGI;
 using Vortice.Direct3D11;
 using Vortice.Mathematics;
 using System.Numerics;
+using Vortice.UIAnimation;
 
 namespace FlysEngine
 {
@@ -25,6 +25,8 @@ namespace FlysEngine
         public IDXGISwapChain1 SwapChain;
         public ID2D1DeviceContext RenderTarget;
         public ID3D11Device D3Device;
+        public IUIAnimationManager2 Animation = new();
+        public IUIAnimationTransitionLibrary2 TransitionLibrary = new();
 
         public XResource()
         {
@@ -33,11 +35,19 @@ namespace FlysEngine
             TextLayouts = new TextLayoutManager(DWriteFactory, TextFormats);
         }
 
+        public IUIAnimationVariable2 CreateAnimation(double initialValue, double finalValue, double durationInSeconds)
+        {
+            IUIAnimationVariable2 v = Animation.CreateAnimationVariable(initialValue);
+            using IUIAnimationTransition2 transition = TransitionLibrary.CreateAccelerateDecelerateTransition(durationInSeconds, finalValue, 0.3, 0.3);
+            Animation.ScheduleTransition(v, transition, DurationSinceStart.TotalSeconds);
+            return v;
+        }
+
         public ID2D1SolidColorBrush GetColor(Color4 color)
         {
             if (_solidBrush == null)
                 throw new InvalidOperationException("Need to call Initialize before call this function.");
-            
+
             _solidBrush.Color = color;
 
             return _solidBrush;
@@ -75,10 +85,11 @@ namespace FlysEngine
         }
 
         public TimeSpan DurationSinceStart { get; private set; }
-        
+
         public void UpdateLogic(TimeSpan durationSinceLastUpdate)
         {
             DurationSinceStart += durationSinceLastUpdate;
+            Animation.Update(DurationSinceStart.TotalSeconds);
         }
 
         public void InitializeDevice(IntPtr windowHandle)
@@ -126,6 +137,8 @@ namespace FlysEngine
             Direct2DFactory?.Dispose();
             DWriteFactory?.Dispose();
             WICFactory?.Dispose();
+            Animation.Dispose();
+            TransitionLibrary.Dispose();
         }
     }
 }
