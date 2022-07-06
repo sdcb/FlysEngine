@@ -1,5 +1,8 @@
 # Current Versions
 
+## 2022-07-06
+* Release 2.0.3, support Windows Animation Manager, upgrade dependencies to latest
+
 ## 2022-06-29
 * Release `FlysEngine` 2.0.2, `FlysEngine.Desktop` 2.0.2, `FlysEngine.Sprite` 2.0.2
 * Add support for all examples updated 2.0 version. 
