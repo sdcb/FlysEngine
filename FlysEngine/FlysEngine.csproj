@@ -6,11 +6,11 @@
     <Authors>sdcb</Authors>
     <Company />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.3</Version>
+    <Version>2.0.4</Version>
     <Description>Real-time 2D rendering utilities based on SharpDX/Direct2D.</Description>
     <PackageReleaseNotes>https://github.com/sdcb/FlysEngine/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/sdcb/FlysEngine</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/sdcb/FlysEngine</RepositoryUrl>
+    <RepositoryUrl>https://github.com/sdcb/FlysEngine.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicense>
       <license type="file">LICENSE</license>
@@ -19,13 +19,11 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Nullable>disable</Nullable>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Vortice.Direct2D1" Version="2.1.22-beta" />
     <PackageReference Include="Vortice.Direct3D11" Version="2.1.22-beta" />
     <PackageReference Include="Vortice.UIAnimation" Version="2.1.22-beta" />

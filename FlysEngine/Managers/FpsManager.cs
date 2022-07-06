@@ -6,7 +6,7 @@ namespace FlysEngine.Managers
     {
         private long _lastFpsTick = Stopwatch.GetTimestamp();
         private long _lastTick = Stopwatch.GetTimestamp();
-        private Stopwatch _stopwatch = new Stopwatch();
+        private readonly Stopwatch _stopwatch = new();
 
         public long Frames { get; private set; }
 

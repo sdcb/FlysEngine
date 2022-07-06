@@ -15,22 +15,16 @@
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
-    <Version>2.0.3</Version>
-    <PackageReleaseNotes>0.1.1: Add linqpad-samples
-0.2.0: Add behavior/more details
-0.2.1: World not update by default.
-0.2.2: Fix the IsMouseOver not correct issue.
-0.2.3: Fix linqpad-samples, update license notice.</PackageReleaseNotes>
+    <Version>2.0.4</Version>
+    <PackageReleaseNotes>https://github.com/sdcb/FlysEngine/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AdamsLair.Duality.Physics" Version="4.0.0-alpha2" />
     <PackageReference Include="AdamsLair.Duality.Primitives" Version="4.0.0-alpha2" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
   </ItemGroup>
 
