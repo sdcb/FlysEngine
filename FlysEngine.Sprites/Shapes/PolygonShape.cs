@@ -29,7 +29,7 @@ namespace FlysEngine.Sprites.Shapes
             };
             foreach (var line in lines)
             {
-                renderTarget.DrawLine(line[0].ToPoint(), line[1].ToPoint(), brush, 2.0f);
+                renderTarget.DrawLine(line[0], line[1], brush, 2.0f);
             }
         }
 

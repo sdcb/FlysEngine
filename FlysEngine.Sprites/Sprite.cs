@@ -35,7 +35,7 @@ namespace FlysEngine.Sprites
 
         public bool ReadyToRemove { get; set; }
 
-        public Color4 DefaultDrawColor { get; set; } = Color4.Black;
+        public Color4 DefaultDrawColor { get; set; } = Colors.Black;
 
         public Shape[] Shapes { get; private set; }
 

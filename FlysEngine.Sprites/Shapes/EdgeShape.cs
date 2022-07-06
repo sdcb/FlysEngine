@@ -37,7 +37,7 @@ namespace FlysEngine.Sprites.Shapes
 
         public override void Draw(ID2D1DeviceContext renderTarget, ID2D1SolidColorBrush brush)
         {
-            renderTarget.DrawLine(P1.ToPoint(), P2.ToPoint(), brush);
+            renderTarget.DrawLine(P1, P2, brush);
         }
 
         public override bool TestPoint(Vector2 point) => false;

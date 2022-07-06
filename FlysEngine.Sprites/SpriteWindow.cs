@@ -2,7 +2,6 @@
 using FlysEngine.Desktop;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using Vortice.Direct2D1;
@@ -17,7 +16,7 @@ namespace FlysEngine.Sprites
 
         public Dictionary<Guid, Sprite> Sprites { get; } = new Dictionary<Guid, Sprite>();
 
-        public Color4 ClearColor { get; set; } = Color4.CornflowerBlue;
+        public Color4 ClearColor { get; set; } = Colors.CornflowerBlue;
 
         public Matrix3x2 GlobalTransform { get; protected set; } = Matrix3x2.Identity;
 
@@ -69,8 +68,7 @@ namespace FlysEngine.Sprites
             Mouse.GetCurrentState(ref MouseState);
             MouseClientPosition = PointToClient(System.Windows.Forms.Cursor.Position).ToVector2();
 
-            if (!new Rectangle(0, 0, ClientSize.Width, ClientSize.Height).Contains(
-                (int)MouseClientPosition.X, (int)MouseClientPosition.Y))
+            if (!new Rect(0, 0, ClientSize.Width, ClientSize.Height).Contains(MouseClientPosition))
             {
                 MouseState.Z = 0;
             }
@@ -102,8 +100,8 @@ namespace FlysEngine.Sprites
             {
                 renderTarget.DrawText($"FPS: {RenderTimer.FramesPerSecond:F1}",
                     XResource.TextFormats[12.0f],
-                    new RectangleF(0, 0, renderTarget.Size.Width, renderTarget.Size.Height),
-                    XResource.GetColor(Color4.DimGray));
+                    new Rect(0, 0, renderTarget.Size.Width, renderTarget.Size.Height),
+                    XResource.GetColor(Colors.DimGray));
             }
         }
 

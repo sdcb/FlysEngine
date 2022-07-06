@@ -33,22 +33,22 @@ namespace FlysTest.Desktop
                 void Draw(RenderWindow _, ID2D1DeviceContext target)
                 {
                     XResource res = window.XResource;
-                    target.Clear(Color4.Transparent);
-                    RectangleF rectangle = new RectangleF(0, 0, target.Size.Width, target.Size.Height);
+                    target.Clear(Colors.Transparent);
+                    Rect rectangle = new (0, 0, target.Size.Width, target.Size.Height);
 
                     target.DrawRectangle(
                         rectangle,
-                        res.GetColor(Color4.Blue));
+                        res.GetColor(Colors.Blue));
 
                     target.DrawText("😀😁😂🤣😃😄😅😆😉😊😋😎",
-                        res.TextFormats[36], rectangle, res.GetColor(Color4.Blue),
+                        res.TextFormats[36], rectangle, res.GetColor(Colors.Blue),
                         DrawTextOptions.EnableColorFont);
 
                     target.DrawText($"{window.XResource.DurationSinceStart:mm':'ss'.'ff}\nFPS: {window.RenderTimer.FramesPerSecond:F1}",
-                        bottomRightFont, rectangle, res.GetColor(Color4.Red));
+                        bottomRightFont, rectangle, res.GetColor(Colors.Red));
 
                     target.DrawText("Hello World",
-                        bottomLeftFont, rectangle, res.GetColor(Color4.Purple));
+                        bottomLeftFont, rectangle, res.GetColor(Colors.Purple));
                 }
             }
         }

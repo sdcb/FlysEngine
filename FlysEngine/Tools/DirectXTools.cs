@@ -5,6 +5,7 @@ using Vortice.Direct3D;
 using Vortice.Direct3D11;
 using Vortice.Direct2D1;
 using Vortice.DXGI;
+using Vortice.Mathematics;
 
 namespace FlysEngine.Tools
 {
@@ -95,7 +96,7 @@ namespace FlysEngine.Tools
                 BitmapOptions = BitmapOptions.Target | BitmapOptions.GdiCompatible,
                 PixelFormat = new Vortice.DCommon.PixelFormat(Format.B8G8R8A8_UNorm, Vortice.DCommon.AlphaMode.Premultiplied)
             };
-            using (ID2D1Bitmap1 bitmap = target.CreateBitmap(new Size(width, height), IntPtr.Zero, 0, ref props))
+            using (ID2D1Bitmap1 bitmap = target.CreateBitmap(new SizeI(width, height), IntPtr.Zero, 0, props))
             {
                 target.Target = bitmap;
             }

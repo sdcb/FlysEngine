@@ -86,7 +86,7 @@ namespace FlysEngine
             D3Device = DirectXTools.CreateD3Device();
             {
                 RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, D3Device);
-                _solidBrush = RenderTarget.CreateSolidColorBrush(Color4.Black);
+                _solidBrush = RenderTarget.CreateSolidColorBrush(Colors.Black);
                 SwapChain = DirectXTools.CreateSwapChainForHwnd(D3Device, windowHandle);
                 DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
                 Bitmaps.SetRenderTarget(RenderTarget);
@@ -99,7 +99,7 @@ namespace FlysEngine
             D3Device = DirectXTools.CreateD3Device();
             {
                 RenderTarget = DirectXTools.CreateRenderTarget(Direct2DFactory, D3Device);
-                _solidBrush = RenderTarget.CreateSolidColorBrush(Color4.Black);
+                _solidBrush = RenderTarget.CreateSolidColorBrush(Colors.Black);
                 SwapChain = DirectXTools.CreateSwapChainForHwnd(D3Device, windowHandle);
                 //DirectXTools.CreateDeviceSwapChainBitmap(SwapChain, RenderTarget);
                 DirectXTools.CreateDeviceContextCPUBitmap(RenderTarget, width, height);
