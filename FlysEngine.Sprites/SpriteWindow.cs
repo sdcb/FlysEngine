@@ -6,7 +6,6 @@ using System.Linq;
 using System.Numerics;
 using Vortice.Direct2D1;
 using Vortice.Mathematics;
-using DirectInput = SharpDX.DirectInput;
 
 namespace FlysEngine.Sprites
 {
@@ -22,25 +21,9 @@ namespace FlysEngine.Sprites
 
         public bool ShowFPS { get; set; }
 
-        private DirectInput.DirectInput DirectInput { get; } = new DirectInput.DirectInput();
-
-        private DirectInput.Keyboard Keyboard { get; }
-
-        public DirectInput.KeyboardState KeyboardState = new DirectInput.KeyboardState();
-
-        private DirectInput.Mouse Mouse { get; }
-
-        public DirectInput.MouseState MouseState = new DirectInput.MouseState();
-
+        public DeviceInput DeviceInput = new();
+        
         public Vector2 MouseClientPosition = new Vector2();
-
-        public SpriteWindow()
-        {
-            Keyboard = new DirectInput.Keyboard(DirectInput);
-            Keyboard.Acquire();
-            Mouse = new DirectInput.Mouse(DirectInput);
-            Mouse.Acquire();
-        }
 
         public void AddSprites(params Sprite[] sprites)
         {
@@ -58,19 +41,19 @@ namespace FlysEngine.Sprites
 
             if (Focused)
             {
-                Keyboard.GetCurrentState(ref KeyboardState);
+                DeviceInput.UpdateKeyboard();
             }
             else
             {
-                KeyboardState.PressedKeys.Clear();
+                DeviceInput.KeyboardState.PressedKeys.Clear();
             }
 
-            Mouse.GetCurrentState(ref MouseState);
+            DeviceInput.UpdateMouse();
             MouseClientPosition = PointToClient(System.Windows.Forms.Cursor.Position).ToVector2();
 
             if (!new Rect(0, 0, ClientSize.Width, ClientSize.Height).Contains(MouseClientPosition))
             {
-                MouseState.Z = 0;
+                DeviceInput.MouseState.Z = 0;
             }
 
             foreach (var sprite in Sprites.Values) sprite.OnUpdate(lastFrameTimeInSecond);
@@ -133,9 +116,7 @@ namespace FlysEngine.Sprites
         {
             if (disposing)
             {
-                Keyboard.Dispose();
-                Mouse.Dispose();
-                DirectInput.Dispose();
+                DeviceInput?.Dispose();
             }
 
             base.Dispose(disposing);

@@ -15,7 +15,7 @@
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
-    <Version>2.0.4</Version>
+    <Version>2.0.5</Version>
     <PackageReleaseNotes>https://github.com/sdcb/FlysEngine/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <IncludeSymbols>true</IncludeSymbols>
@@ -25,7 +25,6 @@
   <ItemGroup>
     <PackageReference Include="AdamsLair.Duality.Physics" Version="4.0.0-alpha2" />
     <PackageReference Include="AdamsLair.Duality.Primitives" Version="4.0.0-alpha2" />
-    <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
   </ItemGroup>
 
   <ItemGroup>

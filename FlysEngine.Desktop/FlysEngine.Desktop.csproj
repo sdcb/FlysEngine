@@ -14,7 +14,7 @@
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
-    <Version>2.0.4</Version>
+    <Version>2.0.5</Version>
     <PackageReleaseNotes>https://github.com/sdcb/FlysEngine/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.4" />
+    <PackageReference Include="Vortice.DirectInput" Version="2.1.23-beta" />
   </ItemGroup>
 
   <ItemGroup>

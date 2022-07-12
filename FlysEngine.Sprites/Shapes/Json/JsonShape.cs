@@ -1,5 +1,4 @@
-﻿using SharpDX;
-using System;
+﻿using System;
 using System.Numerics;
 
 namespace FlysEngine.Sprites.Shapes.Json
