@@ -9,8 +9,7 @@ namespace FlysEngine.Desktop
     {
         UpdateLayeredWindowInfo info;
         BlendFunction blend;
-        Size size;
-        Point source = new Point(), destination = new Point();
+        Point source = new Point();
 
         public LayeredWindowContext(Size size, Point destination)
         {
@@ -19,14 +18,12 @@ namespace FlysEngine.Desktop
             info.BlendFunction = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(BlendFunction)));
             Marshal.StructureToPtr(blend, info.BlendFunction, false);
 
-            this.size = size;
             info.WindowSize = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Size)));
             Marshal.StructureToPtr(size, info.WindowSize, false);
 
             info.SourcePoint = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Point)));
             Marshal.StructureToPtr(source, info.SourcePoint, false);
 
-            this.destination = destination;
             info.DestinationPoint = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Point)));
             Marshal.StructureToPtr(destination, info.DestinationPoint, false);
 
@@ -37,7 +34,6 @@ namespace FlysEngine.Desktop
         public void Move(Point destination)
         {
             Marshal.DestroyStructure(info.DestinationPoint, typeof(Point));
-            this.destination = destination;
             info.DestinationPoint = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Point)));
             Marshal.StructureToPtr(destination, info.DestinationPoint, false);
         }
@@ -55,7 +51,6 @@ namespace FlysEngine.Desktop
         public void Resize(Size size)
         {
             Marshal.DestroyStructure(info.WindowSize, typeof(Size));
-            this.size = size;
             info.WindowSize = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Size)));
             Marshal.StructureToPtr(size, info.WindowSize, false);
         }
