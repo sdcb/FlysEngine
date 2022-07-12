@@ -24,9 +24,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vortice.Direct2D1" Version="2.1.22-beta" />
-    <PackageReference Include="Vortice.Direct3D11" Version="2.1.22-beta" />
-    <PackageReference Include="Vortice.UIAnimation" Version="2.1.22-beta" />
+    <PackageReference Include="Vortice.Direct2D1" Version="2.1.23-beta" />
+    <PackageReference Include="Vortice.Direct3D11" Version="2.1.23-beta" />
+    <PackageReference Include="Vortice.UIAnimation" Version="2.1.23-beta" />
   </ItemGroup>
 
   <ItemGroup>
