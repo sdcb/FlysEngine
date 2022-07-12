@@ -29,7 +29,7 @@ static class C
 
 class Game : SpriteWindow
 {
-	public Dictionary<Guid, Sprite> Blocks = new Dictionary<Guid, Sprite>();
+	public Dictionary<int, Sprite> Blocks = new ();
 	public Sprite Breaker, Ball, Walls, FailureArea;
 	public GameState State { get; set; } = GameState.BallOnBreaker;
 	private Direct2D.ID2D1Brush BallBrush;
