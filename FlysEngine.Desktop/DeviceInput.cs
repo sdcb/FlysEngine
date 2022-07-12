@@ -18,9 +18,12 @@ namespace FlysEngine.Desktop
         public DeviceInput()
         {
             Keyboard = DirectInput.CreateDevice(PredefinedDevice.SysKeyboard);
-            Keyboard.Acquire();
+            Keyboard.SetDataFormat<RawKeyboardState>();
+            Keyboard.Acquire().CheckError();
+
             Mouse = DirectInput.CreateDevice(PredefinedDevice.SysMouse);
-            Mouse.Acquire();
+            Mouse.SetDataFormat<RawMouseState>();
+            Mouse.Acquire().CheckError();
         }
 
         public void UpdateKeyboard() => Keyboard.GetCurrentKeyboardState(ref KeyboardState);
@@ -31,6 +34,11 @@ namespace FlysEngine.Desktop
         {
             UpdateKeyboard();
             UpdateMouse();
+        }
+
+        public void ClearKeyboard()
+        {
+            KeyboardState = new();
         }
 
         public void Dispose()

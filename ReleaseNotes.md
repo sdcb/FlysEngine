@@ -1,5 +1,8 @@
 # Current Versions
 
+## 2022-07-12
+* Release 2.0.6, switch DirectInput into Vortice dependency.
+
 ## 2022-07-06
 * Release 2.0.4, support Windows Animation Manager, upgrade dependencies to latest
 

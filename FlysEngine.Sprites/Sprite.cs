@@ -11,7 +11,9 @@ namespace FlysEngine.Sprites
 {
     public class Sprite : IDisposable
     {
-        public Guid Id { get; } = Guid.NewGuid();
+        static int _nextId = 0;
+
+        public int Id { get; } = _nextId++;
 
         public string Name { get; set; }
 
