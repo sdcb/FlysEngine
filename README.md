@@ -32,58 +32,58 @@ Real-time 2D rendering utilities based on SharpDX/Direct2D.
   using (var res = new XResource())
   using (var form = new Form() { Text = "Hello World" })
   {
-      var timer = new RenderTimer();
-      IDWriteTextFormat bottomRightFont = res.DWriteFactory.CreateTextFormat("Consolas", 16.0f);
-      bottomRightFont.FlowDirection = FlowDirection.BottomToTop;
-      bottomRightFont.TextAlignment = TextAlignment.Trailing;
-  
-      IDWriteTextFormat bottomLeftFont = res.DWriteFactory.CreateTextFormat("Consolas", FontWeight.Normal, FontStyle.Italic, FontStretch.Normal, 24.0f);
-      bottomLeftFont.FlowDirection = FlowDirection.BottomToTop;
-      bottomLeftFont.TextAlignment = TextAlignment.Leading;
-  
-      form.Resize += (o, e) =>
+    var timer = new RenderTimer();
+    IDWriteTextFormat bottomRightFont = res.DWriteFactory.CreateTextFormat("Consolas", 16.0f);
+    bottomRightFont.FlowDirection = Vortice.DirectWrite.FlowDirection.BottomToTop;
+    bottomRightFont.TextAlignment = TextAlignment.Trailing;
+
+    IDWriteTextFormat bottomLeftFont = res.DWriteFactory.CreateTextFormat("Consolas", FontWeight.Normal, Vortice.DirectWrite.FontStyle.Italic, FontStretch.Normal, 24.0f);
+    bottomLeftFont.FlowDirection = Vortice.DirectWrite.FlowDirection.BottomToTop;
+    bottomLeftFont.TextAlignment = TextAlignment.Leading;
+
+    form.Resize += (o, e) =>
+    {
+      if (form.WindowState != FormWindowState.Minimized && res.DeviceAvailable)
       {
-          if (form.WindowState != FormWindowState.Minimized && res.DeviceAvailable)
-          {
-              res.Resize();
-          }
-      };
-  
-      RenderLoop.Run(form, () => Render());
-  
-      void Render()
-      {
-          if (!res.DeviceAvailable) res.InitializeDevice(form.Handle);
-  
-          var target = res.RenderTarget;
-  
-          timer.BeginFrame();
-          target.BeginDraw();
-          Draw(target);
-          target.EndDraw();
-          res.SwapChain.Present(1, 0);
-          timer.EndFrame();
+        res.Resize();
       }
-  
-      void Draw(ID2D1DeviceContext target)
-      {
-          target.Clear(Color4.CornflowerBlue);
-          RectangleF rectangle = new RectangleF(0, 0, target.Size.Width, target.Size.Height);
-  
-          target.DrawRectangle(
-              new RectangleF(10, 10, target.Size.Width - 20, target.Size.Height - 20),
-              res.GetColor(Color4.Blue));
-  
-          target.DrawText("😀😁😂🤣😃😄😅😆😉😊😋😎",
-              res.TextFormats[36], rectangle, res.GetColor(Color4.Blue),
-              DrawTextOptions.EnableColorFont);
-  
-          target.DrawText("FPS: " + timer.FramesPerSecond.ToString("F1"),
-              bottomRightFont, rectangle, res.GetColor(Color4.Red));
-  
-          target.DrawText("Hello World",
-              bottomLeftFont, rectangle, res.GetColor(Color4.Purple));
-      }
+    };
+
+    RenderLoop.Run(form, () => Render());
+
+    void Render()
+    {
+      if (!res.DeviceAvailable) res.InitializeDevice(form.Handle);
+
+      var target = res.RenderTarget;
+
+      timer.BeginFrame();
+      target.BeginDraw();
+      Draw(target);
+      target.EndDraw();
+      res.SwapChain.Present(1, 0);
+      timer.EndFrame();
+    }
+
+    void Draw(ID2D1DeviceContext target)
+    {
+      target.Clear(Colors.CornflowerBlue);
+      Rect rectangle = new Rect(0, 0, target.Size.Width, target.Size.Height);
+
+      target.DrawRectangle(
+        new Rect(10, 10, target.Size.Width - 20, target.Size.Height - 20),
+        res.GetColor(Colors.Blue));
+
+      target.DrawText("😀😁😂🤣😃😄😅😆😉😊😋😎",
+        res.TextFormats[36], rectangle, res.GetColor(Colors.Blue),
+        DrawTextOptions.EnableColorFont);
+
+      target.DrawText("FPS: " + timer.FramesPerSecond.ToString("F1"),
+        bottomRightFont, rectangle, res.GetColor(Colors.Red));
+
+      target.DrawText("Hello World",
+        bottomLeftFont, rectangle, res.GetColor(Colors.Purple));
+    }
   }
   ```
 * Compile and run.
