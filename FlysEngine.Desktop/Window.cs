@@ -79,6 +79,8 @@ namespace FlysEngine.Desktop
 
         protected virtual IntPtr WindowProc(HWND hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
+            if (WndProc(msg, wParam, lParam)) return IntPtr.Zero;
+
             switch (msg)
             {
                 case (uint)WindowMessage.WM_DESTROY:
@@ -99,6 +101,9 @@ namespace FlysEngine.Desktop
 
         public event EventHandler<ResizeEventArgs> Resize;
         protected virtual void OnResize(bool isMinimized, int newWidth, int newHeight) { }
+
+        /// <returns>is handled</returns>
+        protected virtual IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam) { return IntPtr.Zero; }
 
         #region Dispose Pattern
         protected virtual void Dispose(bool disposing)

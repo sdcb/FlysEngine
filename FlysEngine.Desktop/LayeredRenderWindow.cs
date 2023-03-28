@@ -1,5 +1,6 @@
 ﻿using FlysEngine.Tools;
 using System;
+using Vanara.PInvoke;
 using Vortice.Direct2D1;
 
 namespace FlysEngine.Desktop
@@ -16,20 +17,18 @@ namespace FlysEngine.Desktop
             FormBorderStyle = FormBorderStyle.None;
         }
 
-        protected override void WndProc(ref Message m)
+        protected override IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam)
         {
             const int WM_NCHITTEST = 0x84;
             const int HT_CAPTION = 0x2;
-
-            base.WndProc(ref m);
-
             if (DragMoveEnabled)
             {
-                if (m.Msg == WM_NCHITTEST)
+                if (message == WM_NCHITTEST)
                 {
-                    m.Result = (IntPtr)(HT_CAPTION);
+                    return (IntPtr)HT_CAPTION;
                 }
             }
+            return IntPtr.Zero;
         }
 
         protected override CreateParams CreateParams
