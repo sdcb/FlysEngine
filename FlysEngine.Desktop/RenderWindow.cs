@@ -1,14 +1,13 @@
 ﻿using FlysEngine.Managers;
 using SharpGen.Runtime;
-using System;
 using System.Threading;
-using System.Windows.Forms;
+using Vanara.PInvoke;
 using Vortice.Direct2D1;
 using Vortice.DXGI;
 
 namespace FlysEngine.Desktop
 {
-    public class RenderWindow : Form
+    public class RenderWindow : Window
     {
         public XResource XResource { get; } = new XResource();
         public RenderTimer RenderTimer { get; } = new RenderTimer();
@@ -24,9 +23,13 @@ namespace FlysEngine.Desktop
         public event RenderWindowAction ReleaseDeviceResources;
         public event RenderWindowAction CreateDeviceSizeResources;
 
+        public RenderWindow(int width = 800, int height = 600, string title = "Render Window") : base(CreateDefault(width, height, title))
+        {
+        }
+
         public virtual void Render(int syncInterval, PresentFlags presentFlags)
         {
-            if (WindowState == FormWindowState.Minimized)
+            if (WindowState == ShowWindowCommand.SW_SHOWMINIMIZED)
             {
                 Thread.Sleep(1);
                 return;
@@ -44,7 +47,7 @@ namespace FlysEngine.Desktop
 
         protected virtual void InitializeResources()
         {
-            XResource.InitializeDevice(Handle);
+            XResource.InitializeDevice(Handle.DangerousGetHandle());
 
             OnCreateDeviceResources();
             OnCreateDeviceSizeResources();
@@ -94,11 +97,9 @@ namespace FlysEngine.Desktop
         {
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnResize(bool isMinimized, int newWidth, int newHeight)
         {
-            base.OnResize(e);
-
-            if (WindowState != FormWindowState.Minimized && XResource.DeviceAvailable)
+            if (!isMinimized && XResource.DeviceAvailable)
             {
                 OnReleaseDeviceSizeResources();
 

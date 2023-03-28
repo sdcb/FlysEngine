@@ -1,6 +1,5 @@
 ﻿using FlysEngine.Tools;
 using System;
-using System.Windows.Forms;
 using Vortice.Direct2D1;
 
 namespace FlysEngine.Desktop
@@ -52,11 +51,11 @@ namespace FlysEngine.Desktop
             layeredWindowCtx.Move(Location);
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnResize(bool isMinimized, int newWidth, int newHeight)
         {
             layeredWindowCtx.Resize(Size);
 
-            if (!XResource.DeviceAvailable || WindowState == FormWindowState.Minimized) return;
+            if (!XResource.DeviceAvailable || isMinimized) return;
 
             OnReleaseDeviceSizeResources();
 
@@ -68,7 +67,7 @@ namespace FlysEngine.Desktop
 
         protected override void InitializeResources()
         {
-            XResource.InitializeDeviceGdiCompatible(Handle, Size.Width, Size.Height);
+            XResource.InitializeDeviceGdiCompatible(Handle.DangerousGetHandle(), Size.Width, Size.Height);
 
             OnCreateDeviceResources();
             OnCreateDeviceSizeResources();
@@ -79,7 +78,7 @@ namespace FlysEngine.Desktop
             using (ID2D1GdiInteropRenderTarget gdi = XResource.RenderTarget.QueryInterface<ID2D1GdiInteropRenderTarget>())
             {
                 var hdc = gdi.GetDC(DcInitializeMode.Copy);
-                layeredWindowCtx.Draw(Handle, hdc);
+                layeredWindowCtx.Draw(Handle.DangerousGetHandle(), hdc);
                 gdi.ReleaseDC(null);
             }
         }
