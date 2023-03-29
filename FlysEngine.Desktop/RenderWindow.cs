@@ -1,9 +1,11 @@
 ﻿using FlysEngine.Managers;
 using SharpGen.Runtime;
+using System;
 using System.Threading;
 using Vanara.PInvoke;
 using Vortice.Direct2D1;
 using Vortice.DXGI;
+using static Vanara.PInvoke.User32;
 
 namespace FlysEngine.Desktop
 {
@@ -23,6 +25,8 @@ namespace FlysEngine.Desktop
         public event RenderWindowAction ReleaseDeviceResources;
         public event RenderWindowAction CreateDeviceSizeResources;
 
+        public bool DragMoveEnabled { get; set; }
+
         public virtual void Render(int syncInterval, PresentFlags presentFlags)
         {
             if (WindowState == ShowWindowCommand.SW_SHOWMINIMIZED)
@@ -39,6 +43,20 @@ namespace FlysEngine.Desktop
             float lastFrameTimeInSecond = RenderTimer.BeginFrame();
             RenderCore(syncInterval, presentFlags, lastFrameTimeInSecond);
             RenderTimer.EndFrame();
+        }
+
+        protected override IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam)
+        {
+            if (message == (uint)WindowMessage.WM_NCHITTEST)
+            {
+                const int HT_CAPTION = 0x2;
+                if (DragMoveEnabled)
+                {
+                    return (IntPtr)HT_CAPTION;
+                }
+            }
+
+            return IntPtr.Zero;
         }
 
         protected virtual void InitializeResources()

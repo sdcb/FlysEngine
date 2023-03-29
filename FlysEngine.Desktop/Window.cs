@@ -12,7 +12,7 @@ namespace FlysEngine.Desktop
     {
         public Window()
         {
-            (HWND hwnd, string className) = WindowHelper.CreateDefault(CW_USEDEFAULT, CW_USEDEFAULT, "Window", WindowProc);
+            (HWND hwnd, string className) = WindowHelper.CreateDefault(300, 300, "Window", WindowProc);
             Handle = hwnd;
             _className = className;
         }

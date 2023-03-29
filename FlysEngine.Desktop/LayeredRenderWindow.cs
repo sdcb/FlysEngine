@@ -13,30 +13,25 @@ namespace FlysEngine.Desktop
     {
         private LayeredWindowContext layeredWindowCtx;
 
-        public bool DragMoveEnabled { get; set; }
-
         public LayeredRenderWindow()
         {
             layeredWindowCtx = new LayeredWindowContext(Size, Location);
 
-            nint style = GetWindowLong(Handle, WindowLongFlags.GWL_STYLE);
-            style &= ~(nint)(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU);
-            SetWindowLong(Handle, WindowLongFlags.GWL_STYLE, style);
-            SetWindowPos(Handle, HWND.NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
-        }
-
-        protected override IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam)
-        {
-            if (message == (uint)WindowMessage.WM_NCHITTEST)
             {
-                const int HT_CAPTION = 0x2;
-                if (DragMoveEnabled)
-                {
-                    return (IntPtr)HT_CAPTION;
-                }
+                // Remove border
+                nint style = GetWindowLong(Handle, WindowLongFlags.GWL_STYLE);
+                style &= ~(nint)(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU);
+                SetWindowLong(Handle, WindowLongFlags.GWL_STYLE, style);
             }
 
-            return IntPtr.Zero;
+            {
+                // Layered window
+                nint style = GetWindowLong(Handle, WindowLongFlags.GWL_EXSTYLE);
+                style |= (nint)WindowStylesEx.WS_EX_LAYERED;
+                SetWindowLong(Handle, WindowLongFlags.GWL_EXSTYLE, style);
+            }
+
+            SetWindowPos(Handle, HWND.NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
         }
 
         protected override void OnMove(int x, int y)
