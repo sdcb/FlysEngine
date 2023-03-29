@@ -10,15 +10,15 @@ namespace FlysEngine.Desktop
             while (true)
             {
                 // Process all waiting messages
-                while (PeekMessage(out MSG message, HWND.NULL, 0, 0, PM.PM_REMOVE))
+                while (PeekMessage(out MSG msg, HWND.NULL, 0, 0, PM.PM_REMOVE))
                 {
-                    if (message.message == (uint)WindowMessage.WM_QUIT)
+                    if (msg.message == (uint)WindowMessage.WM_QUIT)
                     {
                         return;
                     }
 
-                    TranslateMessage(in message);
-                    DispatchMessage(in message);
+                    TranslateMessage(in msg);
+                    DispatchMessage(in msg);
                 }
 
                 // Call the render callback

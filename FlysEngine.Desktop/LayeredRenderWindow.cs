@@ -1,5 +1,6 @@
 ﻿using FlysEngine.Tools;
 using System;
+using System.Drawing;
 using Vanara.PInvoke;
 using Vortice.Direct2D1;
 
@@ -14,40 +15,29 @@ namespace FlysEngine.Desktop
         public LayeredRenderWindow()
         {
             layeredWindowCtx = new LayeredWindowContext(Size, Location);
-            FormBorderStyle = FormBorderStyle.None;
         }
 
         protected override IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam)
         {
-            const int WM_NCHITTEST = 0x84;
-            const int HT_CAPTION = 0x2;
-            if (DragMoveEnabled)
+            if (message == (uint)User32.WindowMessage.WM_NCHITTEST)
             {
-                if (message == WM_NCHITTEST)
+                const int HT_CAPTION = 0x2;
+                if (DragMoveEnabled)
                 {
                     return (IntPtr)HT_CAPTION;
                 }
             }
+            else if (message == (uint)User32.WindowMessage.WM_CREATE)
+            {
+
+            }
+
             return IntPtr.Zero;
         }
 
-        protected override CreateParams CreateParams
+        protected override void OnMove(int x, int y)
         {
-            get
-            {
-                const int WS_EX_LAYERED = 0x00080000;
-                var baseParams = base.CreateParams;
-
-                baseParams.ExStyle |= (WS_EX_LAYERED);
-
-                return baseParams;
-            }
-        }
-
-        protected override void OnMove(EventArgs e)
-        {
-            base.OnMove(e);
-            layeredWindowCtx.Move(Location);
+            layeredWindowCtx.Move(new Point(x, y));
         }
 
         protected override void OnResize(bool isMinimized, int newWidth, int newHeight)

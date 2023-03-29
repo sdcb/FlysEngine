@@ -79,7 +79,8 @@ namespace FlysEngine.Desktop
 
         protected virtual IntPtr WindowProc(HWND hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
-            if (WndProc(msg, wParam, lParam)) return IntPtr.Zero;
+            IntPtr processed = WndProc(msg, wParam, lParam);
+            if (processed != IntPtr.Zero) return processed;
 
             switch (msg)
             {
@@ -93,7 +94,12 @@ namespace FlysEngine.Desktop
                     int newHeight = Macros.HIWORD(lParam);
                     Resize?.Invoke(this, new ResizeEventArgs(isMinimized, newWidth, newHeight));
                     OnResize(isMinimized, newWidth, newHeight);
-                    return IntPtr.Zero;
+                    break;
+                case (uint)WindowMessage.WM_MOVE:
+                    int x = Macros.LOWORD(lParam);
+                    int y = Macros.HIWORD(lParam);
+                    OnMove(x, y);
+                    break;
             }
 
             return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -101,6 +107,7 @@ namespace FlysEngine.Desktop
 
         public event EventHandler<ResizeEventArgs> Resize;
         protected virtual void OnResize(bool isMinimized, int newWidth, int newHeight) { }
+        protected virtual void OnMove(int x, int y) { }
 
         /// <returns>is handled</returns>
         protected virtual IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam) { return IntPtr.Zero; }

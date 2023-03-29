@@ -1,6 +1,7 @@
 ﻿using FlysEngine;
 using FlysEngine.Desktop;
 using FlysEngine.Managers;
+using Vanara.PInvoke;
 using Vortice.Direct2D1;
 using Vortice.DirectWrite;
 using Vortice.Mathematics;
@@ -37,7 +38,13 @@ namespace FlysTest
                     }
                 };
 
-                RenderLoop.Run(form, () => Render());
+                form.FormClosed += (o, e) =>
+                {
+                    User32.PostQuitMessage(0);
+                };
+
+                form.Show();
+                RenderLoop.Run(form.Handle, () => Render());
 
                 void Render()
                 {
@@ -56,10 +63,10 @@ namespace FlysTest
                 void Draw(ID2D1DeviceContext target)
                 {
                     target.Clear(Colors.CornflowerBlue);
-                    Rect rectangle = new(0, 0, target.Size.Width, target.Size.Height);
+                    RectangleF rectangle = new(0, 0, target.Size.Width, target.Size.Height);
 
                     target.DrawRectangle(
-                        new Rect(10, 10, target.Size.Width - 20, target.Size.Height - 20),
+                        new RectangleF(10, 10, target.Size.Width - 20, target.Size.Height - 20),
                         res.GetColor(Colors.Blue));
 
                     target.DrawText("😀😁😂🤣😃😄😅😆😉😊😋😎",
