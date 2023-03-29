@@ -15,7 +15,6 @@
   <Reference>&lt;RuntimeDirectory&gt;\WPF\UIAutomationTypes.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\WPF\WindowsBase.dll</Reference>
   <NuGetReference>AdamsLair.FarseerDuality</NuGetReference>
-  <NuGetReference Prerelease="true">FlysEngine</NuGetReference>
   <NuGetReference Prerelease="true">FlysEngine.Desktop</NuGetReference>
   <Namespace>Direct2D = Vortice.Direct2D1</Namespace>
   <Namespace>DirectWrite = Vortice.DirectWrite</Namespace>
@@ -56,7 +55,7 @@ class Game : RenderWindow
 	private List<Direct2D.ID2D1Brush> RectBrushes;
 	public Matrix3x2 GlobalTransform { get; set; }
 
-	protected override void OnLoad()
+	protected override void OnLoad(EventArgs e)
 	{
 		Text = "Block Breaker";
 
@@ -135,7 +134,7 @@ class Game : RenderWindow
 
 		var sprite = new Sprite(this)
 		{
-			Name = "Border", 
+			Name = "Border",
 			Shapes = lines.Select(x =>
 				(Shape)new EdgeShape(new Vector2(x[0], x[1]), new Vector2(x[2], x[3]))).ToList()
 		};
@@ -147,7 +146,7 @@ class Game : RenderWindow
 	{
 		var sprite = new Sprite(this)
 		{
-			Name = "Bottom", 
+			Name = "Bottom",
 			Shapes = new List<Shape>
 			{
 				(Shape)new EdgeShape(new Vector2(0, C.Height), new Vector2(C.Width, C.Height))
@@ -170,7 +169,7 @@ class Game : RenderWindow
 	{
 		var ball = new Sprite(this)
 		{
-			Name = $"Ball", 
+			Name = $"Ball",
 			Shapes = new List<UserQuery.Shape>
 			{
 				new CircleShape(C.BallR)
@@ -187,9 +186,9 @@ class Game : RenderWindow
 	{
 		var sprite = new Sprite(this)
 		{
-			Name = $"Breaker", 
+			Name = $"Breaker",
 			Position = new Vector2(C.Width / 2 - C.BlockWidth * 1.5f / 2, C.Height - C.BallR * 3), // Center
-			Center = new Vector2(C.BlockWidth * 1.5f / 2, 0), 
+			Center = new Vector2(C.BlockWidth * 1.5f / 2, 0),
 			Shapes = new List<UserQuery.Shape>
 			{
 				new RectangleShape
@@ -235,7 +234,7 @@ class Game : RenderWindow
 		foreach (var sprite in Sprites) sprite.Draw(ctx);
 	}
 
-	protected override void OnMouseMove(MouseEventArgs e)
+	protected override void OnMouseMove(PointEventArgs e)
 	{
 		base.OnMouseMove(e);
 
@@ -250,7 +249,7 @@ class Game : RenderWindow
 		Breaker.QueryBehavior<BreakerBehavior>().MoveX(invertPoint.X);
 	}
 
-	protected override void OnClick(EventArgs e)
+	protected override void OnClick(PointEventArgs e)
 	{
 		base.OnClick(e);
 
@@ -311,7 +310,7 @@ public class RectangleShape : Shape
 
 	public override void Draw(Direct2D.ID2D1DeviceContext renderTarget, Direct2D.ID2D1Brush brush) => renderTarget.FillRectangle(Rect, brush);
 
-	public override bool TestPoint(Vector2 point) => Rect.Contains(point);
+	public override bool TestPoint(Vector2 point) => Rect.Contains(point.X, point.Y);
 
 	public override EngineShapes.Shape ToEngineShape()
 	{
@@ -622,6 +621,6 @@ static void Main()
 	FarseerPhysics.Settings.VelocityThreshold = 0.0f;
 	using (var window = new Game())
 	{
-		RenderLoop.Run(window.Handle, () => window.Render(1, 0));
+		RenderLoop.Run(window, () => window.Render(1, 0));
 	}
 }

@@ -175,8 +175,7 @@ namespace FlysEngine.Desktop
                 case (int)WindowMessage.WM_LBUTTONDOWN:
                     {
                         _leftButtonDown = true;
-                        _leftButtonDownPosition.x = GET_X_LPARAM(lParam);
-                        _leftButtonDownPosition.y = GET_Y_LPARAM(lParam);
+                        _leftButtonDownPosition = new (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
                         PointEventArgs args = new(_leftButtonDownPosition.x, _leftButtonDownPosition.y);
                         OnMouseLeftButtonDown(args);
                         MouseLeftButtonDown?.Invoke(this, args);                        
