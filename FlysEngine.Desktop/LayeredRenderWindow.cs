@@ -5,6 +5,7 @@ using Vanara.PInvoke;
 using Vortice.Direct2D1;
 using static Vanara.PInvoke.User32;
 using static Vanara.PInvoke.User32.WindowStyles;
+using static Vanara.PInvoke.User32.SetWindowPosFlags;
 
 namespace FlysEngine.Desktop
 {
@@ -17,6 +18,11 @@ namespace FlysEngine.Desktop
         public LayeredRenderWindow()
         {
             layeredWindowCtx = new LayeredWindowContext(Size, Location);
+
+            nint style = GetWindowLong(Handle, WindowLongFlags.GWL_STYLE);
+            style &= ~(nint)(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU);
+            SetWindowLong(Handle, WindowLongFlags.GWL_STYLE, style);
+            SetWindowPos(Handle, HWND.NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
         }
 
         protected override IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam)
@@ -28,12 +34,6 @@ namespace FlysEngine.Desktop
                 {
                     return (IntPtr)HT_CAPTION;
                 }
-            }
-            else if (message == (uint)WindowMessage.WM_CREATE)
-            {
-                //nint style = GetWindowLong(Handle, WindowLongFlags.GWL_STYLE);
-                //style &= ~(nint)(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU);
-                //SetWindowLong(Handle, WindowLongFlags.GWL_STYLE, style);
             }
 
             return IntPtr.Zero;

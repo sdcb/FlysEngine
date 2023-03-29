@@ -17,7 +17,7 @@ namespace FlysTest.Desktop
         [STAThread]
         static void Main()
         {
-            using RenderWindow window = new () { Text = "Hello World" };
+            using LayeredRenderWindow window = new () { Text = "Hello World", DragMoveEnabled = true };
             IDWriteTextFormat bottomRightFont = window.XResource.DWriteFactory.CreateTextFormat("Consolas", 16.0f);
             bottomRightFont.FlowDirection = FlowDirection.BottomToTop;
             bottomRightFont.TextAlignment = TextAlignment.Trailing;
