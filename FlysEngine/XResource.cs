@@ -53,7 +53,7 @@ namespace FlysEngine
             return _solidBrush;
         }
 
-        public Vector2 InvertTransformPoint(Matrix3x2 matrix, Vector2 point)
+        public static Vector2 InvertTransformPoint(Matrix3x2 matrix, Vector2 point)
         {
             if (Matrix3x2.Invert(matrix, out Matrix3x2 inverted))
             {
