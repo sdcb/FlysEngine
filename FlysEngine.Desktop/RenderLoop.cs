@@ -16,7 +16,7 @@ namespace FlysEngine.Desktop
             while (true)
             {
                 // Process all waiting messages
-                while (PeekMessage(out MSG msg, HWND.NULL, 0, 0, PM.PM_REMOVE))
+                while (PeekMessage(out MSG msg, HWND.NULL, 0u, 0u, PM.PM_REMOVE))
                 {
                     if (msg.message == (uint)WindowMessage.WM_QUIT)
                     {
