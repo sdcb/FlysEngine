@@ -1,20 +1,6 @@
 <Query Kind="Program">
-  <Reference>&lt;RuntimeDirectory&gt;\Accessibility.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\PresentationCore.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\PresentationFramework.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\PresentationUI.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\ReachFramework.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Configuration.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Deployment.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\System.Printing.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Runtime.Serialization.Formatters.Soap.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Security.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Windows.Forms.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Xaml.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\UIAutomationProvider.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\UIAutomationTypes.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\WindowsBase.dll</Reference>
-  <NuGetReference>AdamsLair.FarseerDuality</NuGetReference>
+  <NuGetReference Prerelease="true">AdamsLair.Duality.Physics</NuGetReference>
+  <NuGetReference Prerelease="true">AdamsLair.Duality.Primitives</NuGetReference>
   <NuGetReference Prerelease="true">FlysEngine.Desktop</NuGetReference>
   <Namespace>Direct2D = Vortice.Direct2D1</Namespace>
   <Namespace>DirectWrite = Vortice.DirectWrite</Namespace>
