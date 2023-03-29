@@ -142,29 +142,34 @@ namespace FlysEngine.Desktop
                     PostQuitMessage(0);
                     return IntPtr.Zero;
                 case (uint)WindowMessage.WM_SIZE:
-                    if (Handle == IntPtr.Zero) break;
-                    const int SIZE_MINIMIZED = 1;
-                    bool isMinimized = (int)wParam == SIZE_MINIMIZED;
-                    int newWidth = LOWORD(lParam);
-                    int newHeight = HIWORD(lParam);
-                    Resize?.Invoke(this, new ResizeEventArgs(isMinimized, newWidth, newHeight));
-                    OnResize(isMinimized, newWidth, newHeight);
+                    {
+                        if (Handle == IntPtr.Zero) break;
+                        const int SIZE_MINIMIZED = 1;
+                        bool isMinimized = (int)wParam == SIZE_MINIMIZED;
+                        int newWidth = LOWORD(lParam);
+                        int newHeight = HIWORD(lParam);
+                        ResizeEventArgs args = new(isMinimized, newWidth, newHeight);
+                        OnResize(args);
+                        Resize?.Invoke(this, args);
+                    }
                     break;
                 case (uint)WindowMessage.WM_MOVE:
                     {
                         if (Handle == IntPtr.Zero) break;
                         int x = GET_X_LPARAM(lParam);
                         int y = GET_Y_LPARAM(lParam);
-                        Move?.Invoke(this, new PointEventArgs(x, y));
-                        OnMove(x, y);
+                        PointEventArgs args = new(x, y);
+                        OnMove(args);
+                        Move?.Invoke(this, args);                        
                     }
                     break;
                 case (int)WindowMessage.WM_MOUSEMOVE:
                     {
                         int x = GET_X_LPARAM(lParam);
                         int y = GET_X_LPARAM(lParam);
-                        MouseMove?.Invoke(this, new PointEventArgs(x, y));
-                        OnMouseMove(x, y);
+                        PointEventArgs args = new PointEventArgs(x, y);
+                        OnMouseMove(args);
+                        MouseMove?.Invoke(this, args);                        
                     }
                     break;
                 case (int)WindowMessage.WM_LBUTTONDOWN:
@@ -172,8 +177,9 @@ namespace FlysEngine.Desktop
                         _leftButtonDown = true;
                         _leftButtonDownPosition.x = GET_X_LPARAM(lParam);
                         _leftButtonDownPosition.y = GET_Y_LPARAM(lParam);
-                        MouseLeftButtonDown?.Invoke(this, new PointEventArgs(_leftButtonDownPosition.x, _leftButtonDownPosition.y));
-                        OnMouseLeftButtonDown(_leftButtonDownPosition.x, _leftButtonDownPosition.y);
+                        PointEventArgs args = new(_leftButtonDownPosition.x, _leftButtonDownPosition.y);
+                        OnMouseLeftButtonDown(args);
+                        MouseLeftButtonDown?.Invoke(this, args);                        
                     }
                     break;
                 case (int)WindowMessage.WM_LBUTTONUP:
@@ -181,8 +187,8 @@ namespace FlysEngine.Desktop
                         POINT upPosition = new(
                                 GET_X_LPARAM(lParam),
                                 GET_Y_LPARAM(lParam));
-                        MouseLeftButtonUp?.Invoke(this, new PointEventArgs(_leftButtonDownPosition.x, _leftButtonDownPosition.y));
-                        OnMouseLeftButtonUp(_leftButtonDownPosition.x, _leftButtonDownPosition.y);
+                        OnMouseLeftButtonUp(new PointEventArgs(_leftButtonDownPosition.x, _leftButtonDownPosition.y));
+                        MouseLeftButtonUp?.Invoke(this, new PointEventArgs(_leftButtonDownPosition.x, _leftButtonDownPosition.y));                        
 
                         if (_leftButtonDown)
                         {
@@ -191,8 +197,8 @@ namespace FlysEngine.Desktop
                                 Math.Abs(upPosition.y - _leftButtonDownPosition.y) < 5)
                             {
                                 // 处理鼠标左键点击事件
+                                OnClick(new PointEventArgs(_leftButtonDownPosition.x, _leftButtonDownPosition.y));
                                 Click?.Invoke(this, new PointEventArgs(_leftButtonDownPosition.x, _leftButtonDownPosition.y));
-                                OnClick(_leftButtonDownPosition.x, _leftButtonDownPosition.y);
                             }
                         }
                         _leftButtonDown = false;
@@ -211,13 +217,13 @@ namespace FlysEngine.Desktop
         public event EventHandler<PointEventArgs> MouseLeftButtonDown;
         public event EventHandler<PointEventArgs> MouseLeftButtonUp;
 
-        protected virtual void OnLoad() { }
-        protected virtual void OnResize(bool isMinimized, int newWidth, int newHeight) { }
-        protected virtual void OnMove(int x, int y) { }
-        protected virtual void OnMouseMove(int x, int y) { }
-        protected virtual void OnClick(int x, int y) { }
-        protected virtual void OnMouseLeftButtonDown(int x, int y) { }
-        protected virtual void OnMouseLeftButtonUp(int x, int y) { }
+        protected virtual void OnLoad(EventArgs e) { }
+        protected virtual void OnResize(ResizeEventArgs e) { }
+        protected virtual void OnMove(PointEventArgs e) { }
+        protected virtual void OnMouseMove(PointEventArgs e) { }
+        protected virtual void OnClick(PointEventArgs e) { }
+        protected virtual void OnMouseLeftButtonDown(PointEventArgs e) { }
+        protected virtual void OnMouseLeftButtonUp(PointEventArgs e) { }
 
         /// <returns>is handled</returns>
         protected virtual IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam) { return IntPtr.Zero; }
@@ -225,8 +231,8 @@ namespace FlysEngine.Desktop
         internal void EnterMessageLoop()
         {
             Show();
-            Load?.Invoke(this, EventArgs.Empty);
-            OnLoad();
+            OnLoad(EventArgs.Empty);
+            Load?.Invoke(this, EventArgs.Empty);            
             UpdateWindow(Handle);
         }
 

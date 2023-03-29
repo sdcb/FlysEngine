@@ -56,10 +56,9 @@ class Game : RenderWindow
 	private List<Direct2D.ID2D1Brush> RectBrushes;
 	public Matrix3x2 GlobalTransform { get; set; }
 
-	protected override void OnLoad(EventArgs e)
+	protected override void OnLoad()
 	{
 		Text = "Block Breaker";
-		base.OnLoad(e);
 
 		for (var row = 0; row < 4; ++row)
 		{
@@ -67,7 +66,7 @@ class Game : RenderWindow
 			{
 				var block = new Sprite(this)
 				{
-					Name = $"Blocker-{row}-{col}", 
+					Name = $"Blocker-{row}-{col}",
 					Position = new Vector2(
 						C.Offset + col * (C.Offset + C.BlockWidth),
 						C.Offset + row * (C.BlockHeight + C.Offset)),

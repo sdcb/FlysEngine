@@ -111,14 +111,12 @@ namespace FlysEngine.Desktop
         {
         }
 
-        protected override void OnResize(bool isMinimized, int newWidth, int newHeight)
+        protected override void OnResize(ResizeEventArgs e)
         {
-            if (!isMinimized && XResource.DeviceAvailable)
+            if (!e.IsMinimized && XResource.DeviceAvailable)
             {
                 OnReleaseDeviceSizeResources();
-
                 XResource.Resize();
-
                 OnCreateDeviceSizeResources();
             }
         }
