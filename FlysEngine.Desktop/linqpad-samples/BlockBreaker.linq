@@ -15,8 +15,8 @@
   <Reference>&lt;RuntimeDirectory&gt;\WPF\UIAutomationTypes.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\WPF\WindowsBase.dll</Reference>
   <NuGetReference>AdamsLair.FarseerDuality</NuGetReference>
-  <NuGetReference>FlysEngine</NuGetReference>
-  <NuGetReference>FlysEngine.Desktop</NuGetReference>
+  <NuGetReference Prerelease="true">FlysEngine</NuGetReference>
+  <NuGetReference Prerelease="true">FlysEngine.Desktop</NuGetReference>
   <Namespace>Direct2D = Vortice.Direct2D1</Namespace>
   <Namespace>DirectWrite = Vortice.DirectWrite</Namespace>
   <Namespace>EngineShapes = FarseerPhysics.Collision.Shapes</Namespace>
@@ -29,8 +29,8 @@
   <Namespace>System.Numerics</Namespace>
   <Namespace>System.Windows.Forms</Namespace>
   <Namespace>Vortice.Mathematics</Namespace>
-  <Namespace>Xna = Duality</Namespace>
   <Namespace>Vortice.UIAnimation</Namespace>
+  <Namespace>Xna = Duality</Namespace>
 </Query>
 
 static class C
@@ -227,7 +227,7 @@ class Game : RenderWindow
 
 		ctx.DrawText($"FPS: {RenderTimer.FramesPerSecond:F1}",
 			XResource.TextFormats[10.0f],
-			new Rect(0, 0, ctx.Size.Width, ctx.Size.Height),
+			new RectangleF(0, 0, ctx.Size.Width, ctx.Size.Height),
 			XResource.GetColor(Colors.Red));
 
 		float scale = ctx.Size.Height / C.Height;
@@ -308,7 +308,7 @@ public class RectangleShape : Shape
 {
 	public Vector2 Size { get; set; }
 
-	public Rect Rect => new (Offset.X, Offset.Y, Size.X, Size.Y);
+	public RectangleF Rect => new (Offset.X, Offset.Y, Size.X, Size.Y);
 
 	public override void Draw(Direct2D.ID2D1DeviceContext renderTarget, Direct2D.ID2D1Brush brush) => renderTarget.FillRectangle(Rect, brush);
 
@@ -623,6 +623,6 @@ static void Main()
 	FarseerPhysics.Settings.VelocityThreshold = 0.0f;
 	using (var window = new Game())
 	{
-		RenderLoop.Run(window, () => window.Render(1, 0));
+		RenderLoop.Run(window.Handle, () => window.Render(1, 0));
 	}
 }
