@@ -131,7 +131,7 @@ namespace FlysEngine.Desktop
         bool _leftButtonDown = false;
         Point _leftButtonDownPosition;
 
-        protected virtual IntPtr WindowProc(HWND hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        private IntPtr WindowProc(HWND hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             IntPtr processed = WndProc(msg, wParam, lParam);
             if (processed != IntPtr.Zero) return processed;
