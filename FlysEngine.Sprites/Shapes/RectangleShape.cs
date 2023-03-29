@@ -1,5 +1,6 @@
 ﻿using FarseerPhysics.Common;
 using FlysEngine.Sprites.Shapes.Json;
+using System.Drawing;
 using System.Numerics;
 using Vortice.Direct2D1;
 using Vortice.Mathematics;
@@ -9,15 +10,15 @@ namespace FlysEngine.Sprites.Shapes
 {
     public class RectangleShape : Shape
     {
-        public Size Size { get; set; }
+        public SizeF Size { get; set; }
 
-        public Rect Rect => new Rect(Offset, Size);
+        public RectangleF Rect => new(new PointF(Offset.X, Offset.Y), Size);
 
         public RectangleShape() { }
 
         public RectangleShape(JsonShape jsonShape, Vector2 center) : base(jsonShape, center)
         {
-            Size = new Size(jsonShape.Size[0], jsonShape.Size[1]);
+            Size = new SizeF(jsonShape.Size[0], jsonShape.Size[1]);
         }
 
         public override void Draw(ID2D1DeviceContext renderTarget, ID2D1SolidColorBrush brush) => renderTarget.DrawRectangle(Rect, brush);

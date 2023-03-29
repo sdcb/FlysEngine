@@ -94,6 +94,15 @@ namespace FlysEngine.Desktop
             }
         }
 
+        public bool Focused => GetForegroundWindow() == Handle;
+
+        public Point ScreenToClient(Point point)
+        {
+            POINT p = new(point.X, point.Y);
+            User32.ScreenToClient(Handle, ref p);
+            return new Point(p.X, p.Y);
+        }
+
         protected virtual IntPtr WindowProc(HWND hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             IntPtr processed = WndProc(msg, wParam, lParam);

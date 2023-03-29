@@ -8,7 +8,7 @@ namespace FlysEngine.Managers
     public class BitmapManager : IDisposable
     {
         private readonly IWICImagingFactory _imagingFactory;
-        private readonly Dictionary<string, ID2D1Bitmap1> _bmps = new Dictionary<string, ID2D1Bitmap1>();
+        private readonly Dictionary<string, ID2D1Bitmap1> _bmps = new();
         private ID2D1DeviceContext _renderTarget;
 
         public BitmapManager(IWICImagingFactory imagingFactory)

@@ -9,11 +9,11 @@ namespace FlysEngine.Desktop
 
         private IDirectInputDevice8 Keyboard { get; }
 
-        public KeyboardState KeyboardState = new KeyboardState();
+        public KeyboardState KeyboardState = new();
 
         private IDirectInputDevice8 Mouse { get; }
 
-        public MouseState MouseState = new MouseState();
+        public MouseState MouseState = new();
 
         public DeviceInput()
         {
