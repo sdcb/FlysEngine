@@ -5,6 +5,12 @@ namespace FlysEngine.Desktop
 {
     public static class RenderLoop
     {
+        public static void Run(Window window, RenderCallback renderCallback)
+        {
+            window.EnterMessageLoop();
+            Run(window.Handle, renderCallback);
+        }
+
         public static void Run(HWND hwnd, RenderCallback renderCallback)
         {
             while (true)
