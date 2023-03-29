@@ -58,6 +58,7 @@ class Game : RenderWindow
 	protected override void OnLoad(EventArgs e)
 	{
 		Text = "Block Breaker";
+		Size = new Size(600, 600);
 
 		for (var row = 0; row < 4; ++row)
 		{
@@ -99,9 +100,9 @@ class Game : RenderWindow
 				new Direct2D.GradientStop{ Color = Colors.White, Position = 0.0f},
 				new Direct2D.GradientStop{ Color = Colors.Black, Position = 1.0f},
 			}));
-		RectBrushes = new[] { Colors.Yellow, Colors.Orange, Colors.Green, Colors.Blue, Colors.Purple }.Select(c => (Direct2D.ID2D1Brush)
+		RectBrushes = new[] { Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colors.Purple }.Select(c => (Direct2D.ID2D1Brush)
 			XResource.RenderTarget.CreateLinearGradientBrush(
-					new Direct2D.LinearGradientBrushProperties { StartPoint = new Vector2(), EndPoint = new Vector2(C.BlockWidth, C.BlockHeight) },
+					new Direct2D.LinearGradientBrushProperties { StartPoint = new Vector2(), EndPoint = new Vector2(C.BlockWidth / 1.5f, C.BlockHeight / 1.5f) },
 					XResource.RenderTarget.CreateGradientStopCollection(new[]
 					{
 						new Direct2D.GradientStop{ Color = c, Position = 0.1f},

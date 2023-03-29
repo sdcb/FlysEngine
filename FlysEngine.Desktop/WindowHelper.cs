@@ -43,7 +43,7 @@ namespace FlysEngine.Desktop
             }
 
             // 创建窗口
-            SafeHWND hwnd = CreateWindowEx(
+            using SafeHWND hwnd = CreateWindowEx(
                 WindowStylesEx.WS_EX_OVERLAPPEDWINDOW,
                 className,
                 title,
@@ -65,7 +65,7 @@ namespace FlysEngine.Desktop
             // 显示窗口
             ShowWindow(hwnd, ShowWindowCommand.SW_SHOW);
             UpdateWindow(hwnd);
-            return (hwnd, className);
+            return (hwnd.ReleaseOwnership(), className);
         }
     }
 }
