@@ -17,7 +17,7 @@ namespace FlysTest.Desktop
         [STAThread]
         static void Main()
         {
-            using LayeredRenderWindow window = new () { Text = "Hello World", DragMoveEnabled = true };
+            using RenderWindow window = new () { Text = "Hello World" };
             IDWriteTextFormat bottomRightFont = window.XResource.DWriteFactory.CreateTextFormat("Consolas", 16.0f);
             bottomRightFont.FlowDirection = FlowDirection.BottomToTop;
             bottomRightFont.TextAlignment = TextAlignment.Trailing;
@@ -27,13 +27,13 @@ namespace FlysTest.Desktop
             bottomLeftFont.TextAlignment = TextAlignment.Leading;
 
             window.Draw += Draw;
-            RenderLoop.Run(window, () => window.Render(1, 0));
+            RenderLoop.Run(window.Handle, () => window.Render(1, 0));
 
             void Draw(RenderWindow _, ID2D1DeviceContext target)
             {
                 XResource res = window.XResource;
                 target.Clear(Colors.Transparent);
-                Rect rectangle = new(0, 0, target.Size.Width, target.Size.Height);
+                RectangleF rectangle = new(0, 0, target.Size.Width, target.Size.Height);
 
                 target.DrawRectangle(
                     rectangle,

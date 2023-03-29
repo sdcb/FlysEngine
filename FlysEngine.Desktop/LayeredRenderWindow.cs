@@ -3,6 +3,8 @@ using System;
 using System.Drawing;
 using Vanara.PInvoke;
 using Vortice.Direct2D1;
+using static Vanara.PInvoke.User32;
+using static Vanara.PInvoke.User32.WindowStyles;
 
 namespace FlysEngine.Desktop
 {
@@ -19,7 +21,7 @@ namespace FlysEngine.Desktop
 
         protected override IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam)
         {
-            if (message == (uint)User32.WindowMessage.WM_NCHITTEST)
+            if (message == (uint)WindowMessage.WM_NCHITTEST)
             {
                 const int HT_CAPTION = 0x2;
                 if (DragMoveEnabled)
@@ -27,9 +29,11 @@ namespace FlysEngine.Desktop
                     return (IntPtr)HT_CAPTION;
                 }
             }
-            else if (message == (uint)User32.WindowMessage.WM_CREATE)
+            else if (message == (uint)WindowMessage.WM_CREATE)
             {
-
+                //nint style = GetWindowLong(Handle, WindowLongFlags.GWL_STYLE);
+                //style &= ~(nint)(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU);
+                //SetWindowLong(Handle, WindowLongFlags.GWL_STYLE, style);
             }
 
             return IntPtr.Zero;

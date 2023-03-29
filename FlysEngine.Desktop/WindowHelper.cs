@@ -8,7 +8,16 @@ namespace FlysEngine.Desktop
 {
     public class WindowHelper
     {
-        public static (HWND, string className) CreateDefault(int width, int height, string title)
+        // 导入SetProcessDpiAwareness函数
+        [DllImport("Shcore.dll")]
+        public static extern int SetProcessDpiAwareness(PROCESS_DPI_AWARENESS value);
+
+        static WindowHelper()
+        {
+            SetProcessDpiAwareness(PROCESS_DPI_AWARENESS.PROCESS_PER_MONITOR_DPI_AWARE);
+        }
+
+        public static (HWND, string className) CreateDefault(int width, int height, string title, WindowProc wndProc)
         {
             string className = Guid.NewGuid().ToString();
 
@@ -17,7 +26,7 @@ namespace FlysEngine.Desktop
             {
                 cbSize = (uint)Marshal.SizeOf<WNDCLASSEX>(),
                 style = WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
-                lpfnWndProc = DefWindowProc,
+                lpfnWndProc = wndProc,
                 cbClsExtra = 0,
                 cbWndExtra = 0,
                 hInstance = HINSTANCE.NULL,

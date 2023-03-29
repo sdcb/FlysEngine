@@ -3,22 +3,24 @@ using System.Runtime.InteropServices;
 using static Vanara.PInvoke.User32;
 using Vanara.PInvoke;
 using System.Drawing;
+using System.Text;
 
 namespace FlysEngine.Desktop
 {
+
     public class Window : IDisposable
     {
-        public Window((HWND hwnd, string className) record)
+        public Window()
         {
-            Handle = record.hwnd;
-            _className = record.className;
-            SetWindowLong(Handle, WindowLongFlags.GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(WindowProc));
+            (HWND hwnd, string className) = WindowHelper.CreateDefault(CW_USEDEFAULT, CW_USEDEFAULT, "Window", WindowProc);
+            Handle = hwnd;
+            _className = className;
         }
 
         public HWND Handle { get; }
 
         private readonly string _className;
-        private bool disposedValue;
+        private bool _isDisposed;
 
         public Size Size
         {
@@ -77,6 +79,21 @@ namespace FlysEngine.Desktop
             }
         }
 
+        public string Text
+        {
+            get
+            {
+                int length = GetWindowTextLength(Handle);
+                StringBuilder title = new (length + 1);
+                GetWindowText(Handle, title, title.Length);
+                return title.ToString();
+            }
+            set
+            {
+                SetWindowText(Handle, value);
+            }
+        }
+
         protected virtual IntPtr WindowProc(HWND hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             IntPtr processed = WndProc(msg, wParam, lParam);
@@ -88,6 +105,7 @@ namespace FlysEngine.Desktop
                     PostQuitMessage(0);
                     return IntPtr.Zero;
                 case (uint)WindowMessage.WM_SIZE:
+                    if (Handle == IntPtr.Zero) break;
                     const int SIZE_MINIMIZED = 1;
                     bool isMinimized = (int)wParam == SIZE_MINIMIZED;
                     int newWidth = Macros.LOWORD(lParam);
@@ -96,6 +114,7 @@ namespace FlysEngine.Desktop
                     OnResize(isMinimized, newWidth, newHeight);
                     break;
                 case (uint)WindowMessage.WM_MOVE:
+                    if (Handle == IntPtr.Zero) break;
                     int x = Macros.LOWORD(lParam);
                     int y = Macros.HIWORD(lParam);
                     OnMove(x, y);
@@ -115,7 +134,7 @@ namespace FlysEngine.Desktop
         #region Dispose Pattern
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_isDisposed)
             {
                 if (disposing)
                 {
@@ -125,7 +144,7 @@ namespace FlysEngine.Desktop
                 // TODO: 释放未托管的资源(未托管的对象)并重写终结器
                 // TODO: 将大型字段设置为 null
                 UnregisterClass(_className, HINSTANCE.NULL);
-                disposedValue = true;
+                _isDisposed = true;
             }
         }
 

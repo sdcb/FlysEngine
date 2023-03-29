@@ -23,10 +23,6 @@ namespace FlysEngine.Desktop
         public event RenderWindowAction ReleaseDeviceResources;
         public event RenderWindowAction CreateDeviceSizeResources;
 
-        public RenderWindow(int width = 800, int height = 600, string title = "Render Window") : base(WindowHelper.CreateDefault(width, height, title))
-        {
-        }
-
         public virtual void Render(int syncInterval, PresentFlags presentFlags)
         {
             if (WindowState == ShowWindowCommand.SW_SHOWMINIMIZED)
