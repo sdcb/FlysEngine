@@ -21,9 +21,9 @@ static void DotNetRun(string args) => Run("dotnet", args, Encoding.GetEncoding("
 static void Run(string exe, string args, Encoding encoding) => Util.Cmd(exe, args, encoding);
 static ProjectVersion[] Projects = new[]
 {
-	new ProjectVersion("FlysEngine", "3.0-preview.7"), 
-	new ProjectVersion("FlysEngine.Desktop", "3.0-preview.7"), 
-	new ProjectVersion("FlysEngine.Sprites", "3.0-preview.7"), 
+	new ProjectVersion("FlysEngine", "3.0-preview.8"), 
+	new ProjectVersion("FlysEngine.Desktop", "3.0-preview.8"), 
+	new ProjectVersion("FlysEngine.Sprites", "3.0-preview.8"), 
 };
 
 static async Task DownloadFile(Uri uri, string localFile, CancellationToken cancellationToken = default)
