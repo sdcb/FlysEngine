@@ -85,7 +85,7 @@ namespace FlysEngine.Desktop
             {
                 int length = GetWindowTextLength(Handle);
                 StringBuilder title = new (length + 1);
-                GetWindowText(Handle, title, title.Length);
+                _ = GetWindowText(Handle, title, title.Length);
                 return title.ToString();
             }
             set
@@ -147,10 +147,21 @@ namespace FlysEngine.Desktop
                     OnResize(isMinimized, newWidth, newHeight);
                     break;
                 case (uint)WindowMessage.WM_MOVE:
-                    if (Handle == IntPtr.Zero) break;
-                    int x = Macros.LOWORD(lParam);
-                    int y = Macros.HIWORD(lParam);
-                    OnMove(x, y);
+                    {
+                        if (Handle == IntPtr.Zero) break;
+                        int x = Macros.GET_X_LPARAM(lParam);
+                        int y = Macros.GET_Y_LPARAM(lParam);
+                        Move?.Invoke(this, new PointEventArgs(x, y));
+                        OnMove(x, y);
+                    }
+                    break;
+                case (int)WindowMessage.WM_MOUSEMOVE:
+                    {
+                        int x = Macros.GET_X_LPARAM(lParam);
+                        int y = Macros.GET_X_LPARAM(lParam);
+                        MouseMove?.Invoke(this, new PointEventArgs(x, y));
+                        OnMouseMove(x, y);
+                    }
                     break;
             }
 
@@ -158,8 +169,11 @@ namespace FlysEngine.Desktop
         }
 
         public event EventHandler<ResizeEventArgs> Resize;
+        public event EventHandler<PointEventArgs> Move;
+        public event EventHandler<PointEventArgs> MouseMove;
         protected virtual void OnResize(bool isMinimized, int newWidth, int newHeight) { }
         protected virtual void OnMove(int x, int y) { }
+        protected virtual void OnMouseMove(int x, int y) { }
 
         /// <returns>is handled</returns>
         protected virtual IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam) { return IntPtr.Zero; }
@@ -195,19 +209,5 @@ namespace FlysEngine.Desktop
             System.GC.SuppressFinalize(this);
         }
         #endregion
-    }
-
-    public class ResizeEventArgs : EventArgs
-    {
-        public bool IsMinimized { get; init; }
-        public int NewWidth { get; init; }
-        public int NewHeight { get; init; }
-
-        public ResizeEventArgs(bool isMinimized, int newWidth, int newHeight)
-        {
-            IsMinimized = isMinimized;
-            NewWidth = newWidth;
-            NewHeight = newHeight;
-        }
     }
 }
