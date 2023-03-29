@@ -129,7 +129,7 @@ namespace FlysEngine.Desktop
         }
 
         bool _leftButtonDown = false;
-        POINT _leftButtonDownPosition;
+        Point _leftButtonDownPosition;
 
         protected virtual IntPtr WindowProc(HWND hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
@@ -176,7 +176,7 @@ namespace FlysEngine.Desktop
                     {
                         _leftButtonDown = true;
                         _leftButtonDownPosition = new (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-                        PointEventArgs args = new(_leftButtonDownPosition.x, _leftButtonDownPosition.y);
+                        PointEventArgs args = new(_leftButtonDownPosition);
                         OnMouseLeftButtonDown(args);
                         MouseLeftButtonDown?.Invoke(this, args);                        
                     }
@@ -186,18 +186,18 @@ namespace FlysEngine.Desktop
                         POINT upPosition = new(
                                 GET_X_LPARAM(lParam),
                                 GET_Y_LPARAM(lParam));
-                        OnMouseLeftButtonUp(new PointEventArgs(_leftButtonDownPosition.x, _leftButtonDownPosition.y));
-                        MouseLeftButtonUp?.Invoke(this, new PointEventArgs(_leftButtonDownPosition.x, _leftButtonDownPosition.y));                        
+                        OnMouseLeftButtonUp(new PointEventArgs(_leftButtonDownPosition));
+                        MouseLeftButtonUp?.Invoke(this, new PointEventArgs(_leftButtonDownPosition));                        
 
                         if (_leftButtonDown)
                         {
                             // 如果鼠标在按下和释放期间保持在相同的区域内，则视为点击事件
-                            if (Math.Abs(upPosition.x - _leftButtonDownPosition.x) < 5 &&
-                                Math.Abs(upPosition.y - _leftButtonDownPosition.y) < 5)
+                            if (Math.Abs(upPosition.x - _leftButtonDownPosition.X) < 5 &&
+                                Math.Abs(upPosition.y - _leftButtonDownPosition.Y) < 5)
                             {
                                 // 处理鼠标左键点击事件
-                                OnClick(new PointEventArgs(_leftButtonDownPosition.x, _leftButtonDownPosition.y));
-                                Click?.Invoke(this, new PointEventArgs(_leftButtonDownPosition.x, _leftButtonDownPosition.y));
+                                OnClick(new PointEventArgs(_leftButtonDownPosition));
+                                Click?.Invoke(this, new PointEventArgs(_leftButtonDownPosition));
                             }
                         }
                         _leftButtonDown = false;
