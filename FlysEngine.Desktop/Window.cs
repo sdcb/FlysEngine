@@ -96,6 +96,30 @@ namespace FlysEngine.Desktop
 
         public bool Focused => GetForegroundWindow() == Handle;
 
+        public bool Visible
+        {
+            get
+            {
+                return IsWindowVisible(Handle);
+            }
+            set
+            {
+                bool visible = IsWindowVisible(Handle);
+                if (value && !visible)
+                {
+                    ShowWindow(Handle, ShowWindowCommand.SW_SHOW);
+                }
+                else if (!value && visible)
+                {
+                    ShowWindow(Handle, ShowWindowCommand.SW_HIDE);
+                }
+            }
+        }
+
+        public void Show() => Visible = true;
+
+        public void Hide() => Visible = false;
+
         public Point ScreenToClient(Point point)
         {
             POINT p = new(point.X, point.Y);
