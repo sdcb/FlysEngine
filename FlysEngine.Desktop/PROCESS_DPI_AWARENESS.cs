@@ -1,6 +1,6 @@
 ﻿namespace FlysEngine.Desktop
 {
-    public enum PROCESS_DPI_AWARENESS
+    internal enum PROCESS_DPI_AWARENESS
     {
         PROCESS_DPI_UNAWARE = 0,
         PROCESS_SYSTEM_DPI_AWARE = 1,

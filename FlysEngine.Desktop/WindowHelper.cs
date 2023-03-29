@@ -10,11 +10,11 @@ namespace FlysEngine.Desktop
     {
         // 导入SetProcessDpiAwareness函数
         [DllImport("Shcore.dll")]
-        public static extern int SetProcessDpiAwareness(PROCESS_DPI_AWARENESS value);
+        private static extern int SetProcessDpiAwareness(PROCESS_DPI_AWARENESS value);
 
         static WindowHelper()
         {
-            SetProcessDpiAwareness(PROCESS_DPI_AWARENESS.PROCESS_PER_MONITOR_DPI_AWARE);
+            _ = SetProcessDpiAwareness(PROCESS_DPI_AWARENESS.PROCESS_PER_MONITOR_DPI_AWARE);
         }
 
         public static (HWND, string className) CreateDefault(int width, int height, string title, WindowProc wndProc)
