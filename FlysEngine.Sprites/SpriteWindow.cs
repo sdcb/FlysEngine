@@ -42,7 +42,7 @@ namespace FlysEngine.Sprites
             POINT point;
             User32.GetCursorPos(out point);
 
-            return new Point(point.x, point.y);
+            return new Point(point.X, point.Y);
         }
 
         protected override void OnUpdateLogic(float lastFrameTimeInSecond)

@@ -183,7 +183,7 @@ namespace FlysEngine.Desktop
                     break;
                 case (int)WindowMessage.WM_LBUTTONUP:
                     {
-                        POINT upPosition = new(
+                        Point upPosition = new(
                                 GET_X_LPARAM(lParam),
                                 GET_Y_LPARAM(lParam));
                         OnMouseLeftButtonUp(new PointEventArgs(_leftButtonDownPosition));
@@ -192,8 +192,8 @@ namespace FlysEngine.Desktop
                         if (_leftButtonDown)
                         {
                             // 如果鼠标在按下和释放期间保持在相同的区域内，则视为点击事件
-                            if (Math.Abs(upPosition.x - _leftButtonDownPosition.X) < 5 &&
-                                Math.Abs(upPosition.y - _leftButtonDownPosition.Y) < 5)
+                            if (Math.Abs(upPosition.X - _leftButtonDownPosition.X) < 5 &&
+                                Math.Abs(upPosition.Y - _leftButtonDownPosition.Y) < 5)
                             {
                                 // 处理鼠标左键点击事件
                                 OnClick(new PointEventArgs(_leftButtonDownPosition));
