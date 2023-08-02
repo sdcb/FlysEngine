@@ -1,4 +1,5 @@
 ﻿using FarseerPhysics.Dynamics;
+using FlysEngine.Desktop;
 using FlysEngine.Sprites.Shapes;
 using System;
 using System.Collections.Generic;
@@ -51,14 +52,16 @@ namespace FlysEngine.Sprites
 
         public object UserData { get; set; }
 
-        public List<Sprite> Children = new List<Sprite>();
+        public List<Sprite> Children = new();
 
         public Sprite(SpriteWindow game)
         {
             Window = game;
             XResource = game.XResource;
-            Body = new Body(game.World);
-            Body.UserData = this;
+            Body = new Body(game.World)
+            {
+                UserData = this
+            };
         }
 
         public T QueryBehavior<T>() where T : Behavior
@@ -88,7 +91,7 @@ namespace FlysEngine.Sprites
         {
             return Shape.TestPoint(Shapes, XResource.InvertTransformPoint(
                 Transform * Window.GlobalTransform,
-                Window.MouseClientPosition));
+                Window.MouseClientPosition.ToVector2()));
         }
 
         public virtual void OnUpdate(float dt)
@@ -174,7 +177,7 @@ namespace FlysEngine.Sprites
             OnReleaseDeviceSizeResources();
             OnReleaseDeviceResources();
 
-            foreach (var child in Children)
+            foreach (Sprite child in Children)
                 child.Dispose();
             Children.Clear();
 

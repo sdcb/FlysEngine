@@ -6,8 +6,8 @@ namespace FlysEngine.Managers
 {
     public class TextFormatManager : IDisposable
     {
-        private readonly Dictionary<string, DWrite.IDWriteTextFormat> _formatMap = new Dictionary<string, DWrite.IDWriteTextFormat>();
-        private readonly Dictionary<string, DWrite.IDWriteTextFormat> _sizeDependentFormatMap = new Dictionary<string, DWrite.IDWriteTextFormat>();
+        private readonly Dictionary<string, DWrite.IDWriteTextFormat> _formatMap = new();
+        private readonly Dictionary<string, DWrite.IDWriteTextFormat> _sizeDependentFormatMap = new();
         private readonly DWrite.IDWriteFactory _factory;
 
         public TextFormatManager(DWrite.IDWriteFactory factory)

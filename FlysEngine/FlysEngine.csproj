@@ -5,8 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Authors>sdcb</Authors>
     <Company />
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.6</Version>
+    <Version>3.0-preview.1</Version>
     <Description>Real-time 2D rendering utilities based on SharpDX/Direct2D.</Description>
     <PackageReleaseNotes>https://github.com/sdcb/FlysEngine/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/sdcb/FlysEngine</PackageProjectUrl>

@@ -18,8 +18,8 @@ namespace FlysTest
         [STAThread]
         static void Main()
         {
-            using (var res = new XResource())
-            using (var form = new Form() { Text = "Hello World" })
+            using (XResource res = new())
+            using (Form form = new() { Text = "Hello World" })
             {
                 var timer = new RenderTimer();
                 IDWriteTextFormat bottomRightFont = res.DWriteFactory.CreateTextFormat("Consolas", 16.0f);

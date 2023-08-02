@@ -5,7 +5,7 @@
   <Reference>&lt;RuntimeDirectory&gt;\System.Runtime.Serialization.Formatters.Soap.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Security.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Windows.Forms.dll</Reference>
-  <NuGetReference>FlysEngine.Desktop</NuGetReference>
+  <NuGetReference Prerelease="true">FlysEngine.Desktop</NuGetReference>
   <Namespace>FlysEngine</Namespace>
   <Namespace>FlysEngine.Desktop</Namespace>
   <Namespace>FlysEngine.Managers</Namespace>
@@ -16,6 +16,7 @@
   <Namespace>Vortice.Direct2D1</Namespace>
   <Namespace>Vortice.DXGI</Namespace>
   <Namespace>Vortice.Mathematics</Namespace>
+  <Namespace>Vanara.PInvoke</Namespace>
 </Query>
 
 void Main()
@@ -46,10 +47,13 @@ void Main()
 		{
 			layeredWindowCtx.Move(form.Location);
 		};
+		
+		form.FormClosed += (o, e) => User32.PostQuitMessage(0);
 	
 		var fpsManager = new FpsManager();
 	
-		RenderLoop.Run(form, () => Render());
+		form.Show();
+		RenderLoop.Run(form.Handle, () => Render());
 	
 		void Render()
 		{
@@ -79,18 +83,18 @@ void Main()
 		void Draw(ID2D1RenderTarget renderTarget)
 		{
 			renderTarget.Clear(Colors.Transparent);
-			renderTarget.DrawRectangle(new Rect(0, 0, renderTarget.Size.Width, renderTarget.Size.Height),
+			renderTarget.DrawRectangle(new RectangleF(0, 0, renderTarget.Size.Width, renderTarget.Size.Height),
 				res.GetColor(Colors.Blue));
 	
 			renderTarget.DrawText($"😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎",
 				res.TextFormats[24.0f],
-				new Rect(0, 22, renderTarget.Size.Width, float.MaxValue),
+				new RectangleF(0, 22, renderTarget.Size.Width, float.MaxValue),
 				res.GetColor(Colors.White),
 				DrawTextOptions.EnableColorFont);
 	
 			renderTarget.DrawText($"FPS: {fpsManager.Fps}\r\nFT: {fpsManager.FrameTimeMs}",
 				res.TextFormats[15.0f],
-				new Rect(0, 0, float.MaxValue, float.MaxValue),
+				new RectangleF(0, 0, float.MaxValue, float.MaxValue),
 				res.GetColor(Colors.Red));
 		}
 	}

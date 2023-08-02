@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using static Vanara.PInvoke.User32;
+using static Vanara.PInvoke.Macros;
 using Vanara.PInvoke;
 using System.Drawing;
 using System.Text;
@@ -85,7 +86,7 @@ namespace FlysEngine.Desktop
             {
                 int length = GetWindowTextLength(Handle);
                 StringBuilder title = new (length + 1);
-                GetWindowText(Handle, title, title.Length);
+                _ = GetWindowText(Handle, title, title.Length);
                 return title.ToString();
             }
             set
@@ -94,7 +95,43 @@ namespace FlysEngine.Desktop
             }
         }
 
-        protected virtual IntPtr WindowProc(HWND hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        public bool Focused => GetForegroundWindow() == Handle;
+
+        public bool Visible
+        {
+            get
+            {
+                return IsWindowVisible(Handle);
+            }
+            set
+            {
+                bool visible = IsWindowVisible(Handle);
+                if (value && !visible)
+                {
+                    ShowWindow(Handle, ShowWindowCommand.SW_SHOW);
+                }
+                else if (!value && visible)
+                {
+                    ShowWindow(Handle, ShowWindowCommand.SW_HIDE);
+                }
+            }
+        }
+
+        public void Show() => Visible = true;
+
+        public void Hide() => Visible = false;
+
+        public Point ScreenToClient(Point point)
+        {
+            POINT p = new(point.X, point.Y);
+            User32.ScreenToClient(Handle, ref p);
+            return new Point(p.X, p.Y);
+        }
+
+        bool _leftButtonDown = false;
+        Point _leftButtonDownPosition;
+
+        private IntPtr WindowProc(HWND hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             IntPtr processed = WndProc(msg, wParam, lParam);
             if (processed != IntPtr.Zero) return processed;
@@ -105,31 +142,98 @@ namespace FlysEngine.Desktop
                     PostQuitMessage(0);
                     return IntPtr.Zero;
                 case (uint)WindowMessage.WM_SIZE:
-                    if (Handle == IntPtr.Zero) break;
-                    const int SIZE_MINIMIZED = 1;
-                    bool isMinimized = (int)wParam == SIZE_MINIMIZED;
-                    int newWidth = Macros.LOWORD(lParam);
-                    int newHeight = Macros.HIWORD(lParam);
-                    Resize?.Invoke(this, new ResizeEventArgs(isMinimized, newWidth, newHeight));
-                    OnResize(isMinimized, newWidth, newHeight);
+                    {
+                        if (Handle == IntPtr.Zero) break;
+                        const int SIZE_MINIMIZED = 1;
+                        bool isMinimized = (int)wParam == SIZE_MINIMIZED;
+                        int newWidth = LOWORD(lParam);
+                        int newHeight = HIWORD(lParam);
+                        ResizeEventArgs args = new(isMinimized, newWidth, newHeight);
+                        OnResize(args);
+                        Resize?.Invoke(this, args);
+                    }
                     break;
                 case (uint)WindowMessage.WM_MOVE:
-                    if (Handle == IntPtr.Zero) break;
-                    int x = Macros.LOWORD(lParam);
-                    int y = Macros.HIWORD(lParam);
-                    OnMove(x, y);
+                    {
+                        if (Handle == IntPtr.Zero) break;
+                        int x = GET_X_LPARAM(lParam);
+                        int y = GET_Y_LPARAM(lParam);
+                        PointEventArgs args = new(x, y);
+                        OnMove(args);
+                        Move?.Invoke(this, args);                        
+                    }
+                    break;
+                case (int)WindowMessage.WM_MOUSEMOVE:
+                    {
+                        int x = GET_X_LPARAM(lParam);
+                        int y = GET_X_LPARAM(lParam);
+                        PointEventArgs args = new PointEventArgs(x, y);
+                        OnMouseMove(args);
+                        MouseMove?.Invoke(this, args);                        
+                    }
+                    break;
+                case (int)WindowMessage.WM_LBUTTONDOWN:
+                    {
+                        _leftButtonDown = true;
+                        _leftButtonDownPosition = new (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                        PointEventArgs args = new(_leftButtonDownPosition);
+                        OnMouseLeftButtonDown(args);
+                        MouseLeftButtonDown?.Invoke(this, args);                        
+                    }
+                    break;
+                case (int)WindowMessage.WM_LBUTTONUP:
+                    {
+                        Point upPosition = new(
+                                GET_X_LPARAM(lParam),
+                                GET_Y_LPARAM(lParam));
+                        OnMouseLeftButtonUp(new PointEventArgs(_leftButtonDownPosition));
+                        MouseLeftButtonUp?.Invoke(this, new PointEventArgs(_leftButtonDownPosition));                        
+
+                        if (_leftButtonDown)
+                        {
+                            // 如果鼠标在按下和释放期间保持在相同的区域内，则视为点击事件
+                            if (Math.Abs(upPosition.X - _leftButtonDownPosition.X) < 5 &&
+                                Math.Abs(upPosition.Y - _leftButtonDownPosition.Y) < 5)
+                            {
+                                // 处理鼠标左键点击事件
+                                OnClick(new PointEventArgs(_leftButtonDownPosition));
+                                Click?.Invoke(this, new PointEventArgs(_leftButtonDownPosition));
+                            }
+                        }
+                        _leftButtonDown = false;
+                    }
                     break;
             }
 
             return DefWindowProc(hWnd, msg, wParam, lParam);
         }
 
+        public event EventHandler<EventArgs> Load;
         public event EventHandler<ResizeEventArgs> Resize;
-        protected virtual void OnResize(bool isMinimized, int newWidth, int newHeight) { }
-        protected virtual void OnMove(int x, int y) { }
+        public event EventHandler<PointEventArgs> Move;
+        public event EventHandler<PointEventArgs> MouseMove;
+        public event EventHandler<PointEventArgs> Click;
+        public event EventHandler<PointEventArgs> MouseLeftButtonDown;
+        public event EventHandler<PointEventArgs> MouseLeftButtonUp;
+
+        protected virtual void OnLoad(EventArgs e) { }
+        protected virtual void OnResize(ResizeEventArgs e) { }
+        protected virtual void OnMove(PointEventArgs e) { }
+        protected virtual void OnMouseMove(PointEventArgs e) { }
+        protected virtual void OnClick(PointEventArgs e) { }
+        protected virtual void OnMouseLeftButtonDown(PointEventArgs e) { }
+        protected virtual void OnMouseLeftButtonUp(PointEventArgs e) { }
 
         /// <returns>is handled</returns>
         protected virtual IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam) { return IntPtr.Zero; }
+
+        internal void EnterMessageLoop()
+        {
+            Show();
+            OnLoad(EventArgs.Empty);
+            Load?.Invoke(this, EventArgs.Empty);            
+            UpdateWindow(Handle);
+        }
 
         #region Dispose Pattern
         protected virtual void Dispose(bool disposing)
@@ -162,19 +266,5 @@ namespace FlysEngine.Desktop
             System.GC.SuppressFinalize(this);
         }
         #endregion
-    }
-
-    public class ResizeEventArgs : EventArgs
-    {
-        public bool IsMinimized { get; init; }
-        public int NewWidth { get; init; }
-        public int NewHeight { get; init; }
-
-        public ResizeEventArgs(bool isMinimized, int newWidth, int newHeight)
-        {
-            IsMinimized = isMinimized;
-            NewWidth = newWidth;
-            NewHeight = newHeight;
-        }
     }
 }

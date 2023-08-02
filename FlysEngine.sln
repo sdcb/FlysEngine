@@ -21,6 +21,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlysEngine.Sprites", "FlysE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlysTest", "FlysTest\FlysTest.csproj", "{ABD7E7CB-E92B-4002-8601-D01B4EF18FD3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{A6710744-151F-42AC-A746-5457A873827A}"
+	ProjectSection(SolutionItems) = preProject
+		build\00-common.linq = build\00-common.linq
+		build\01-build-packages.linq = build\01-build-packages.linq
+		build\02-publish-proget-nuget.linq = build\02-publish-proget-nuget.linq
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +57,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A6710744-151F-42AC-A746-5457A873827A} = {2F168CE5-61DB-4DA4-8C58-C9365889A1BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C496A256-B9F1-4B5D-B6EB-D121E87C9849}

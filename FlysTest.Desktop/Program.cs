@@ -27,7 +27,7 @@ namespace FlysTest.Desktop
             bottomLeftFont.TextAlignment = TextAlignment.Leading;
 
             window.Draw += Draw;
-            RenderLoop.Run(window.Handle, () => window.Render(1, 0));
+            RenderLoop.Run(window, () => window.Render(1, 0));
 
             void Draw(RenderWindow _, ID2D1DeviceContext target)
             {

@@ -10,11 +10,11 @@ namespace FlysEngine.Desktop
     {
         // 导入SetProcessDpiAwareness函数
         [DllImport("Shcore.dll")]
-        public static extern int SetProcessDpiAwareness(PROCESS_DPI_AWARENESS value);
+        private static extern int SetProcessDpiAwareness(PROCESS_DPI_AWARENESS value);
 
         static WindowHelper()
         {
-            SetProcessDpiAwareness(PROCESS_DPI_AWARENESS.PROCESS_PER_MONITOR_DPI_AWARE);
+            _ = SetProcessDpiAwareness(PROCESS_DPI_AWARENESS.PROCESS_PER_MONITOR_DPI_AWARE);
         }
 
         public static (HWND, string className) CreateDefault(int width, int height, string title, WindowProc wndProc)
@@ -43,7 +43,7 @@ namespace FlysEngine.Desktop
             }
 
             // 创建窗口
-            SafeHWND hwnd = CreateWindowEx(
+            using SafeHWND hwnd = CreateWindowEx(
                 WindowStylesEx.WS_EX_OVERLAPPEDWINDOW,
                 className,
                 title,
@@ -65,7 +65,7 @@ namespace FlysEngine.Desktop
             // 显示窗口
             ShowWindow(hwnd, ShowWindowCommand.SW_SHOW);
             UpdateWindow(hwnd);
-            return (hwnd, className);
+            return (hwnd.ReleaseOwnership(), className);
         }
     }
 }

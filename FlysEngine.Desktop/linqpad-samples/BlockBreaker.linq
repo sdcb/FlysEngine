@@ -1,22 +1,7 @@
 <Query Kind="Program">
-  <Reference>&lt;RuntimeDirectory&gt;\Accessibility.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\PresentationCore.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\PresentationFramework.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\PresentationUI.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\ReachFramework.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Configuration.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Deployment.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\System.Printing.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Runtime.Serialization.Formatters.Soap.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Security.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Windows.Forms.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\System.Xaml.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\UIAutomationProvider.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\UIAutomationTypes.dll</Reference>
-  <Reference>&lt;RuntimeDirectory&gt;\WPF\WindowsBase.dll</Reference>
-  <NuGetReference>AdamsLair.FarseerDuality</NuGetReference>
-  <NuGetReference>FlysEngine</NuGetReference>
-  <NuGetReference>FlysEngine.Desktop</NuGetReference>
+  <NuGetReference Prerelease="true">AdamsLair.Duality.Physics</NuGetReference>
+  <NuGetReference Prerelease="true">AdamsLair.Duality.Primitives</NuGetReference>
+  <NuGetReference Prerelease="true">FlysEngine.Desktop</NuGetReference>
   <Namespace>Direct2D = Vortice.Direct2D1</Namespace>
   <Namespace>DirectWrite = Vortice.DirectWrite</Namespace>
   <Namespace>EngineShapes = FarseerPhysics.Collision.Shapes</Namespace>
@@ -29,8 +14,8 @@
   <Namespace>System.Numerics</Namespace>
   <Namespace>System.Windows.Forms</Namespace>
   <Namespace>Vortice.Mathematics</Namespace>
-  <Namespace>Xna = Duality</Namespace>
   <Namespace>Vortice.UIAnimation</Namespace>
+  <Namespace>Xna = Duality</Namespace>
 </Query>
 
 static class C
@@ -59,7 +44,7 @@ class Game : RenderWindow
 	protected override void OnLoad(EventArgs e)
 	{
 		Text = "Block Breaker";
-		base.OnLoad(e);
+		Size = new Size(600, 600);
 
 		for (var row = 0; row < 4; ++row)
 		{
@@ -67,7 +52,7 @@ class Game : RenderWindow
 			{
 				var block = new Sprite(this)
 				{
-					Name = $"Blocker-{row}-{col}", 
+					Name = $"Blocker-{row}-{col}",
 					Position = new Vector2(
 						C.Offset + col * (C.Offset + C.BlockWidth),
 						C.Offset + row * (C.BlockHeight + C.Offset)),
@@ -101,9 +86,9 @@ class Game : RenderWindow
 				new Direct2D.GradientStop{ Color = Colors.White, Position = 0.0f},
 				new Direct2D.GradientStop{ Color = Colors.Black, Position = 1.0f},
 			}));
-		RectBrushes = new[] { Colors.Yellow, Colors.Orange, Colors.Green, Colors.Blue, Colors.Purple }.Select(c => (Direct2D.ID2D1Brush)
+		RectBrushes = new[] { Colors.Red, Colors.Orange, Colors.Green, Colors.Blue, Colors.Purple }.Select(c => (Direct2D.ID2D1Brush)
 			XResource.RenderTarget.CreateLinearGradientBrush(
-					new Direct2D.LinearGradientBrushProperties { StartPoint = new Vector2(), EndPoint = new Vector2(C.BlockWidth, C.BlockHeight) },
+					new Direct2D.LinearGradientBrushProperties { StartPoint = new Vector2(), EndPoint = new Vector2(C.BlockWidth / 1.5f, C.BlockHeight / 1.5f) },
 					XResource.RenderTarget.CreateGradientStopCollection(new[]
 					{
 						new Direct2D.GradientStop{ Color = c, Position = 0.1f},
@@ -136,7 +121,7 @@ class Game : RenderWindow
 
 		var sprite = new Sprite(this)
 		{
-			Name = "Border", 
+			Name = "Border",
 			Shapes = lines.Select(x =>
 				(Shape)new EdgeShape(new Vector2(x[0], x[1]), new Vector2(x[2], x[3]))).ToList()
 		};
@@ -148,7 +133,7 @@ class Game : RenderWindow
 	{
 		var sprite = new Sprite(this)
 		{
-			Name = "Bottom", 
+			Name = "Bottom",
 			Shapes = new List<Shape>
 			{
 				(Shape)new EdgeShape(new Vector2(0, C.Height), new Vector2(C.Width, C.Height))
@@ -171,7 +156,7 @@ class Game : RenderWindow
 	{
 		var ball = new Sprite(this)
 		{
-			Name = $"Ball", 
+			Name = $"Ball",
 			Shapes = new List<UserQuery.Shape>
 			{
 				new CircleShape(C.BallR)
@@ -188,9 +173,9 @@ class Game : RenderWindow
 	{
 		var sprite = new Sprite(this)
 		{
-			Name = $"Breaker", 
+			Name = $"Breaker",
 			Position = new Vector2(C.Width / 2 - C.BlockWidth * 1.5f / 2, C.Height - C.BallR * 3), // Center
-			Center = new Vector2(C.BlockWidth * 1.5f / 2, 0), 
+			Center = new Vector2(C.BlockWidth * 1.5f / 2, 0),
 			Shapes = new List<UserQuery.Shape>
 			{
 				new RectangleShape
@@ -227,7 +212,7 @@ class Game : RenderWindow
 
 		ctx.DrawText($"FPS: {RenderTimer.FramesPerSecond:F1}",
 			XResource.TextFormats[10.0f],
-			new Rect(0, 0, ctx.Size.Width, ctx.Size.Height),
+			new RectangleF(0, 0, ctx.Size.Width, ctx.Size.Height),
 			XResource.GetColor(Colors.Red));
 
 		float scale = ctx.Size.Height / C.Height;
@@ -236,7 +221,7 @@ class Game : RenderWindow
 		foreach (var sprite in Sprites) sprite.Draw(ctx);
 	}
 
-	protected override void OnMouseMove(MouseEventArgs e)
+	protected override void OnMouseMove(PointEventArgs e)
 	{
 		base.OnMouseMove(e);
 
@@ -251,7 +236,7 @@ class Game : RenderWindow
 		Breaker.QueryBehavior<BreakerBehavior>().MoveX(invertPoint.X);
 	}
 
-	protected override void OnClick(EventArgs e)
+	protected override void OnClick(PointEventArgs e)
 	{
 		base.OnClick(e);
 
@@ -308,11 +293,11 @@ public class RectangleShape : Shape
 {
 	public Vector2 Size { get; set; }
 
-	public Rect Rect => new (Offset.X, Offset.Y, Size.X, Size.Y);
+	public RectangleF Rect => new (Offset.X, Offset.Y, Size.X, Size.Y);
 
 	public override void Draw(Direct2D.ID2D1DeviceContext renderTarget, Direct2D.ID2D1Brush brush) => renderTarget.FillRectangle(Rect, brush);
 
-	public override bool TestPoint(Vector2 point) => Rect.Contains(point);
+	public override bool TestPoint(Vector2 point) => Rect.Contains(point.X, point.Y);
 
 	public override EngineShapes.Shape ToEngineShape()
 	{

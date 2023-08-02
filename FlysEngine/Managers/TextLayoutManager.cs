@@ -9,7 +9,7 @@ namespace FlysEngine.Managers
     {
         private readonly DWrite.IDWriteFactory _dwriteFactory;
         private readonly TextFormatManager _textManager;
-        private readonly Dictionary<string, DWrite.IDWriteTextLayout> _bmps = new Dictionary<string, DWrite.IDWriteTextLayout>();
+        private readonly Dictionary<string, DWrite.IDWriteTextLayout> _bmps = new();
         private Direct2D1.ID2D1DeviceContext _renderTarget;
 
         public TextLayoutManager(DWrite.IDWriteFactory dwriteFactory, TextFormatManager textManager)

@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TargetFramework>net6.0</TargetFramework>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/sdcb/FlysEngine</RepositoryUrl>
     <PackageProjectUrl>https://github.com/sdcb/FlysEngine</PackageProjectUrl>
@@ -15,7 +13,7 @@
     <PackageTags>linqpad-samples</PackageTags>
     <Authors>sdcb</Authors>
     <Company>sdcb</Company>
-    <Version>2.0.6</Version>
+    <Version>3.0-preview.1</Version>
     <PackageReleaseNotes>https://github.com/sdcb/FlysEngine/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <IncludeSymbols>true</IncludeSymbols>

@@ -2,8 +2,10 @@
 using FlysEngine.Desktop;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using Vanara.PInvoke;
 using Vortice.Direct2D1;
 using Vortice.Mathematics;
 
@@ -23,7 +25,7 @@ namespace FlysEngine.Sprites
 
         public DeviceInput DeviceInput = new();
         
-        public Vector2 MouseClientPosition = new Vector2();
+        public Point MouseClientPosition = new();
 
         public void AddSprites(params Sprite[] sprites)
         {
@@ -33,6 +35,14 @@ namespace FlysEngine.Sprites
             {
                 Sprites.Add(sprite.Id, sprite);
             }
+        }
+
+        public static Point GetMousePosition()
+        {
+            POINT point;
+            User32.GetCursorPos(out point);
+
+            return new Point(point.X, point.Y);
         }
 
         protected override void OnUpdateLogic(float lastFrameTimeInSecond)
@@ -49,9 +59,9 @@ namespace FlysEngine.Sprites
             }
 
             DeviceInput.UpdateMouse();
-            MouseClientPosition = PointToClient(System.Windows.Forms.Cursor.Position).ToVector2();
+            MouseClientPosition = ScreenToClient(GetMousePosition());
 
-            if (!new Rect(0, 0, ClientSize.Width, ClientSize.Height).Contains(MouseClientPosition))
+            if (!new RectangleF(0, 0, ClientSize.Width, ClientSize.Height).Contains(MouseClientPosition))
             {
                 DeviceInput.MouseState.Z = 0;
             }
@@ -83,7 +93,7 @@ namespace FlysEngine.Sprites
             {
                 renderTarget.DrawText($"FPS: {RenderTimer.FramesPerSecond:F1}",
                     XResource.TextFormats[12.0f],
-                    new Rect(0, 0, renderTarget.Size.Width, renderTarget.Size.Height),
+                    new RectangleF(0, 0, renderTarget.Size.Width, renderTarget.Size.Height),
                     XResource.GetColor(Colors.DimGray));
             }
         }

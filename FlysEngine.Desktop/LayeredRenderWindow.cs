@@ -11,7 +11,7 @@ namespace FlysEngine.Desktop
 {
     public class LayeredRenderWindow : RenderWindow
     {
-        private LayeredWindowContext layeredWindowCtx;
+        private readonly LayeredWindowContext layeredWindowCtx;
 
         public LayeredRenderWindow()
         {
@@ -34,16 +34,16 @@ namespace FlysEngine.Desktop
             SetWindowPos(Handle, HWND.NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
         }
 
-        protected override void OnMove(int x, int y)
+        protected override void OnMove(PointEventArgs e)
         {
-            layeredWindowCtx.Move(new Point(x, y));
+            layeredWindowCtx.Move(new Point(e.X, e.Y));
         }
 
-        protected override void OnResize(bool isMinimized, int newWidth, int newHeight)
+        protected override void OnResize(ResizeEventArgs e)
         {
             layeredWindowCtx.Resize(Size);
 
-            if (!XResource.DeviceAvailable || isMinimized) return;
+            if (!XResource.DeviceAvailable || e.IsMinimized) return;
 
             OnReleaseDeviceSizeResources();
 
