@@ -7,68 +7,67 @@ using static Vanara.PInvoke.User32;
 using static Vanara.PInvoke.User32.WindowStyles;
 using static Vanara.PInvoke.User32.SetWindowPosFlags;
 
-namespace FlysEngine.Desktop
+namespace FlysEngine.Desktop;
+
+public class LayeredRenderWindow : RenderWindow
 {
-    public class LayeredRenderWindow : RenderWindow
+    private readonly LayeredWindowContext layeredWindowCtx;
+
+    public LayeredRenderWindow()
     {
-        private readonly LayeredWindowContext layeredWindowCtx;
+        layeredWindowCtx = new LayeredWindowContext(Size, Location);
 
-        public LayeredRenderWindow()
         {
-            layeredWindowCtx = new LayeredWindowContext(Size, Location);
-
-            {
-                // Remove border
-                nint style = GetWindowLong(Handle, WindowLongFlags.GWL_STYLE);
-                style &= ~(nint)(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU);
-                SetWindowLong(Handle, WindowLongFlags.GWL_STYLE, style);
-            }
-
-            {
-                // Layered window
-                nint style = GetWindowLong(Handle, WindowLongFlags.GWL_EXSTYLE);
-                style |= (nint)WindowStylesEx.WS_EX_LAYERED;
-                SetWindowLong(Handle, WindowLongFlags.GWL_EXSTYLE, style);
-            }
-
-            SetWindowPos(Handle, HWND.NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+            // Remove border
+            nint style = GetWindowLong(Handle, WindowLongFlags.GWL_STYLE);
+            style &= ~(nint)(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU);
+            SetWindowLong(Handle, WindowLongFlags.GWL_STYLE, style);
         }
 
-        protected override void OnMove(PointEventArgs e)
         {
-            layeredWindowCtx.Move(new Point(e.X, e.Y));
+            // Layered window
+            nint style = GetWindowLong(Handle, WindowLongFlags.GWL_EXSTYLE);
+            style |= (nint)WindowStylesEx.WS_EX_LAYERED;
+            SetWindowLong(Handle, WindowLongFlags.GWL_EXSTYLE, style);
         }
 
-        protected override void OnResize(ResizeEventArgs e)
+        SetWindowPos(Handle, HWND.NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+    }
+
+    protected override void OnMove(PointEventArgs e)
+    {
+        layeredWindowCtx.Move(new Point(e.X, e.Y));
+    }
+
+    protected override void OnResize(ResizeEventArgs e)
+    {
+        layeredWindowCtx.Resize(Size);
+
+        if (!XResource.DeviceAvailable || e.IsMinimized) return;
+
+        OnReleaseDeviceSizeResources();
+
+        XResource.RenderTarget.Target = null;
+        DirectXTools.CreateDeviceContextCPUBitmap(XResource.RenderTarget, Size.Width, Size.Height);
+
+        OnCreateDeviceSizeResources();
+    }
+
+    protected override void InitializeResources()
+    {
+        XResource.InitializeDeviceGdiCompatible(Handle.DangerousGetHandle(), Size.Width, Size.Height);
+
+        OnCreateDeviceResources();
+        OnCreateDeviceSizeResources();
+    }
+
+    protected override void OnPostDraw()
+    {
+        using (ID2D1GdiInteropRenderTarget gdi = XResource.RenderTarget.QueryInterface<ID2D1GdiInteropRenderTarget>())
         {
-            layeredWindowCtx.Resize(Size);
-
-            if (!XResource.DeviceAvailable || e.IsMinimized) return;
-
-            OnReleaseDeviceSizeResources();
-
-            XResource.RenderTarget.Target = null;
-            DirectXTools.CreateDeviceContextCPUBitmap(XResource.RenderTarget, Size.Width, Size.Height);
-
-            OnCreateDeviceSizeResources();
-        }
-
-        protected override void InitializeResources()
-        {
-            XResource.InitializeDeviceGdiCompatible(Handle.DangerousGetHandle(), Size.Width, Size.Height);
-
-            OnCreateDeviceResources();
-            OnCreateDeviceSizeResources();
-        }
-
-        protected override void OnPostDraw()
-        {
-            using (ID2D1GdiInteropRenderTarget gdi = XResource.RenderTarget.QueryInterface<ID2D1GdiInteropRenderTarget>())
-            {
-                var hdc = gdi.GetDC(DcInitializeMode.Copy);
-                layeredWindowCtx.Draw(Handle.DangerousGetHandle(), hdc);
-                gdi.ReleaseDC(null);
-            }
+            var hdc = gdi.GetDC(DcInitializeMode.Copy);
+            layeredWindowCtx.Draw(Handle.DangerousGetHandle(), hdc);
+            gdi.ReleaseDC(null);
         }
     }
 }

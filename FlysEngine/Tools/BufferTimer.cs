@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace FlysEngine.Tools
-{
-    public class BufferTimer
+namespace FlysEngine.Tools;
+
+public class BufferTimer
 	{
 		float _total = 0;
 
@@ -16,4 +16,3 @@ namespace FlysEngine.Tools
 			}
 		}
 	}
-}

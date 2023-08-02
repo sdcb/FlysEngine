@@ -2,62 +2,61 @@
 using System.Collections.Generic;
 using DWrite = Vortice.DirectWrite;
 
-namespace FlysEngine.Managers
+namespace FlysEngine.Managers;
+
+public class TextFormatManager : IDisposable
 {
-    public class TextFormatManager : IDisposable
+    private readonly Dictionary<string, DWrite.IDWriteTextFormat> _formatMap = new();
+    private readonly Dictionary<string, DWrite.IDWriteTextFormat> _sizeDependentFormatMap = new();
+    private readonly DWrite.IDWriteFactory _factory;
+
+    public TextFormatManager(DWrite.IDWriteFactory factory)
     {
-        private readonly Dictionary<string, DWrite.IDWriteTextFormat> _formatMap = new();
-        private readonly Dictionary<string, DWrite.IDWriteTextFormat> _sizeDependentFormatMap = new();
-        private readonly DWrite.IDWriteFactory _factory;
+        _factory = factory;
+    }
 
-        public TextFormatManager(DWrite.IDWriteFactory factory)
+    public DWrite.IDWriteTextFormat this[float fontSize, string fontFamilyName = "Consolas", bool isSizeDependent = false]
+    {
+        get
         {
-            _factory = factory;
-        }
+            var key = $"{fontFamilyName}:{fontSize}";
+            Dictionary<string, DWrite.IDWriteTextFormat> map = isSizeDependent ? _sizeDependentFormatMap : _formatMap;
 
-        public DWrite.IDWriteTextFormat this[float fontSize, string fontFamilyName = "Consolas", bool isSizeDependent = false]
-        {
-            get
+            if (!_formatMap.ContainsKey(key))
             {
-                var key = $"{fontFamilyName}:{fontSize}";
-                Dictionary<string, DWrite.IDWriteTextFormat> map = isSizeDependent ? _sizeDependentFormatMap : _formatMap;
-
-                if (!_formatMap.ContainsKey(key))
-                {
-                    map[key] = _factory.CreateTextFormat(fontFamilyName, fontSize);
-                }
-
-                return map[key];
-            }
-        }
-
-        public int Count => _formatMap.Count + _sizeDependentFormatMap.Count;
-        public int SizeDependentCount => _sizeDependentFormatMap.Count;
-
-        public void ReleaseResources(bool includeSizeDependent = false, bool includeSizeIndependent = false)
-        {
-            if (includeSizeDependent)
-            {
-                foreach (var format in _formatMap.Values)
-                {
-                    format.Dispose();
-                }
-                _formatMap.Clear();
+                map[key] = _factory.CreateTextFormat(fontFamilyName, fontSize);
             }
 
-            if (includeSizeIndependent)
+            return map[key];
+        }
+    }
+
+    public int Count => _formatMap.Count + _sizeDependentFormatMap.Count;
+    public int SizeDependentCount => _sizeDependentFormatMap.Count;
+
+    public void ReleaseResources(bool includeSizeDependent = false, bool includeSizeIndependent = false)
+    {
+        if (includeSizeDependent)
+        {
+            foreach (var format in _formatMap.Values)
             {
-                foreach (var format in _sizeDependentFormatMap.Values)
-                {
-                    format.Dispose();
-                }
-                _sizeDependentFormatMap.Clear();
+                format.Dispose();
             }
+            _formatMap.Clear();
         }
 
-        public void Dispose()
+        if (includeSizeIndependent)
         {
-            ReleaseResources(includeSizeDependent: true, includeSizeIndependent: true);
+            foreach (var format in _sizeDependentFormatMap.Values)
+            {
+                format.Dispose();
+            }
+            _sizeDependentFormatMap.Clear();
         }
+    }
+
+    public void Dispose()
+    {
+        ReleaseResources(includeSizeDependent: true, includeSizeIndependent: true);
     }
 }

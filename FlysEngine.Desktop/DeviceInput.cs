@@ -1,51 +1,50 @@
 ﻿using System;
 using Vortice.DirectInput;
 
-namespace FlysEngine.Desktop
+namespace FlysEngine.Desktop;
+
+public class DeviceInput : IDisposable
 {
-    public class DeviceInput : IDisposable
+    private IDirectInput8 DirectInput { get; } = DInput.DirectInput8Create();
+
+    private IDirectInputDevice8 Keyboard { get; }
+
+    public KeyboardState KeyboardState = new();
+
+    private IDirectInputDevice8 Mouse { get; }
+
+    public MouseState MouseState = new();
+
+    public DeviceInput()
     {
-        private IDirectInput8 DirectInput { get; } = DInput.DirectInput8Create();
+        Keyboard = DirectInput.CreateDevice(PredefinedDevice.SysKeyboard);
+        Keyboard.SetDataFormat<RawKeyboardState>();
+        Keyboard.Acquire().CheckError();
 
-        private IDirectInputDevice8 Keyboard { get; }
+        Mouse = DirectInput.CreateDevice(PredefinedDevice.SysMouse);
+        Mouse.SetDataFormat<RawMouseState>();
+        Mouse.Acquire().CheckError();
+    }
 
-        public KeyboardState KeyboardState = new();
+    public void UpdateKeyboard() => Keyboard.GetCurrentKeyboardState(ref KeyboardState);
 
-        private IDirectInputDevice8 Mouse { get; }
+    public void UpdateMouse() => Mouse.GetCurrentMouseState(ref MouseState);
 
-        public MouseState MouseState = new();
+    public void UpdateAll()
+    {
+        UpdateKeyboard();
+        UpdateMouse();
+    }
 
-        public DeviceInput()
-        {
-            Keyboard = DirectInput.CreateDevice(PredefinedDevice.SysKeyboard);
-            Keyboard.SetDataFormat<RawKeyboardState>();
-            Keyboard.Acquire().CheckError();
+    public void ClearKeyboard()
+    {
+        KeyboardState = new();
+    }
 
-            Mouse = DirectInput.CreateDevice(PredefinedDevice.SysMouse);
-            Mouse.SetDataFormat<RawMouseState>();
-            Mouse.Acquire().CheckError();
-        }
-
-        public void UpdateKeyboard() => Keyboard.GetCurrentKeyboardState(ref KeyboardState);
-
-        public void UpdateMouse() => Mouse.GetCurrentMouseState(ref MouseState);
-
-        public void UpdateAll()
-        {
-            UpdateKeyboard();
-            UpdateMouse();
-        }
-
-        public void ClearKeyboard()
-        {
-            KeyboardState = new();
-        }
-
-        public void Dispose()
-        {
-            Keyboard.Dispose();
-            Mouse.Dispose();
-            DirectInput.Dispose();
-        }
+    public void Dispose()
+    {
+        Keyboard.Dispose();
+        Mouse.Dispose();
+        DirectInput.Dispose();
     }
 }
