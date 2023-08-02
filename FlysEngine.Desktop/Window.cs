@@ -9,8 +9,14 @@ using System.Text;
 namespace FlysEngine.Desktop;
 
 
+/// <summary>
+/// A wrapper class for working with Windows using PInvoke.
+/// </summary>
 public class Window : IDisposable
 {
+    /// <summary>
+    /// Constructs a new instance of <see cref="Window"/>.
+    /// </summary>
     public Window()
     {
         (HWND hwnd, string className) = WindowHelper.CreateDefault(300, 300, "Window", WindowProc);
@@ -18,11 +24,17 @@ public class Window : IDisposable
         _className = className;
     }
 
+    /// <summary>
+    /// Gets the handle of this window.
+    /// </summary>
     public HWND Handle { get; }
 
     private readonly string _className;
     private bool _isDisposed;
 
+    /// <summary>
+    /// Gets or sets the size of the window.
+    /// </summary>
     public Size Size
     {
         get
@@ -37,6 +49,9 @@ public class Window : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets or sets the client area size of the window.
+    /// </summary>
     public Size ClientSize
     {
         get
@@ -53,6 +68,9 @@ public class Window : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets the current state of the window.
+    /// </summary>
     public ShowWindowCommand WindowState
     {
         get
@@ -66,6 +84,9 @@ public class Window : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets or sets the location of the window.
+    /// </summary>
     public Point Location
     {
         get
@@ -80,12 +101,15 @@ public class Window : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets or sets the text for the window.
+    /// </summary>
     public string Text
     {
         get
         {
             int length = GetWindowTextLength(Handle);
-            StringBuilder title = new (length + 1);
+            StringBuilder title = new(length + 1);
             _ = GetWindowText(Handle, title, title.Length);
             return title.ToString();
         }
@@ -95,8 +119,14 @@ public class Window : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets a value that indicates whether the window has focus.
+    /// </summary>
     public bool Focused => GetForegroundWindow() == Handle;
 
+    /// <summary>
+    /// Gets or sets a value that indicates whether the window is visible.
+    /// </summary>
     public bool Visible
     {
         get
@@ -117,10 +147,19 @@ public class Window : IDisposable
         }
     }
 
+    /// <summary>
+    /// Shows the window.
+    /// </summary>
     public void Show() => Visible = true;
 
+    /// <summary>
+    /// Hides the window.
+    /// </summary>
     public void Hide() => Visible = false;
 
+    /// <summary>
+    /// Converts a point in screen coordinates to client coordinates.
+    /// </summary>
     public Point ScreenToClient(Point point)
     {
         POINT p = new(point.X, point.Y);
@@ -160,25 +199,25 @@ public class Window : IDisposable
                     int y = GET_Y_LPARAM(lParam);
                     PointEventArgs args = new(x, y);
                     OnMove(args);
-                    Move?.Invoke(this, args);                        
+                    Move?.Invoke(this, args);
                 }
                 break;
             case (int)WindowMessage.WM_MOUSEMOVE:
                 {
                     int x = GET_X_LPARAM(lParam);
                     int y = GET_X_LPARAM(lParam);
-                    PointEventArgs args = new PointEventArgs(x, y);
+                    PointEventArgs args = new(x, y);
                     OnMouseMove(args);
-                    MouseMove?.Invoke(this, args);                        
+                    MouseMove?.Invoke(this, args);
                 }
                 break;
             case (int)WindowMessage.WM_LBUTTONDOWN:
                 {
                     _leftButtonDown = true;
-                    _leftButtonDownPosition = new (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+                    _leftButtonDownPosition = new(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
                     PointEventArgs args = new(_leftButtonDownPosition);
                     OnMouseLeftButtonDown(args);
-                    MouseLeftButtonDown?.Invoke(this, args);                        
+                    MouseLeftButtonDown?.Invoke(this, args);
                 }
                 break;
             case (int)WindowMessage.WM_LBUTTONUP:
@@ -187,7 +226,7 @@ public class Window : IDisposable
                             GET_X_LPARAM(lParam),
                             GET_Y_LPARAM(lParam));
                     OnMouseLeftButtonUp(new PointEventArgs(_leftButtonDownPosition));
-                    MouseLeftButtonUp?.Invoke(this, new PointEventArgs(_leftButtonDownPosition));                        
+                    MouseLeftButtonUp?.Invoke(this, new PointEventArgs(_leftButtonDownPosition));
 
                     if (_leftButtonDown)
                     {
@@ -208,57 +247,136 @@ public class Window : IDisposable
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
 
+    /// <summary>
+    /// Occurs when the control is loaded.
+    /// </summary>
     public event EventHandler<EventArgs> Load;
+
+    /// <summary>
+    /// Occurs when the control is resized.
+    /// </summary>
     public event EventHandler<ResizeEventArgs> Resize;
+
+    /// <summary>
+    /// Occurs when the control is moved.
+    /// </summary>
     public event EventHandler<PointEventArgs> Move;
+
+    /// <summary>
+    /// Occurs when the mouse pointer moves over the control.
+    /// </summary>
     public event EventHandler<PointEventArgs> MouseMove;
+
+    /// <summary>
+    /// Occurs when the control is clicked by the mouse.
+    /// </summary>
     public event EventHandler<PointEventArgs> Click;
+
+    /// <summary>
+    /// Occurs when the left mouse button is pressed while the mouse pointer is over the control.
+    /// </summary>
     public event EventHandler<PointEventArgs> MouseLeftButtonDown;
+
+    /// <summary>
+    /// Occurs when the left mouse button is released while the mouse pointer is over the control.
+    /// </summary>
     public event EventHandler<PointEventArgs> MouseLeftButtonUp;
 
+    ///<summary>
+    ///Raises the <see cref="E:Load"/> event.
+    ///</summary>
+    ///<param name="e">An <see cref="EventArgs"/> containing the event data.</param>
     protected virtual void OnLoad(EventArgs e) { }
+    /// <summary>
+    /// Called when the control is being resized.
+    /// </summary>
+    /// <param name="e">The event data.</param>
     protected virtual void OnResize(ResizeEventArgs e) { }
+
+    /// <summary>
+    /// Called when the control is being moved.
+    /// </summary>
+    /// <param name="e">The event data.</param>
     protected virtual void OnMove(PointEventArgs e) { }
+
+    /// <summary>
+    /// Called when the mouse is moved over the control.
+    /// </summary>
+    /// <param name="e">The event data.</param>
     protected virtual void OnMouseMove(PointEventArgs e) { }
+
+    /// <summary>
+    /// Called when the control is clicked.
+    /// </summary>
+    /// <param name="e">The event data.</param>
     protected virtual void OnClick(PointEventArgs e) { }
+
+    /// <summary>
+    /// Called when the left mouse button is pressed over the control.
+    /// </summary>
+    /// <param name="e">The event data.</param>
     protected virtual void OnMouseLeftButtonDown(PointEventArgs e) { }
+
+    /// <summary>
+    /// Called when the left mouse button is released over the control.
+    /// </summary>
+    /// <param name="e">The event data.</param>
     protected virtual void OnMouseLeftButtonUp(PointEventArgs e) { }
 
-    /// <returns>is handled</returns>
-    protected virtual IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam) { return IntPtr.Zero; }
+
+    /// <summary>
+    /// Overrides the WndProc function in order to handle Windows messages.
+    /// </summary>
+    /// <param name="message">The message to handle.</param>
+    /// <param name="wParam">The wParam parameter of the message.</param>
+    /// <param name="lParam">The lParam parameter of the message.</param>
+    /// <returns>The result of the message processing. </returns>
+    protected virtual IntPtr WndProc(uint message, IntPtr wParam, IntPtr lParam)
+    {
+        return IntPtr.Zero;
+    }
 
     internal void EnterMessageLoop()
     {
         Show();
         OnLoad(EventArgs.Empty);
-        Load?.Invoke(this, EventArgs.Empty);            
+        Load?.Invoke(this, EventArgs.Empty);
         UpdateWindow(Handle);
     }
 
     #region Dispose Pattern
+
+    /// <summary>
+    /// Disposes of the resources (managed and unmanaged) used by the WindowClass.
+    /// </summary>
+    /// <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (!_isDisposed)
         {
             if (disposing)
             {
-                // TODO: 释放托管状态(托管对象)
+                // Release managed resources here.
             }
 
-            // TODO: 释放未托管的资源(未托管的对象)并重写终结器
-            // TODO: 将大型字段设置为 null
+            // Release unmanaged resources and set large fields to null.
             UnregisterClass(_className, HINSTANCE.NULL);
             _isDisposed = true;
         }
     }
 
-    // TODO: 仅当“Dispose(bool disposing)”拥有用于释放未托管资源的代码时才替代终结器
+    /// <summary>
+    /// Finalizer of the <see cref="Window"/> class.
+    /// </summary>
     ~Window()
     {
-        // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+        // Do not modify this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: false);
     }
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public void Dispose()
     {
         // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中

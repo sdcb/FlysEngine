@@ -3,15 +3,27 @@ using static Vanara.PInvoke.User32;
 
 namespace FlysEngine.Desktop;
 
+/// <summary>
+/// Provides a render loop for a window.
+/// </summary>
 public static class RenderLoop
 {
+    /// <summary>
+    /// Runs the render loop for the specified window.
+    /// </summary>
+    /// <param name="window">The window to render.</param>
+    /// <param name="renderCallback">The delegate to render the window.</param>
     public static void Run(Window window, RenderCallback renderCallback)
     {
         window.EnterMessageLoop();
-        Run(window.Handle, renderCallback);
+        Run(renderCallback);
     }
 
-    public static void Run(HWND hwnd, RenderCallback renderCallback)
+    /// <summary>
+    /// Runs the render loop for the specified window handle.
+    /// </summary>
+    /// <param name="renderCallback">The delegate to render the window.</param>
+    public static void Run(RenderCallback renderCallback)
     {
         while (true)
         {

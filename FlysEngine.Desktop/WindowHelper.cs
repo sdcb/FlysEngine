@@ -6,7 +6,7 @@ using Vanara.PInvoke;
 
 namespace FlysEngine.Desktop;
 
-public class WindowHelper
+internal class WindowHelper
 {
     // 导入SetProcessDpiAwareness函数
     [DllImport("Shcore.dll")]

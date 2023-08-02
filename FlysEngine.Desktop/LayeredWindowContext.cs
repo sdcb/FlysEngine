@@ -5,12 +5,20 @@ using System.Runtime.InteropServices;
 
 namespace FlysEngine.Desktop;
 
-public class LayeredWindowContext : IDisposable
+/// <summary>
+/// Represents a wrapper around UpdateLayeredWindow API function.
+/// </summary>
+internal class LayeredWindowContext : IDisposable
 {
-    UpdateLayeredWindowInfo info;
-    BlendFunction blend;
-    Point source = new();
+    private UpdateLayeredWindowInfo info;
+    private BlendFunction blend;
+    private Point source = new();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LayeredWindowContext"/> class.
+    /// </summary>
+    /// <param name="size">The size of the window to draw.</param>
+    /// <param name="destination">The destination point at which to draw the window.</param>
     public LayeredWindowContext(Size size, Point destination)
     {
         blend.SourceConstantAlpha = 0xff;
@@ -31,6 +39,10 @@ public class LayeredWindowContext : IDisposable
         info.Flags = UlwFlags.Alpha;
     }
 
+    /// <summary>
+    /// Moves the window to a new location specified by <paramref name="destination"/>.
+    /// </summary>
+    /// <param name="destination">The destination point at which to move the window.</param>
     public void Move(Point destination)
     {
         Marshal.DestroyStructure(info.DestinationPoint, typeof(Point));
@@ -38,16 +50,25 @@ public class LayeredWindowContext : IDisposable
         Marshal.StructureToPtr(destination, info.DestinationPoint, false);
     }
 
+    /// <summary>
+    /// Draws the window on the screen.
+    /// </summary>
+    /// <param name="window">The window handle on which to draw.</param>
+    /// <param name="hdc">The device context handle of the window.</param>
     public void Draw(IntPtr window, IntPtr hdc)
     {
         info.SourceHdc = hdc;
-        var ok = UpdateLayeredWindowIndirect(window, ref info);
+        bool ok = UpdateLayeredWindowIndirect(window, ref info);
         if (!ok)
         {
             Debug.WriteLine("ULW failed!, set EXStyle |= WS_EX_LAYERED(0x00080000)");
         }
     }
 
+    /// <summary>
+    /// Resizes the window.
+    /// </summary>
+    /// <param name="size">The new size of the window.</param>
     public void Resize(Size size)
     {
         Marshal.DestroyStructure(info.WindowSize, typeof(Size));
@@ -55,11 +76,9 @@ public class LayeredWindowContext : IDisposable
         Marshal.StructureToPtr(size, info.WindowSize, false);
     }
 
-    [DllImport("user32", SetLastError = true, ExactSpelling = true)]
-    private extern static bool UpdateLayeredWindowIndirect(
-        IntPtr hwnd,
-        ref UpdateLayeredWindowInfo ulwInfo);
-
+    /// <summary>
+    /// Disposes the resources used by the <see cref="LayeredWindowContext"/> object.
+    /// </summary>
     public void Dispose()
     {
         Marshal.DestroyStructure(info.BlendFunction, typeof(BlendFunction));
@@ -67,10 +86,16 @@ public class LayeredWindowContext : IDisposable
         Marshal.DestroyStructure(info.SourcePoint, typeof(Point));
         Marshal.DestroyStructure(info.DestinationPoint, typeof(Point));
     }
+
+    [DllImport("user32", SetLastError = true, ExactSpelling = true)]
+    private static extern bool UpdateLayeredWindowIndirect(IntPtr hwnd, ref UpdateLayeredWindowInfo ulwInfo);
 }
 
+/// <summary>
+/// Represents structure for SetWindowRgn API function.
+/// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct UpdateLayeredWindowInfo
+internal struct UpdateLayeredWindowInfo
 {
     public int StructureSize;
     public IntPtr DestinationHdc;   // HDC
@@ -84,16 +109,22 @@ public struct UpdateLayeredWindowInfo
     public IntPtr prcDirty;
 }
 
+/// <summary>
+/// Enumeration for the flags used with the <see cref="UpdateLayeredWindowInfo"/> structure.
+/// </summary>
 [Flags]
-public enum UlwFlags : int
+internal enum UlwFlags : int
 {
     ColorKey = 1,
     Alpha = 2,
     Opaque = 4,
 }
 
+/// <summary>
+/// Represents structure for BlendFunction parameter of the <see cref="UpdateLayeredWindowInfo"/> structure.
+/// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct BlendFunction
+internal struct BlendFunction
 {
     public byte BlendOp;
     public byte BlendFlags;
@@ -101,7 +132,10 @@ public struct BlendFunction
     public BlendFormats AlphaFormat;
 }
 
-public enum BlendFormats : byte
+/// <summary>
+/// Enumeration for the alpha format of the <see cref="BlendFunction"/> structure.
+/// </summary>
+internal enum BlendFormats : byte
 {
     Over = 0,
     Alpha = 1,

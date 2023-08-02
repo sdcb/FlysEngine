@@ -5,29 +5,38 @@ using DWrite = Vortice.DirectWrite;
 
 namespace FlysEngine.Managers;
 
+/// <summary>
+/// Provides functionality to manage and render text using DirectWrite.
+/// </summary>
 public class TextLayoutManager : IDisposable
 {
     private readonly DWrite.IDWriteFactory _dwriteFactory;
     private readonly TextFormatManager _textManager;
     private readonly Dictionary<string, DWrite.IDWriteTextLayout> _bmps = new();
-    private Direct2D1.ID2D1DeviceContext _renderTarget;
 
+    /// <summary>
+    /// Initializes a new instance of the TextLayoutManager class.
+    /// </summary>
+    /// <param name="dwriteFactory"> The DWrite factory to use to create text layouts.</param>
+    /// <param name="textManager">The text format manager.</param>
     public TextLayoutManager(DWrite.IDWriteFactory dwriteFactory, TextFormatManager textManager)
     {
         _dwriteFactory = dwriteFactory;
         _textManager = textManager;
     }
 
-    public void SetRenderTarget(Direct2D1.ID2D1DeviceContext renderTarget)
-    {
-        _renderTarget = renderTarget;
-    }
-
+    /// <summary>
+    /// Gets the cached DirectWrite text layout associated with the given text parameters.
+    /// </summary>
+    /// <param name="text">The string of text to render with the layout.</param>
+    /// <param name="fontSize">The font size to use for the text layout.</param>
+    /// <param name="fontFamilyName">The optional name of the font family to use for the text layout (default: Consolas).</param>
+    /// <returns>The DirectWrite text layout associated with the given text parameters.</returns>
     public DWrite.IDWriteTextLayout this[string text, float fontSize, string fontFamilyName = "Consolas"]
     {
         get
         {
-            var key = $"{text}:{fontSize}";
+            string key = $"{text}:{fontSize}";
             if (!_bmps.ContainsKey(key))
             {
                 _bmps[key] = _dwriteFactory.CreateTextLayout(
@@ -35,33 +44,44 @@ public class TextLayoutManager : IDisposable
                     _textManager[fontSize, fontFamilyName],
                     float.MaxValue, fontSize * 2.0f);
             }
-
             return _bmps[key];
         }
     }
 
+    /// <summary>
+    /// Removes the cached DirectWrite text layout associated with the given text parameters.
+    /// </summary>
+    /// <param name="text">The string of text associated with the layout to remove.</param>
+    /// <param name="fontSize">The font size associated with the layout to remove.</param>
     public void Remove(string text, float fontSize)
     {
-        var key = $"{text}:{fontSize}";
+        string key = $"{text}:{fontSize}";
         if (_bmps.ContainsKey(key))
         {
-            var val = _bmps[key];
+            DWrite.IDWriteTextLayout val = _bmps[key];
             val.Dispose();
             _bmps.Remove(key);
         }
     }
 
+    /// <summary>
+    /// Frees the DirectWrite resources used by the text layout manager.
+    /// </summary>
     public void ReleaseDeviceResources()
     {
-        foreach (var kv in _bmps)
+        foreach (KeyValuePair<string, DWrite.IDWriteTextLayout> kv in _bmps)
         {
             kv.Value.Dispose();
         }
         _bmps.Clear();
     }
 
+    /// <summary>
+    /// Disposes the text layout manager and frees all DirectWrite resources used by it.
+    /// </summary>
     public void Dispose()
     {
         ReleaseDeviceResources();
+        GC.SuppressFinalize(this);
     }
 }
