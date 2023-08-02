@@ -23,8 +23,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.13" />
-    <PackageReference Include="Vortice.DirectInput" Version="3.0.0-beta" />
+    <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.15" />
+    <PackageReference Include="Vortice.DirectInput" Version="3.2.0" />
   </ItemGroup>
 
   <ItemGroup>
