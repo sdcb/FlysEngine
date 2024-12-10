@@ -15,26 +15,26 @@ namespace FlysEngine.Desktop
         {
             blend.SourceConstantAlpha = 0xff;
             blend.AlphaFormat = BlendFormats.Alpha;
-            info.BlendFunction = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(BlendFunction)));
+            info.BlendFunction = Marshal.AllocHGlobal(Marshal.SizeOf<BlendFunction>());
             Marshal.StructureToPtr(blend, info.BlendFunction, false);
 
-            info.WindowSize = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Size)));
+            info.WindowSize = Marshal.AllocHGlobal(Marshal.SizeOf<Size>());
             Marshal.StructureToPtr(size, info.WindowSize, false);
 
-            info.SourcePoint = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Point)));
+            info.SourcePoint = Marshal.AllocHGlobal(Marshal.SizeOf<Point>());
             Marshal.StructureToPtr(source, info.SourcePoint, false);
 
-            info.DestinationPoint = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Point)));
+            info.DestinationPoint = Marshal.AllocHGlobal(Marshal.SizeOf<Point>());
             Marshal.StructureToPtr(destination, info.DestinationPoint, false);
 
-            info.StructureSize = Marshal.SizeOf(typeof(UpdateLayeredWindowInfo));
+            info.StructureSize = Marshal.SizeOf<UpdateLayeredWindowInfo>();
             info.Flags = UlwFlags.Alpha;
         }
 
         public void Move(Point destination)
         {
-            Marshal.DestroyStructure(info.DestinationPoint, typeof(Point));
-            info.DestinationPoint = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Point)));
+            Marshal.DestroyStructure<Point>(info.DestinationPoint);
+            info.DestinationPoint = Marshal.AllocHGlobal(Marshal.SizeOf<Point>());
             Marshal.StructureToPtr(destination, info.DestinationPoint, false);
         }
 
@@ -50,8 +50,8 @@ namespace FlysEngine.Desktop
 
         public void Resize(Size size)
         {
-            Marshal.DestroyStructure(info.WindowSize, typeof(Size));
-            info.WindowSize = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Size)));
+            Marshal.DestroyStructure<Size>(info.WindowSize);
+            info.WindowSize = Marshal.AllocHGlobal(Marshal.SizeOf<Size>());
             Marshal.StructureToPtr(size, info.WindowSize, false);
         }
 
@@ -62,10 +62,10 @@ namespace FlysEngine.Desktop
 
         public void Dispose()
         {
-            Marshal.DestroyStructure(info.BlendFunction, typeof(BlendFunction));
-            Marshal.DestroyStructure(info.WindowSize, typeof(Size));
-            Marshal.DestroyStructure(info.SourcePoint, typeof(Point));
-            Marshal.DestroyStructure(info.DestinationPoint, typeof(Point));
+            Marshal.DestroyStructure<BlendFunction>(info.BlendFunction);
+            Marshal.DestroyStructure<Size>(info.WindowSize);
+            Marshal.DestroyStructure<Point>(info.SourcePoint);
+            Marshal.DestroyStructure<Point>(info.DestinationPoint);
         }
     }
 

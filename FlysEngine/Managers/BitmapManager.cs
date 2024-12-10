@@ -58,12 +58,12 @@ namespace FlysEngine.Managers
             string filename,
             ID2D1DeviceContext renderTarget)
         {
-            using IWICBitmapDecoder decoder = imagingFactory.CreateDecoderFromFileName(filename);
+            using IWICBitmapDecoder decoder = imagingFactory.CreateDecoderFromFileName(filename,System.IO.FileAccess.Read);
             using IWICBitmapFrameDecode frame = decoder.GetFrame(0);
 
             using IWICFormatConverter converter = imagingFactory.CreateFormatConverter();
             converter.Initialize(frame, PixelFormat.Format32bppPBGRA, BitmapDitherType.None, null, 0, BitmapPaletteType.Custom);
-            return renderTarget.CreateBitmapFromWicBitmap(converter, null);
+            return renderTarget.CreateBitmapFromWicBitmap(converter);
         }
 
         public void ReleaseDeviceResources()
