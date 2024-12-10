@@ -18,7 +18,7 @@ namespace FlysTest
         static void Main()
         {
             using (var res = new XResource())
-            using (var form = new Form() { Text = "Hello World" })
+            using (var form = new Form() { Text = "Hello World", MaximizeBox = false, Size = new System.Drawing.Size(800, 600) })
             {
                 var timer = new RenderTimer();
                 IDWriteTextFormat bottomRightFont = res.DWriteFactory.CreateTextFormat("Consolas", 16.0f);
@@ -37,6 +37,8 @@ namespace FlysTest
                     }
                 };
 
+                var manager = new BitmapManager(new Vortice.WIC.IWICImagingFactory());
+
                 RenderLoop.Run(form, () => Render());
 
                 void Render()
@@ -47,6 +49,7 @@ namespace FlysTest
 
                     timer.BeginFrame();
                     target.BeginDraw();
+                    manager.SetRenderTarget(target);
                     Draw(target);
                     target.EndDraw();
                     res.SwapChain.Present(1, 0);
@@ -71,6 +74,10 @@ namespace FlysTest
 
                     target.DrawText("Hello World",
                         bottomLeftFont, rectangle, res.GetColor(Colors.Purple));
+                    
+                    var bitmap = manager[Path.Combine(AppContext.BaseDirectory, "temp", "test.png")];
+                    target.DrawBitmap(bitmap);
+
                 }
             }
         }

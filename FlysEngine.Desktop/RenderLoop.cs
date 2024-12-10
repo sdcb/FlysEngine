@@ -120,7 +120,7 @@ namespace FlysEngine.Desktop
                         MSG msg;
                         while (User32.PeekMessage(out msg, HWND.NULL, 0, 0, 0))
                         {
-                            if (!User32.GetMessage(out msg, IntPtr.Zero, 0, 0))
+                            if (User32.GetMessage(out msg, IntPtr.Zero, 0, 0) == -1)
                             {
                                 throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
                                     "An error happened in rendering loop while processing windows messages. Error: {0}",
@@ -133,12 +133,12 @@ namespace FlysEngine.Desktop
                                 isControlAlive = false;
                             }
 
-                            Message message = new () 
-                            { 
-                                HWnd = (IntPtr)msg.hwnd, 
-                                LParam = msg.lParam, 
-                                Msg = (int)msg.message, 
-                                WParam = msg.wParam 
+                            Message message = new()
+                            {
+                                HWnd = (IntPtr)msg.hwnd,
+                                LParam = msg.lParam,
+                                Msg = (int)msg.message,
+                                WParam = msg.wParam
                             };
                             if (!Application.FilterMessage(ref message))
                             {

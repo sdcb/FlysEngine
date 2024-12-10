@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryType>git</RepositoryType>
@@ -24,8 +24,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.4" />
-    <PackageReference Include="Vortice.DirectInput" Version="2.1.23-beta" />
+    <PackageReference Include="Vanara.PInvoke.User32" Version="4.0.4" />
+    <PackageReference Include="Vortice.DirectInput" Version="3.6.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -74,7 +74,7 @@ namespace FlysEngine
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public void Resize(int width = 0, int height = 0)
+        public void Resize(uint width = 0, uint height = 0)
         {
             if (!DeviceAvailable)
                 return;

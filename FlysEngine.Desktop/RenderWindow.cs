@@ -24,7 +24,7 @@ namespace FlysEngine.Desktop
         public event RenderWindowAction ReleaseDeviceResources;
         public event RenderWindowAction CreateDeviceSizeResources;
 
-        public virtual void Render(int syncInterval, PresentFlags presentFlags)
+        public virtual void Render(uint syncInterval, PresentFlags presentFlags)
         {
             if (WindowState == FormWindowState.Minimized)
             {
@@ -50,7 +50,7 @@ namespace FlysEngine.Desktop
             OnCreateDeviceSizeResources();
         }
 
-        private void RenderCore(int syncInterval, PresentFlags presentFlags, float lastFrameTimeInSecond)
+        private void RenderCore(uint syncInterval, PresentFlags presentFlags, float lastFrameTimeInSecond)
         {
             try
             {

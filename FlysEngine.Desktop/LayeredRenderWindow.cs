@@ -2,6 +2,7 @@
 using System;
 using System.Windows.Forms;
 using Vortice.Direct2D1;
+using System.ComponentModel;
 
 namespace FlysEngine.Desktop
 {
@@ -9,6 +10,7 @@ namespace FlysEngine.Desktop
     {
         private LayeredWindowContext layeredWindowCtx;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool DragMoveEnabled { get; set; }
 
         public LayeredRenderWindow()

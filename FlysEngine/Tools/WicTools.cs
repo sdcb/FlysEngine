@@ -14,7 +14,7 @@ namespace FlysEngine.Tools
                 using (IWICBitmapFrameEncode frame = encoder.CreateNewFrame(out IPropertyBag2 props))
                 {
                     frame.Initialize();
-                    frame.SetSize(wicBitmap.Size.Width, wicBitmap.Size.Height);
+                    frame.SetSize(wicBitmap.Size);
 
                     var pixelFormat = wicBitmap.PixelFormat;
                     frame.SetPixelFormat(ref pixelFormat);
