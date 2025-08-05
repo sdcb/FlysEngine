@@ -15,7 +15,7 @@ namespace FlysEngine.Sprites.Shapes
 
         public PolygonShape(JsonShape jsonShape, Vector2 center) : base(jsonShape, center)
         {
-            Points = jsonShape.Points.Select(x => new Vector2(x[0], x[1])).ToArray();
+            Points = [.. jsonShape.Points.Select(x => new Vector2(x[0], x[1]))];
         }
 
         public override void Draw(ID2D1DeviceContext renderTarget, ID2D1SolidColorBrush brush)

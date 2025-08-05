@@ -11,7 +11,7 @@ namespace FlysEngine.Sprites.Shapes
 
         public float R { get; private set; }
 
-        public Ellipse Ellipse => new Ellipse(Center + Offset, R, R);
+        public Ellipse Ellipse => new(Center + Offset, R, R);
 
         public CircleShape(JsonShape jsonShape, Vector2 center) : base(jsonShape, center)
         {

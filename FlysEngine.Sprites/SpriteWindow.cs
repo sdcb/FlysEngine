@@ -13,7 +13,7 @@ namespace FlysEngine.Sprites
     {
         public World World { get; } = new World(Vector2.Zero.ToSimulation());
 
-        public Dictionary<int, Sprite> Sprites { get; } = new Dictionary<int, Sprite>();
+        public Dictionary<int, Sprite> Sprites { get; } = [];
 
         public Color4 ClearColor { get; set; } = Colors.CornflowerBlue;
 
@@ -23,11 +23,11 @@ namespace FlysEngine.Sprites
 
         public DeviceInput DeviceInput = new();
         
-        public Vector2 MouseClientPosition = new Vector2();
+        public Vector2 MouseClientPosition = new();
 
         public void AddSprites(params Sprite[] sprites)
         {
-            if (sprites == null) throw new ArgumentNullException(nameof(sprites));
+            ArgumentNullException.ThrowIfNull(sprites);
 
             foreach (Sprite sprite in sprites)
             {
@@ -58,7 +58,7 @@ namespace FlysEngine.Sprites
 
             foreach (var sprite in Sprites.Values) sprite.OnUpdate(lastFrameTimeInSecond);
 
-            List<int> toDestroyIds = Sprites.Values.Where(x => x.ReadyToRemove).Select(x => x.Id).ToList();
+            List<int> toDestroyIds = [.. Sprites.Values.Where(x => x.ReadyToRemove).Select(x => x.Id)];
             if (toDestroyIds.Count > 0)
             {
                 foreach (int id in toDestroyIds)

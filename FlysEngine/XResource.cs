@@ -17,7 +17,7 @@ namespace FlysEngine
         public readonly ID2D1Factory1 Direct2DFactory = D2D1.D2D1CreateFactory<ID2D1Factory1>(Vortice.Direct2D1.FactoryType.SingleThreaded);
         public readonly IDWriteFactory DWriteFactory = DWrite.DWriteCreateFactory<IDWriteFactory>(Vortice.DirectWrite.FactoryType.Shared);
         public readonly TextFormatManager TextFormats;
-        public readonly IWICImagingFactory WICFactory = new IWICImagingFactory();
+        public readonly IWICImagingFactory WICFactory = new();
         public readonly BitmapManager Bitmaps;
         public readonly TextLayoutManager TextLayouts;
         private ID2D1SolidColorBrush _solidBrush;

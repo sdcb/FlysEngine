@@ -11,7 +11,7 @@ namespace FlysEngine.Sprites.Shapes
     {
         public Size Size { get; set; }
 
-        public Rect Rect => new Rect(Offset, Size);
+        public Rect Rect => new(Offset, Size);
 
         public RectangleShape() { }
 

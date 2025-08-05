@@ -39,7 +39,6 @@ namespace FlysEngine.Desktop
 
             float lastFrameTimeInSecond = RenderTimer.BeginFrame();
             RenderCore(syncInterval, presentFlags, lastFrameTimeInSecond);
-            RenderTimer.EndFrame();
         }
 
         protected virtual void InitializeResources()
@@ -67,6 +66,7 @@ namespace FlysEngine.Desktop
                     OnPostDraw();
                 }
                 XResource.RenderTarget.EndDraw();
+                RenderTimer.EndFrame();
 
                 XResource.SwapChain.Present(syncInterval, presentFlags);
             }

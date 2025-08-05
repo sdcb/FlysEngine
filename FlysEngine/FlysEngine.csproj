@@ -6,7 +6,7 @@
     <Authors>sdcb</Authors>
     <Company />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.6</Version>
+    <Version>2.0.7</Version>
     <Description>Real-time 2D rendering utilities based on SharpDX/Direct2D.</Description>
     <PackageReleaseNotes>https://github.com/sdcb/FlysEngine/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/sdcb/FlysEngine</PackageProjectUrl>
@@ -27,7 +27,7 @@
     <PackageReference Include="Vortice.Direct2D1" Version="3.6.2" />
     <PackageReference Include="Vortice.Direct3D11" Version="3.6.2" />
     <PackageReference Include="Vortice.UIAnimation" Version="3.6.2" />
-    <PackageReference Include="Vortice.Win32" Version="2.2.6" />
+    <PackageReference Include="Vortice.Win32" Version="2.2.7" />
   </ItemGroup>
 
   <ItemGroup>

@@ -25,7 +25,7 @@ namespace FlysEngine.Sprites
 
         public event EventHandler<Sprite> Hit;
 
-        public Dictionary<Type, Behavior> Behaviors { get; } = new Dictionary<Type, Behavior>();
+        public Dictionary<Type, Behavior> Behaviors { get; } = [];
 
         public Vector2 Center { get; set; }
 
@@ -51,7 +51,7 @@ namespace FlysEngine.Sprites
 
         public object UserData { get; set; }
 
-        public List<Sprite> Children = new List<Sprite>();
+        public List<Sprite> Children = [];
 
         public Sprite(SpriteWindow game)
         {

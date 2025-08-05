@@ -9,7 +9,7 @@ namespace FlysEngine.Desktop
     {
         UpdateLayeredWindowInfo info;
         BlendFunction blend;
-        Point source = new Point();
+        Point source = new();
 
         public LayeredWindowContext(Size size, Point destination)
         {
